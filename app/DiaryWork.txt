@@ -1,0 +1,3 @@
+27/3 -> Sergio
+    Creación del proyecto y del repositorio junto a una estructura preliminar.
+    Búsqueda de proyectos de ejemplo que sirvan de ayuda para nuestro proyecto.
