@@ -1,3 +1,6 @@
 27/3 -> Sergio
     Creación del proyecto y del repositorio junto a una estructura preliminar.
     Búsqueda de proyectos de ejemplo que sirvan de ayuda para nuestro proyecto.
+
+01/04 -> Pedro
+    Creación de bocetos de pantalla y clonado del repositorio.
