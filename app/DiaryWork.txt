@@ -4,3 +4,5 @@
 
 01/04 -> Pedro
     Creación de bocetos de pantalla y clonado del repositorio.
+03/04 -> Sergio
+    Comienzo en el desarrollo de la pantalla del calendario.

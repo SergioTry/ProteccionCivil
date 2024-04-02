@@ -30,6 +30,9 @@ android {
         }
     }
     compileOptions {
+        // Requerido para usar una API no oficial
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -59,6 +62,10 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    // Requerido para usar una API no oficial
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+    implementation("com.kizitonwose.calendar:compose:2.5.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
