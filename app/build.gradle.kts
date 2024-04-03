@@ -62,8 +62,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+    //implementation("androidx.compose.material:material-icons-extended:1.6.5")
+    implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
     // Requerido para usar una API no oficial
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+    // Libreria del calendario
     implementation("com.kizitonwose.calendar:compose:2.5.0")
 
     testImplementation(libs.junit)

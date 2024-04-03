@@ -6,3 +6,5 @@
     Creación de bocetos de pantalla y clonado del repositorio.
 03/04 -> Sergio
     Comienzo en el desarrollo de la pantalla del calendario.
+04/04 -> Sergio
+    Comienzo en el desarrollo del mainApp y de la navegación.
