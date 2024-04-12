@@ -8,3 +8,7 @@
     Comienzo en el desarrollo de la pantalla del calendario.
 04/04 -> Sergio
     Comienzo en el desarrollo del mainApp y de la navegación.
+11/04 -> Pedro
+    Ampliación de la estructura del proyecto
+12/04 -> Sergio
+    Implementación de las dependencias del ORM
