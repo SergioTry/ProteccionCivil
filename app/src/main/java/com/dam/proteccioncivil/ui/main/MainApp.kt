@@ -52,6 +52,35 @@ import com.dam.proteccioncivil.pantallas.chat.PantallaMensajes
 import com.dam.proteccioncivil.pantallas.home.MainScreen
 import com.dam.proteccioncivil.ui.theme.ProteccionCivilTheme
 import kotlinx.coroutines.CoroutineScope
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
+import org.jetbrains.exposed.sql.StdOutSqlLogger
+import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
+import java.io.IOException
+import java.sql.Connection
+import java.sql.DriverManager
+
+object Anuncios : Table() {
+    val CodAnuncio = integer("CodAnuncio").autoIncrement()
+    val FechaPublicacion = datetime("FechaPublicacion").isNotNull()
+    val Texto = text("texto").isNotNull()
+    override val primaryKey = PrimaryKey(CodAnuncio)
+}
+//class Anuncio(id: EntityID<Int>) : IntEntity(id) {
+//    companion object : IntEntityClass<Anuncio>()
+//    var sequelId by StarWarsFilms.sequelId
+//    var name     by StarWarsFilms.name
+//    var director by StarWarsFilms.director
+//}
+
 
 enum class AppScreens(@StringRes val title: Int) {
     Splash(title = R.string.screen_name_splash),
@@ -127,6 +156,32 @@ fun MainApp(
     } else {
         //ModalNavigationDrawer?
     }
+
+    try {
+       // var conn = DriverManager.getConnection("jdbc:mysql://34.175.113.180:3306/ProteccionCivil;user=admin;password=admin" )
+    } catch (e: IOException) {
+
+    }
+
+
+//    Database.connect(
+//        "jdbc:mysql://34.175.113.180:3306/ProteccionCivil",
+//        driver = "com.mysql.cj.jdbc.Driver",
+//        user = "admin", password = "admin"
+//    )
+
+//    transaction {
+//        // print sql to std-out
+//        addLogger(StdOutSqlLogger)
+//
+//
+//        println("hola" )
+//        Anuncios.selectAll().map {
+//           // val text = it[Anuncios.Texto]
+//            println(it)
+//        }
+//    }
+
 }
 
 /**
@@ -318,6 +373,7 @@ fun MainTopAppBar(
         }
     )
 }
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MainAppPreview() {
