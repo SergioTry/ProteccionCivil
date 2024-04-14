@@ -26,9 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,11 +50,6 @@ import com.dam.proteccioncivil.pantallas.chat.PantallaMensajes
 import com.dam.proteccioncivil.pantallas.home.MainScreen
 import com.dam.proteccioncivil.ui.theme.ProteccionCivilTheme
 import kotlinx.coroutines.CoroutineScope
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.Table
@@ -67,6 +60,11 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.IOException
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.ResultSet
+import java.sql.SQLException
+import java.sql.Statement
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 object Anuncios : Table() {
     val CodAnuncio = integer("CodAnuncio").autoIncrement()
@@ -119,6 +117,9 @@ fun MainApp(
         Icons.Default.Notifications to stringResource(R.string.screen_name_chat),
         Icons.Default.Build to stringResource(R.string.screen_name_vehicles),
     )
+
+    var connectionClass: ConnectionClass;
+    var connection: Connection;
 
     if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT
         && windowSize == WindowWidthSizeClass.Compact
@@ -181,8 +182,21 @@ fun MainApp(
 //            println(it)
 //        }
 //    }
+    connectionClass = ConnectionClass()
+    try {
+        connection = connectionClass.conn()
+        if (connection == null) {
+            println("Error")
+        } else {
+            println("Conectado")
+        }
+    } catch (e: Exception) {
+        println(e)
+    }
 
 }
+
+
 
 /**
  * Anotación de la navegación
