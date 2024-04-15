@@ -69,7 +69,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-    implementation("mysql:mysql-connector-java:8.0.33")
+    //Android studio no admite el driver de jdbc superior a la versión 5
+    implementation("mysql:mysql-connector-java:5.1.49")
     implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
@@ -83,7 +84,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
     //implementation("androidx.compose.material:material-icons-extended:1.6.5")
     implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
-    implementation(libs.places)
+    //implementation(libs.places)
     // Requerido para usar una API no oficial
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     // Libreria del calendario

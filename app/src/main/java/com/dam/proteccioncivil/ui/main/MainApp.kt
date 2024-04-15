@@ -51,20 +51,11 @@ import com.dam.proteccioncivil.pantallas.home.MainScreen
 import com.dam.proteccioncivil.ui.theme.ProteccionCivilTheme
 import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
-import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.javatime.datetime
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.IOException
 import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.ResultSet
-import java.sql.SQLException
-import java.sql.Statement
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
+import java.util.function.Consumer
 
 object Anuncios : Table() {
     val CodAnuncio = integer("CodAnuncio").autoIncrement()
@@ -118,7 +109,7 @@ fun MainApp(
         Icons.Default.Build to stringResource(R.string.screen_name_vehicles),
     )
 
-    var connectionClass: ConnectionClass;
+
     var connection: Connection;
 
     if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -158,42 +149,16 @@ fun MainApp(
         //ModalNavigationDrawer?
     }
 
-    try {
-       // var conn = DriverManager.getConnection("jdbc:mysql://34.175.113.180:3306/ProteccionCivil;user=admin;password=admin" )
-    } catch (e: IOException) {
-
-    }
-
-
-//    Database.connect(
-//        "jdbc:mysql://34.175.113.180:3306/ProteccionCivil",
-//        driver = "com.mysql.cj.jdbc.Driver",
-//        user = "admin", password = "admin"
-//    )
-
-//    transaction {
-//        // print sql to std-out
-//        addLogger(StdOutSqlLogger)
-//
-//
-//        println("hola" )
-//        Anuncios.selectAll().map {
-//           // val text = it[Anuncios.Texto]
-//            println(it)
-//        }
-//    }
-    connectionClass = ConnectionClass()
-    try {
-        connection = connectionClass.conn()
-        if (connection == null) {
-            println("Error")
+    val thread = Thread {
+        val ConnectionClass = ConnectionClass()
+        val con = ConnectionClass.getConexion()
+        if (con == null) {
+            println("No hay conexión")
         } else {
             println("Conectado")
         }
-    } catch (e: Exception) {
-        println(e)
     }
-
+    thread.start() // Inicia el hilo
 }
 
 
