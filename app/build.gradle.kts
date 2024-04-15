@@ -74,12 +74,16 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-money:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-core:0.49.0")
+    implementation("org.jetbrains.exposed:exposed-java-time:0.49.0")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.49.0")
 
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     //implementation("androidx.compose.material:material-icons-extended:1.6.5")
     implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
+    implementation(libs.places)
     // Requerido para usar una API no oficial
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     // Libreria del calendario

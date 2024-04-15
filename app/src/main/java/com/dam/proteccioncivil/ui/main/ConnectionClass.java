@@ -8,12 +8,11 @@ public class ConnectionClass {
     public Connection conn() {
         Connection conn = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
             String connectionString= "jdbc:mysql://34.175.113.180:3306/ProteccionCivil";
-            String username = "root";
-            String password = "";
-            //establish a connection to a MySQL database using the JDBC driver
+            String username = "admin";
+            String password = "admin";
             conn = DriverManager.getConnection(connectionString, username, password);
         } catch (SQLException e) {
             System.out.println("Error: "+e);
@@ -22,5 +21,4 @@ public class ConnectionClass {
         }
         return conn;
     }
-
 }
