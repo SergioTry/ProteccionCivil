@@ -1,4 +1,28 @@
 package com.dam.proteccioncivil.ui.screens.usuarios
 
-class UsuariosVM {
+import androidx.lifecycle.ViewModel
+import com.dam.proteccioncivil.data.model.CRUD
+import com.dam.proteccioncivil.data.model.Usuario
+import com.dam.proteccioncivil.data.model.Usuarios
+
+class UsuariosVM: CRUD<Usuarios,Usuario >, ViewModel() {
+    override fun getAll(): List<Usuarios> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAllBy(fieldname: String, value: String): List<Usuarios> {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteBy(fieldname: String, value: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun update(instance: Usuario, fieldname: String, value: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setNew(instance: Usuario) {
+        TODO("Not yet implemented")
+    }
 }

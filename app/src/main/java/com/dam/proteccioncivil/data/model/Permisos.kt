@@ -7,3 +7,9 @@ object Permisos : Table() {
     val CodPermisos = integer("CodPermisos").autoIncrement()
     val Login = short("Login")
 }
+
+data class Permiso(
+    val CodUsuario: Int,
+    val CodPermisos: Int,
+    val Login: Short
+)

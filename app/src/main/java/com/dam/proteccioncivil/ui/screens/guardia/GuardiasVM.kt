@@ -1,4 +1,28 @@
 package com.dam.proteccioncivil.ui.screens.guardia
 
-class GuardiasVM {
+import androidx.lifecycle.ViewModel
+import com.dam.proteccioncivil.data.model.CRUD
+import com.dam.proteccioncivil.data.model.Guardia
+import com.dam.proteccioncivil.data.model.Guardias
+
+class GuardiasVM : CRUD<Guardias, Guardia>, ViewModel() {
+    override fun getAll(): List<Guardias> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAllBy(fieldname: String, value: String): List<Guardias> {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteBy(fieldname: String, value: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun update(instance: Guardia, fieldname: String, value: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setNew(instance: Guardia) {
+        TODO("Not yet implemented")
+    }
 }
