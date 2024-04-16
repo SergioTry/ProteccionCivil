@@ -1,20 +1,15 @@
 package com.dam.proteccioncivil.data.model
 
-import androidx.lifecycle.ViewModel
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.time.LocalDateTime
 
 class AnunciosVM {
 
     //val listaAnuncios
     fun printAnuncios() {
         transaction {
-            Anuncios.selectAll().forEach{
-                println(it[Anuncios.Texto])
+            Anuncio.selectAll().forEach{
+                println(it[Anuncio.texto])
             }
 
 //            Anuncios.insert {
