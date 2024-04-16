@@ -46,10 +46,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.AnunciosVM
 import com.dam.proteccioncivil.pantallas.chat.PantallaMensajes
 import com.dam.proteccioncivil.pantallas.home.MainScreen
 import com.dam.proteccioncivil.ui.theme.ProteccionCivilTheme
 import kotlinx.coroutines.CoroutineScope
+import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.datetime
@@ -57,12 +59,7 @@ import java.io.IOException
 import java.sql.Connection
 import java.util.function.Consumer
 
-object Anuncios : Table() {
-    val CodAnuncio = integer("CodAnuncio").autoIncrement()
-    val FechaPublicacion = datetime("FechaPublicacion").isNotNull()
-    val Texto = text("texto").isNotNull()
-    override val primaryKey = PrimaryKey(CodAnuncio)
-}
+
 //class Anuncio(id: EntityID<Int>) : IntEntity(id) {
 //    companion object : IntEntityClass<Anuncio>()
 //    var sequelId by StarWarsFilms.sequelId
@@ -150,13 +147,17 @@ fun MainApp(
     }
 
     val thread = Thread {
-        val ConnectionClass = ConnectionClass()
-        val con = ConnectionClass.getConexion()
-        if (con == null) {
+//        val ConnectionClass = ConnectionClass()
+//        val con = ConnectionClass.getConexion()
+        val db = Database.connect("jdbc:mysql://34.175.113.180:3306/ProteccionCivil", driver = "com.mysql.jdbc.Driver",
+            user = "admin", password = "admin")
+        if (db == null) {
             println("No hay conexión")
         } else {
             println("Conectado")
         }
+        val anunciosVM = AnunciosVM()
+        //anunciosVM.printAnuncios()
     }
     thread.start() // Inicia el hilo
 }
