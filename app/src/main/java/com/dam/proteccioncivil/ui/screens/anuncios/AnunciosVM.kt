@@ -1,5 +1,6 @@
-package com.dam.proteccioncivil.data.model
+package com.dam.proteccioncivil.ui.screens.anuncios
 
+import com.dam.proteccioncivil.data.model.Anuncios
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -8,8 +9,8 @@ class AnunciosVM {
     //val listaAnuncios
     fun printAnuncios() {
         transaction {
-            Anuncio.selectAll().forEach{
-                println(it[Anuncio.texto])
+            Anuncios.selectAll().forEach{
+                println(it[Anuncios.Texto])
             }
 
 //            Anuncios.insert {

@@ -46,18 +46,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dam.proteccioncivil.R
-import com.dam.proteccioncivil.data.model.AnunciosVM
+import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
 import com.dam.proteccioncivil.pantallas.chat.PantallaMensajes
 import com.dam.proteccioncivil.pantallas.home.MainScreen
 import com.dam.proteccioncivil.ui.theme.ProteccionCivilTheme
 import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.javatime.datetime
-import java.io.IOException
 import java.sql.Connection
-import java.util.function.Consumer
 
 
 //class Anuncio(id: EntityID<Int>) : IntEntity(id) {
