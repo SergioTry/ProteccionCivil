@@ -147,17 +147,17 @@ fun MainApp(
     }
 
     val thread = Thread {
-//        val ConnectionClass = ConnectionClass()
-//        val con = ConnectionClass.getConexion()
-        val db = Database.connect("jdbc:mysql://34.175.113.180:3306/ProteccionCivil", driver = "com.mysql.jdbc.Driver",
-            user = "admin", password = "admin")
+        val ConnectionClass = ConnectionClass()
+        val db = ConnectionClass.getConexion()
+//        val db = Database.connect("jdbc:mysql://34.175.113.180:3306/ProteccionCivil", driver = "com.mysql.jdbc.Driver",
+//            user = "admin", password = "admin")
         if (db == null) {
             println("No hay conexión")
         } else {
             println("Conectado")
         }
         val anunciosVM = AnunciosVM()
-        //anunciosVM.printAnuncios()
+        anunciosVM.printAnuncios()
     }
     thread.start() // Inicia el hilo
 }
