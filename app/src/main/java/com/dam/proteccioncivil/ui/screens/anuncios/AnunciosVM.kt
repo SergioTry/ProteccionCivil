@@ -7,7 +7,7 @@ import com.dam.proteccioncivil.data.model.CRUD
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class AnunciosVM : CRUD<Anuncios, Anuncio>, ViewModel() {
+class AnunciosVM : CRUD<Anuncio>, ViewModel() {
 
     //val listaAnuncios
     fun printAnuncios() {
@@ -25,11 +25,11 @@ class AnunciosVM : CRUD<Anuncios, Anuncio>, ViewModel() {
         }
     }
 
-    override fun getAll(): List<Anuncios> {
+    override fun getAll(): List<Anuncio> {
         TODO("Not yet implemented")
     }
 
-    override fun getAllBy(fieldname: String, value: String): List<Anuncios> {
+    override fun getAllBy(fieldname: String, value: String): List<Anuncio> {
         TODO("Not yet implemented")
     }
 

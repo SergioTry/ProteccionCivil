@@ -3,14 +3,13 @@ package com.dam.proteccioncivil.ui.screens.preventivos
 import androidx.lifecycle.ViewModel
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Preventivo
-import com.dam.proteccioncivil.data.model.Preventivos
 
-class PreventivosVM: CRUD<Preventivos,Preventivo >, ViewModel() {
-    override fun getAll(): List<Preventivos> {
+class PreventivosVM : CRUD<Preventivo>, ViewModel() {
+    override fun getAll(): List<Preventivo> {
         TODO("Not yet implemented")
     }
 
-    override fun getAllBy(fieldname: String, value: String): List<Preventivos> {
+    override fun getAllBy(fieldname: String, value: String): List<Preventivo> {
         TODO("Not yet implemented")
     }
 

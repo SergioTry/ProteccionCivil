@@ -5,12 +5,12 @@ import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Guardia
 import com.dam.proteccioncivil.data.model.Guardias
 
-class GuardiasVM : CRUD<Guardias, Guardia>, ViewModel() {
-    override fun getAll(): List<Guardias> {
+class GuardiasVM : CRUD<Guardia>, ViewModel() {
+    override fun getAll(): List<Guardia> {
         TODO("Not yet implemented")
     }
 
-    override fun getAllBy(fieldname: String, value: String): List<Guardias> {
+    override fun getAllBy(fieldname: String, value: String): List<Guardia> {
         TODO("Not yet implemented")
     }
 

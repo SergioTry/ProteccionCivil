@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.VehiculoPreventivo
 
-class VehiculosPreventivosVM: CRUD<VehiculosPreventivosVM,VehiculoPreventivo >, ViewModel() {
-    override fun getAll(): List<VehiculosPreventivosVM> {
+class VehiculosPreventivosVM : CRUD<VehiculoPreventivo>, ViewModel() {
+    override fun getAll(): List<VehiculoPreventivo> {
         TODO("Not yet implemented")
     }
 
-    override fun getAllBy(fieldname: String, value: String): List<VehiculosPreventivosVM> {
+    override fun getAllBy(fieldname: String, value: String): List<VehiculoPreventivo> {
         TODO("Not yet implemented")
     }
 
