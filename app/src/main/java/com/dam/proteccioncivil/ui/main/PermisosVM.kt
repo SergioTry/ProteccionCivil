@@ -1,4 +1,4 @@
-package com.dam.proteccioncivil.ui.screens
+package com.dam.proteccioncivil.ui.main
 
 import androidx.lifecycle.ViewModel
 import com.dam.proteccioncivil.data.model.CRUD

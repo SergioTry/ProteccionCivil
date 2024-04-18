@@ -15,7 +15,7 @@ fun DlgConfirmacion(
     onCancelarClick: () -> Unit,
     onAceptarClick: () -> Unit,
     modifier: Modifier = Modifier
-) {
+){
 
     AlertDialog(
         onDismissRequest = { },

@@ -37,7 +37,7 @@ class Anuncio(val text: String, val dateTime: LocalDateTime)
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun DummyScreen() {
+fun AnuncioScreen() {
     val sampleMessages = listOf(
         "cxosa"
     )
@@ -132,5 +132,5 @@ fun AnuncioCard(anuncio: Anuncio) {
 @Preview
 @Composable
 fun DummyScreenPreview() {
-    DummyScreen()
+    AnuncioScreen()
 }
