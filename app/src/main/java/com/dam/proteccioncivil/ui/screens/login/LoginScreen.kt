@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.dam.proteccioncivil.R
 
 @Composable
-fun SplashScreen(version: String) {
+fun LoginScreen(version: String) {
     Surface(
         color = Color.White,
         modifier = Modifier.fillMaxSize()
@@ -81,5 +81,5 @@ fun SplashScreen(version: String) {
 @Preview(showSystemUi = true, showBackground = true, device = Devices.PIXEL_5)
 @Composable
 fun PreviewSplashScreen() {
-    SplashScreen(version = "0.0.1")
+    LoginScreen(version = "0.0.1")
 }

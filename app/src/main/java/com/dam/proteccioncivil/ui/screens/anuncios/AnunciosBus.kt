@@ -1,35 +1,35 @@
 package com.dam.proteccioncivil.pantallas.anuncios
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dam.proteccioncivil.R
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -41,78 +41,49 @@ fun AnuncioScreen() {
     val sampleMessages = listOf(
         "cxosa"
     )
-    Scaffold(
-        modifier = Modifier.background(Color.Transparent),
-        content = {
-            Box(
-                modifier = Modifier.fillMaxSize()
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.White)) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            content = {
+                items(sampleMessages.size) { index ->
+                    AnuncioCard(anuncio = Anuncio("Hola", LocalDateTime.now()))
+                }
+            }
+        )
+        if (true) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .align(Alignment.BottomEnd), // Alineamos el Row en la esquina inferior derecha
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.End
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.fondo),
-                    contentDescription = "Escudo caravaca de la cruz",
-                    modifier = Modifier.fillMaxSize(),
-                )
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(4.dp),
-                    verticalArrangement = Arrangement.Bottom
+                FloatingActionButton(
+                    onClick = { /* Acción al hacer clic en el botón */ },
+                    contentColor = Color.White,
+                    elevation = FloatingActionButtonDefaults.elevation(8.dp)
                 ) {
-                    LazyColumn(
-                        modifier = Modifier.weight(1f),
-                        content = {
-                            items(sampleMessages.size) { index ->
-                                AnuncioCard(anuncio = Anuncio("Hola", LocalDateTime.now()))
-                            }
-                        }
-                    )
-                    if (true) {
-                        Row(
-                            verticalAlignment = Alignment.Bottom,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            TextField(
-                                value = "",
-                                onValueChange = {},
-                                label = { Text("Ingrese nuevo anuncio") },
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(end = 8.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                            )
-                            Button(
-                                onClick = { /* Acción al hacer clic */ },
-                                modifier = Modifier
-                                    .align(Alignment.Bottom)
-                                    .clip(RoundedCornerShape(8.dp))
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Send,
-                                    contentDescription = "Icono de enviar mensaje"
-                                )
-                            }
-                        }
-                    }
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = "Añadir")
                 }
             }
         }
-    )
+    }
 }
 
 @Composable
 fun AnuncioCard(anuncio: Anuncio) {
     val formatter = DateTimeFormatter.ofPattern("HH:mm  dd/MM/yyyy")
-    Box(
+    Card(
         modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
+            .padding(16.dp)
+            .fillMaxWidth()
+            .height(180.dp),
+        shape = RoundedCornerShape(8.dp)
     ) {
-        Card(
-            modifier = Modifier
-                .padding(8.dp)
-                .widthIn(300.dp, 300.dp),
-            shape = RoundedCornerShape(8.dp)
-        ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
             Column {
                 Text(
                     text = "Anuncio " + anuncio.dateTime.format(formatter),
@@ -124,6 +95,17 @@ fun AnuncioCard(anuncio: Anuncio) {
                     modifier = Modifier
                         .padding(8.dp)
                 )
+            }
+            if (true) {
+                Spacer(modifier = Modifier.width(100.dp))
+                Column(modifier = Modifier.padding(12.dp)) {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
+                    }
+                }
             }
         }
     }
