@@ -30,19 +30,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.dam.proteccioncivil.R
-import java.time.LocalDateTime
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class Anuncio(val text: String, val dateTime: LocalDateTime)
+class Guardia(val text: String, val date: LocalDate, val user1: String, val user2: String)
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AnuncioBusScreen() {
+fun GuardiasBusScreen() {
     val sampleMessages = listOf(
-        "cxosa", "cxosa",
         "cxosa", "cxosa",
         "cxosa", "cxosa"
     )
@@ -60,7 +61,7 @@ fun AnuncioBusScreen() {
             modifier = Modifier.fillMaxSize(),
             content = {
                 items(sampleMessages.size) { index ->
-                    AnuncioCard(anuncio = Anuncio("Hola", LocalDateTime.now()))
+                    GuardiaCard(guardia = Guardia("Hola", LocalDate.now(), "pepe", "paco"))
                 }
             }
         )
@@ -86,8 +87,8 @@ fun AnuncioBusScreen() {
 }
 
 @Composable
-fun AnuncioCard(anuncio: Anuncio) {
-    val formatter = DateTimeFormatter.ofPattern("HH:mm  dd/MM/yyyy")
+fun GuardiaCard(guardia: Guardia) {
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     Card(
         modifier = Modifier
             .padding(16.dp)
@@ -98,18 +99,33 @@ fun AnuncioCard(anuncio: Anuncio) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Column {
                 Text(
-                    text = "Anuncio " + anuncio.dateTime.format(formatter),
+                    text = "Guardia ${guardia.date.format(formatter)}",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = guardia.text,
+                    modifier = Modifier.padding(start = 8.dp),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = guardia.user1,
+                    modifier = Modifier
+                        .padding(start = 8.dp)
                 )
                 Text(
-                    text = anuncio.text,
+                    text = guardia.user2,
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(start = 8.dp)
                 )
             }
             if (true) {
-                Spacer(modifier = Modifier.width(100.dp))
+                Spacer(modifier = Modifier.width(140.dp))
                 Column(modifier = Modifier.padding(12.dp)) {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
@@ -123,8 +139,9 @@ fun AnuncioCard(anuncio: Anuncio) {
     }
 }
 
+
 @Preview
 @Composable
-fun DummyScreenPreview() {
-    AnuncioBusScreen()
+fun GuardiaBusScreenPreview() {
+    GuardiasBusScreen()
 }
