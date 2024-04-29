@@ -3,6 +3,7 @@ val exposedVersion: String by project
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
 }
 
 android {
@@ -84,7 +85,14 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
     //implementation("androidx.compose.material:material-icons-extended:1.6.5")
     implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
-    implementation(libs.androidx.compose.material)
+
+    //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.10.0")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+    //implementation(libs.androidx.compose.material)
     //implementation(libs.places)
     // Requerido para usar una API no oficial
     coreLibraryDesugaring(libs.desugar.jdk.libs)

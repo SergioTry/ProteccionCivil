@@ -1,8 +1,8 @@
 package com.dam.proteccioncivil.data.model
 
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.datetime
-import java.time.LocalDateTime
 
 object Anuncios : Table() {
     val CodAnuncio = integer("CodAnuncio").autoIncrement()
@@ -11,8 +11,9 @@ object Anuncios : Table() {
     override val primaryKey = PrimaryKey(CodAnuncio)
 }
 
+@Serializable
 data class Anuncio(
     val CodAnuncio: Int,
-    val FechaPublicacion: LocalDateTime,
+    val FechaPublicacion: String,
     val Texto: String
 )

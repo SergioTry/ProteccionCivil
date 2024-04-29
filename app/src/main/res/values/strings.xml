@@ -17,4 +17,9 @@
     <!--Opciones de menú-->
     <string name="menu_salir">Salir</string>
 
+    <!--Indicadores-->
+    <string name="retry">Reintentar</string>
+    <string name="loading">Cargando</string>
+    <string name="loading_failed">Error al cargar los datos</string>
+
 </resources>

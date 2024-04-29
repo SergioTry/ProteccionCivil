@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -91,6 +92,9 @@ fun MainApp(
     val snackbarHostState = remember() { SnackbarHostState() }
 
     val scope = rememberCoroutineScope()
+//
+//    val anunciosVM: AnunciosVM =
+//        viewModel(factory = AnunciosVM.Factory)
 
     val menuOptions = mapOf(
         Icons.Default.Home to stringResource(R.string.screen_name_home),
@@ -133,29 +137,15 @@ fun MainApp(
                 navController,
                 it,
                 scope,
-                snackbarHostState
+                snackbarHostState,
+               // anunciosVM
             )
         }
     } else {
         //ModalNavigationDrawer?
     }
 
-    val thread = Thread {
-        val ConnectionClass = ConnectionClass()
-        val db = ConnectionClass.getConexion()
-//        val db = Database.connect("jdbc:mysql://34.175.113.180:3306/ProteccionCivil", driver = "com.mysql.jdbc.Driver",
-//            user = "admin", password = "admin")
-        if (db == null) {
-            println("No hay conexión")
-        } else {
-            println("Conectado")
-        }
-        val anunciosVM = AnunciosVM()
-        anunciosVM.printAnuncios()
-    }
-    thread.start() // Inicia el hilo
 }
-
 
 
 /**
@@ -175,6 +165,7 @@ private fun NavHostRoutes(
     it: PaddingValues,
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
+    //anunciosVM: AnunciosVM
 ) {
     NavHost(
         navController = navController,
@@ -183,6 +174,8 @@ private fun NavHostRoutes(
     ) {
         composable(route = AppScreens.Home.name) {
             MainScreen()
+           // PruebaScreen(anunciosUiState = anunciosVM.anunciosUiState, retryAction = { anunciosVM::getAll2 })
+
         }
         composable(route = AppScreens.Chat.name) {
             PantallaMensajes()
