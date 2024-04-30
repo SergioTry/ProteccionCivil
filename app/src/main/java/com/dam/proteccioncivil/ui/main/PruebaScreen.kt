@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -41,7 +43,7 @@ fun PruebaScreen(
         is AnunciosUiState.Success -> AnunciosPruebaScreen(
             anunciosUiState.anuncios, contentPadding = contentPadding, modifier = modifier.fillMaxWidth()
         )
-        is AnunciosUiState.Error -> ErrorScreen(retryAction, modifier = modifier.fillMaxSize())
+        is AnunciosUiState.Error -> ErrorScreen(retryAction, anunciosUiState.err, anunciosUiState.state,modifier = modifier.fillMaxSize())
     }
 }
 
@@ -51,14 +53,13 @@ fun AnunciosPruebaScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(150.dp),
+    LazyColumn(
         modifier = modifier.padding(horizontal = 4.dp),
         contentPadding = contentPadding,
     ) {
-        items(items = anuncios, key = { anuncio ->  anuncio.CodAnuncio}) { anuncio ->
-            Text(text = anuncio.CodAnuncio.toString())
-            Text(text = anuncio.Texto)
+        this.items(items = anuncios, key = { anuncio ->  anuncio.codAnuncio}) { anuncio ->
+            Text(text = anuncio.codAnuncio.toString())
+            Text(text = anuncio.texto)
         }
     }
 }
@@ -73,7 +74,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
+fun ErrorScreen(retryAction: () -> Unit, err: String, status: Int,modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
@@ -83,6 +84,8 @@ fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
             painter = painterResource(id = R.drawable.clouderror_icon_icons_com_54404), contentDescription = ""
         )
         Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
+        Text(text = err, modifier = Modifier.padding(16.dp))
+        println(status)
         Button(onClick = retryAction) {
             Text(stringResource(R.string.retry))
         }

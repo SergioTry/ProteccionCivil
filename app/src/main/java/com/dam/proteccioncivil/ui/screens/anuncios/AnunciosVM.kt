@@ -14,6 +14,7 @@ import com.dam.proteccioncivil.data.model.Anuncio
 import com.dam.proteccioncivil.data.model.Anuncios
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.repository.AnunciosRepository
+import com.dam.proteccioncivil.data.repository.ApiException
 import kotlinx.coroutines.launch
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -22,7 +23,7 @@ import java.io.IOException
 
 sealed interface AnunciosUiState {
     data class Success(val anuncios: List<Anuncio>) : AnunciosUiState
-    object Error : AnunciosUiState
+    data class Error(val err: String, val state: Int) : AnunciosUiState
     object Loading : AnunciosUiState
 }
 
@@ -60,11 +61,13 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
             anunciosUiState = AnunciosUiState.Loading
             anunciosUiState = try {
                 AnunciosUiState.Success(anunciosRepository.getAnuncios())
+            } catch (e: ApiException) {
+                AnunciosUiState.Error(e.message!!, e.codigo)
             } catch (e: IOException) {
-                println(e)
-                AnunciosUiState.Error
+                AnunciosUiState.Error("e1", 3)
             } catch (e: HttpException) {
-                AnunciosUiState.Error
+                println("HTTPEX: "+ e)
+                AnunciosUiState.Error("e2", 4)
             }
         }
     }

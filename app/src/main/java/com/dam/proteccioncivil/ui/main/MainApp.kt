@@ -92,7 +92,7 @@ fun MainApp(
     val snackbarHostState = remember() { SnackbarHostState() }
 
     val scope = rememberCoroutineScope()
-//
+
 //    val anunciosVM: AnunciosVM =
 //        viewModel(factory = AnunciosVM.Factory)
 
@@ -138,7 +138,7 @@ fun MainApp(
                 it,
                 scope,
                 snackbarHostState,
-               // anunciosVM
+                //anunciosVM
             )
         }
     } else {
@@ -174,7 +174,7 @@ private fun NavHostRoutes(
     ) {
         composable(route = AppScreens.Home.name) {
             MainScreen()
-           // PruebaScreen(anunciosUiState = anunciosVM.anunciosUiState, retryAction = { anunciosVM::getAll2 })
+            //PruebaScreen(anunciosUiState = anunciosVM.anunciosUiState, retryAction = { anunciosVM::getAll2 })
 
         }
         composable(route = AppScreens.Chat.name) {

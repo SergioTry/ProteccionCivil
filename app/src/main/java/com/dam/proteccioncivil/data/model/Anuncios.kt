@@ -1,5 +1,6 @@
 package com.dam.proteccioncivil.data.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.datetime
@@ -13,7 +14,7 @@ object Anuncios : Table() {
 
 @Serializable
 data class Anuncio(
-    val CodAnuncio: Int,
-    val FechaPublicacion: String,
-    val Texto: String
+    @SerialName("CodAnuncio") val codAnuncio: Int,
+    @SerialName("FechaPublicacion") val fechaPublicacion: String,
+    @SerialName("Texto") val texto: String
 )
