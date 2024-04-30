@@ -92,6 +92,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
 
+    //Json
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     //implementation(libs.androidx.compose.material)
     //implementation(libs.places)

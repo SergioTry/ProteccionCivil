@@ -43,7 +43,7 @@ fun PruebaScreen(
         is AnunciosUiState.Success -> AnunciosPruebaScreen(
             anunciosUiState.anuncios, contentPadding = contentPadding, modifier = modifier.fillMaxWidth()
         )
-        is AnunciosUiState.Error -> ErrorScreen(retryAction, anunciosUiState.err, anunciosUiState.state,modifier = modifier.fillMaxSize())
+        is AnunciosUiState.Error -> ErrorScreen(retryAction, anunciosUiState.err, modifier = modifier.fillMaxSize())
     }
 }
 
@@ -74,7 +74,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ErrorScreen(retryAction: () -> Unit, err: String, status: Int,modifier: Modifier = Modifier) {
+fun ErrorScreen(retryAction: () -> Unit, err: String,modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
@@ -85,7 +85,6 @@ fun ErrorScreen(retryAction: () -> Unit, err: String, status: Int,modifier: Modi
         )
         Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
         Text(text = err, modifier = Modifier.padding(16.dp))
-        println(status)
         Button(onClick = retryAction) {
             Text(stringResource(R.string.retry))
         }

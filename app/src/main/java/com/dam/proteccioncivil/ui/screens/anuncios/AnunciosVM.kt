@@ -1,5 +1,6 @@
 package com.dam.proteccioncivil.ui.screens.anuncios
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -20,10 +21,11 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import retrofit2.HttpException
 import java.io.IOException
+import com.google.gson.JsonParser
 
 sealed interface AnunciosUiState {
     data class Success(val anuncios: List<Anuncio>) : AnunciosUiState
-    data class Error(val err: String, val state: Int) : AnunciosUiState
+    data class Error(val err: String) : AnunciosUiState
     object Loading : AnunciosUiState
 }
 
@@ -61,16 +63,24 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
             anunciosUiState = AnunciosUiState.Loading
             anunciosUiState = try {
                 AnunciosUiState.Success(anunciosRepository.getAnuncios())
-            } catch (e: ApiException) {
-                AnunciosUiState.Error(e.message!!, e.codigo)
             } catch (e: IOException) {
-                AnunciosUiState.Error("e1", 3)
+                AnunciosUiState.Error("e1")
             } catch (e: HttpException) {
-                println("HTTPEX: "+ e)
-                AnunciosUiState.Error("e2", 4)
+                val errorBody = e.response()?.errorBody()
+                val errorBodyString = errorBody?.string()
+                if (errorBodyString != null) {
+                    val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
+                    val error = jsonObject["body"]?.asString ?: ""
+                    Log.e("AnunciosVM (getAll2) ", errorBodyString)
+                    AnunciosUiState.Error(error)
+                } else {
+                    AnunciosUiState.Error("Error")
+                }
+
             }
         }
     }
+
 
     override fun getAllBy(fieldname: String, value: String): List<Anuncio> {
         TODO("Not yet implemented")

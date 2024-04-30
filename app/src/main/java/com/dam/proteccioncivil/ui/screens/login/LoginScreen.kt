@@ -5,17 +5,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,31 +39,41 @@ fun LoginScreen(version: String) {
                     .size(200.dp)
                     .align(Alignment.CenterHorizontally)
             )
-            Spacer(modifier = Modifier.size(20.dp))
+            Spacer(modifier = Modifier.size(28.dp))
             Text(
-                text = "¡Bienvenido!",
-                modifier = Modifier.padding(8.dp)
+                text = "Nombre de usuario",
+                modifier = Modifier.padding(top = 14.dp, start = 58.dp)
             )
-            TextField(
-                value = "Su identificador",
+            OutlinedTextField(
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = Color.LightGray,
+                    focusedBorderColor = Color.Blue,
+                    focusedLabelColor = Color.Blue,
+                    unfocusedLabelColor = Color.Blue
+                ),
+                label = {
+                    Text(
+                        text = "Username",
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                value = "",
                 onValueChange = {},
-                Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Text(
-                text = "¡Bienvenido!",
-                modifier = Modifier.padding(8.dp)
+                text = "Contraseña",
+                modifier = Modifier.padding(top = 14.dp, start = 58.dp, bottom = 8.dp)
             )
-            TextField(
+            OutlinedTextField(
                 value = "Su clave", onValueChange = {},
-                Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Text(
                 text = "¡Bienvenido!",
-                modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .align(Alignment.CenterHorizontally)
             )
         }
         Column(

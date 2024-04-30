@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">ProteccionCivil</string>
+    <string name="db_name">ProteccionCivilDS</string>
+
+<!--    Preferencias-->
+    <string name="value_pref_token">""</string>
+    <string name="value_pref_defaultsplashtime">1</string>
 
     <!--Nombres de pantallas-->
     <string name="screen_name_calendar">Calendario</string>

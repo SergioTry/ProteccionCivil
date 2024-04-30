@@ -3,6 +3,7 @@ package com.dam.proteccioncivil.ui.main
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.res.Configuration
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -50,6 +51,8 @@ import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.pantallas.chat.PantallaMensajes
 import com.dam.proteccioncivil.pantallas.home.MainScreen
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
+import com.dam.proteccioncivil.ui.screens.login.LoginVM
+import com.dam.proteccioncivil.ui.screens.login.tokenRecibido
 import com.dam.proteccioncivil.ui.theme.ProteccionCivilTheme
 import kotlinx.coroutines.CoroutineScope
 import java.sql.Connection
@@ -92,9 +95,12 @@ fun MainApp(
     val snackbarHostState = remember() { SnackbarHostState() }
 
     val scope = rememberCoroutineScope()
-
+//
 //    val anunciosVM: AnunciosVM =
 //        viewModel(factory = AnunciosVM.Factory)
+//
+//    val loginVM: LoginVM =
+//        viewModel(factory = LoginVM.Factory)
 
     val menuOptions = mapOf(
         Icons.Default.Home to stringResource(R.string.screen_name_home),
@@ -138,7 +144,7 @@ fun MainApp(
                 it,
                 scope,
                 snackbarHostState,
-                //anunciosVM
+               // anunciosVM
             )
         }
     } else {
