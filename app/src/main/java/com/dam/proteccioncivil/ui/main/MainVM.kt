@@ -4,7 +4,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.dam.proteccioncivil.MainApplication
 
 import com.dam.proteccioncivil.data.repository.MainRepository
 import kotlinx.coroutines.async
@@ -19,6 +23,11 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
         private set
     var uiPrefState by mutableStateOf(PrefState())
         private set
+
+    var tokenTemporal: String = ""
+        set(value) {
+            field = value
+        }
     suspend fun getPreferences() {
         viewModelScope.async {
             mainRepository.getPreferences().take(1).collect {
@@ -46,6 +55,29 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
             }
         } catch (e: Exception) {
             uiInfoState = MainInfoState.Error
+        }
+    }
+
+    fun setToken(token: String) {
+        uiPrefState = uiPrefState.copy(
+            token = token
+        )
+    }
+
+    fun resetToken() {
+        uiPrefState = uiPrefState.copy(
+            token = ""
+        )
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application =
+                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MainApplication)
+                val mainRepository = application.container.mainRepository
+                MainVM(mainRepository = mainRepository)
+            }
         }
     }
 }

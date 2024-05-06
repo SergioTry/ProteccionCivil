@@ -20,7 +20,6 @@ interface AppContainer {
     val loginRepository: LoginRepository
     val anunciosRepository: AnunciosRepository
 }
-
 class DefaultAppContainer(
     private val context: Context
 ) : AppContainer {

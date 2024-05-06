@@ -4,7 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
@@ -19,15 +20,15 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -53,6 +54,7 @@ fun MainScreen() {
             )
         }
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

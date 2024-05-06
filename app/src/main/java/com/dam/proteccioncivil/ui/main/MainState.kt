@@ -8,12 +8,6 @@ data class MainState(
     val showPreferences: Boolean = false
 )
 
-data class LoginState(
-    val username: String = "",
-    val password: String = "",
-    val datosObligatorios: Boolean = false
-)
-
 data class PrefState(
     val token: String = "",
     val defaultTimeSplash: String = "1"

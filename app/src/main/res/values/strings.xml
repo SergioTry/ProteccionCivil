@@ -27,4 +27,8 @@
     <string name="loading">Cargando</string>
     <string name="loading_failed">Error al cargar los datos</string>
 
+
+    <string name="lbl_password">Contraseña</string>
+    <string name="lbl_username">Usuario</string>
+    <string name="username">Nombre de usuario</string>
 </resources>

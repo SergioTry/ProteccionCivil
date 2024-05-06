@@ -10,44 +10,40 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dam.proteccioncivil.MainApplication
-import com.dam.proteccioncivil.data.model.Anuncio
 import com.dam.proteccioncivil.data.repository.LoginRepository
-import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosUiState
-import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
+import com.dam.proteccioncivil.ui.main.MainVM
 import com.google.gson.JsonParser
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-sealed interface LoginUiState {
-    object Success : LoginUiState
-    data class Error(val err: String): LoginUiState
-    object Loading : LoginUiState
-}
-var tokenRecibido: String = ""
 
-class LoginVM(private val loginRepository: LoginRepository) : ViewModel() {
-    var loginUiState: LoginUiState by mutableStateOf(LoginUiState.Loading)
+class LoginVM(
+    private val loginRepository: LoginRepository
+) : ViewModel() {
+    var uiInfoState: LoginUiState by mutableStateOf(LoginUiState.Loading)
         private set
 
-    init{
-        login()
-    }
+    var uiLoginState by mutableStateOf(LoginState())
+        private set
 
-    fun login() {
+    // Ese método recibirá el mainVM en caso de que
+    // el usuario quiera activar el autoinicio de sesión.
+    fun login(mainVM: MainVM, saveToken: Boolean = false) {
         viewModelScope.launch {
-            loginUiState = LoginUiState.Loading
-            loginUiState = try {
+            uiInfoState = LoginUiState.Loading
+            uiInfoState = try {
                 val credentials = mapOf(
-                    "Username" to "Juan",
-                    "Password" to "admin2"
+                    "Username" to uiLoginState.username,
+                    "Password" to uiLoginState.password
                 )
-                tokenRecibido = loginRepository.login(credentials)
+                val tokenRecibido = loginRepository.login(credentials)
                 if (!tokenRecibido.equals("")) {
-                    Log.e("Token: ",tokenRecibido)
+                    Log.d("Token: ", tokenRecibido)
+                    guardarToken(mainVM, tokenRecibido, saveToken)
                     LoginUiState.Success
                 } else {
-                    Log.e("Token: ","token no recibido")
+                    Log.e("Token: ", "token no recibido")
                     LoginUiState.Error("Vuelva a intentarlo")
                 }
             } catch (e: IOException) {
@@ -63,15 +59,52 @@ class LoginVM(private val loginRepository: LoginRepository) : ViewModel() {
                 } else {
                     LoginUiState.Error("Error")
                 }
-
             }
         }
+    }
+
+    private fun guardarToken(mainVM: MainVM, token: String, saveToken: Boolean) {
+        mainVM.tokenTemporal = token;
+        if (saveToken) {
+            mainVM.setToken(token)
+            mainVM.savePreferences()
+        } else {
+            mainVM.resetToken()
+            mainVM.savePreferences()
+        }
+    }
+
+    fun setUsername(username: String) {
+        uiLoginState = uiLoginState.copy(
+            username = username,
+            datosObligatorios = (uiLoginState.password.isNotBlank() && uiLoginState.password.isNotEmpty())
+        )
+    }
+
+    fun setPassword(password: String) {
+        uiLoginState = uiLoginState.copy(
+            password = password,
+            datosObligatorios = (uiLoginState.username.isNotBlank() && uiLoginState.username.isNotEmpty())
+        )
+    }
+
+    fun resetLogin() {
+        uiLoginState = uiLoginState.copy(
+            username = "",
+            password = "",
+            datosObligatorios = false
+        )
+    }
+
+    fun resetInfoState() {
+        uiInfoState = LoginUiState.Loading
     }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MainApplication)
+                val application =
+                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MainApplication)
                 val loginRepository = application.container.loginRepository
                 LoginVM(loginRepository = loginRepository)
             }

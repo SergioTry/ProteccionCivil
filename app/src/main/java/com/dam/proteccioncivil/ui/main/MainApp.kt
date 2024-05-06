@@ -3,18 +3,17 @@ package com.dam.proteccioncivil.ui.main
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.res.Configuration
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -51,20 +50,12 @@ import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.pantallas.chat.PantallaMensajes
 import com.dam.proteccioncivil.pantallas.home.MainScreen
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
+import com.dam.proteccioncivil.ui.screens.login.LoginScreen
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
-import com.dam.proteccioncivil.ui.screens.login.tokenRecibido
+import com.dam.proteccioncivil.ui.screens.splash.SplashScreen
 import com.dam.proteccioncivil.ui.theme.ProteccionCivilTheme
 import kotlinx.coroutines.CoroutineScope
 import java.sql.Connection
-
-
-//class Anuncio(id: EntityID<Int>) : IntEntity(id) {
-//    companion object : IntEntityClass<Anuncio>()
-//    var sequelId by StarWarsFilms.sequelId
-//    var name     by StarWarsFilms.name
-//    var director by StarWarsFilms.director
-//}
-
 
 enum class AppScreens(@StringRes val title: Int) {
     Splash(title = R.string.screen_name_splash),
@@ -95,19 +86,22 @@ fun MainApp(
     val snackbarHostState = remember() { SnackbarHostState() }
 
     val scope = rememberCoroutineScope()
-//
-//    val anunciosVM: AnunciosVM =
-//        viewModel(factory = AnunciosVM.Factory)
-//
-//    val loginVM: LoginVM =
-//        viewModel(factory = LoginVM.Factory)
+
+    val loginVM: LoginVM =
+        viewModel(factory = LoginVM.Factory)
+
+    val anunciosVM: AnunciosVM =
+        viewModel(factory = AnunciosVM.Factory)
+
+    val mainVM: MainVM =
+        viewModel(factory = MainVM.Factory)
 
     val menuOptions = mapOf(
         Icons.Default.Home to stringResource(R.string.screen_name_home),
-        Icons.Default.Person to stringResource(R.string.screen_name_calendar),
-        Icons.Default.AccountBox to stringResource(R.string.screen_name_news),
-        Icons.Default.Notifications to stringResource(R.string.screen_name_chat),
-        Icons.Default.Build to stringResource(R.string.screen_name_vehicles),
+        Icons.Default.CalendarMonth to stringResource(R.string.screen_name_calendar),
+        Icons.Default.Notifications to stringResource(R.string.screen_name_news),
+        Icons.AutoMirrored.Filled.Chat to stringResource(R.string.screen_name_chat),
+        Icons.Default.DirectionsCar to stringResource(R.string.screen_name_vehicles),
     )
 
 
@@ -119,23 +113,27 @@ fun MainApp(
         Scaffold(
             modifier = modifier,
             topBar = {
-                MainTopAppBar(
-                    scope = scope,
-                    isLandscape = false,
-                    currentScreen = currentScreen,
-                    canNavigateBack = false,
-                    showLoginScreen = { navController.navigate(AppScreens.Login.name) },
-                    showPrefScreen = { navController.navigate(AppScreens.Preferences.name) },
-                    navigateUp = {
-                        //backButtonNavigation(currentScreen, navController)
-                    }
-                )
+                if (currentScreen != AppScreens.Splash) {
+                    MainTopAppBar(
+                        scope = scope,
+                        isLandscape = false,
+                        currentScreen = currentScreen,
+                        canNavigateBack = false,
+                        showLoginScreen = { navController.navigate(AppScreens.Login.name) },
+                        showPrefScreen = { navController.navigate(AppScreens.Preferences.name) },
+                        navigateUp = {
+                            //backButtonNavigation(currentScreen, navController)
+                        }
+                    )
+                }
             },
             bottomBar = {
-                MainBottomBar(
-                    menuOptions = menuOptions,
-                    navController = navController
-                )
+                if (currentScreen != AppScreens.Splash && currentScreen != AppScreens.Login) {
+                    MainBottomBar(
+                        menuOptions = menuOptions,
+                        navController = navController
+                    )
+                }
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         ) {
@@ -144,7 +142,9 @@ fun MainApp(
                 it,
                 scope,
                 snackbarHostState,
-               // anunciosVM
+                anunciosVM,
+                mainVM,
+                loginVM,
             )
         }
     } else {
@@ -171,17 +171,39 @@ private fun NavHostRoutes(
     it: PaddingValues,
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
-    //anunciosVM: AnunciosVM
+    anunciosVM: AnunciosVM,
+    mainVM: MainVM,
+    loginVM: LoginVM
 ) {
     NavHost(
         navController = navController,
-        startDestination = AppScreens.Home.name,
+        startDestination = AppScreens.Splash.name,
         modifier = Modifier.padding(it)
     ) {
+        composable(route = AppScreens.Splash.name) {
+            SplashScreen(mainVM, {
+                if (it) {
+                    navController.navigate(AppScreens.Login.name)
+                } else {
+                    navController.navigate(AppScreens.Home.name)
+                }
+            }, "0.0.0")
+        }
         composable(route = AppScreens.Home.name) {
+            PruebaScreen(
+                anunciosUiState = anunciosVM.anunciosUiState,
+                retryAction = { anunciosVM::getAll2 })
+        }
+        composable(route = AppScreens.Login.name) {
+            LoginScreen(
+                version = "0.0.0", mainVM = mainVM, loginVM = loginVM, onNavUp = {
+                    navController.navigate(AppScreens.Home.name)
+                },
+                savedToken = mainVM.uiPrefState.token.isNotBlank() && mainVM.uiPrefState.token.isNotEmpty()
+            )
+        }
+        composable(route = AppScreens.Calendar.name) {
             MainScreen()
-            //PruebaScreen(anunciosUiState = anunciosVM.anunciosUiState, retryAction = { anunciosVM::getAll2 })
-
         }
         composable(route = AppScreens.Chat.name) {
             PantallaMensajes()
@@ -222,11 +244,11 @@ private fun selectOption(
             AppScreens.Home.name
         )
 
-        Icons.Default.Person.name -> navController.navigate(
+        Icons.Default.CalendarMonth.name -> navController.navigate(
             AppScreens.Calendar.name
         )
 
-        Icons.Default.AccountBox.name -> {
+        Icons.Default.Notifications.name -> {
 //            aulasVM.cargarAulas()
 //            aulasVM.resetInfoState()
             navController.navigate(
@@ -234,7 +256,7 @@ private fun selectOption(
             )
         }
 
-        Icons.Default.Notifications.name -> navController.navigate(
+        Icons.AutoMirrored.Filled.Chat.name -> navController.navigate(
             AppScreens.Chat.name
         )
 
