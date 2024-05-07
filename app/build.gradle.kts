@@ -33,9 +33,6 @@ android {
         }
     }
     compileOptions {
-        // Requerido para usar una API no oficial
-        isCoreLibraryDesugaringEnabled = true
-
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -66,21 +63,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    //ORM Exposed
-    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-    //Android studio no admite el driver de jdbc superior a la versión 5
-    implementation("mysql:mysql-connector-java:5.1.49")
-    implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-money:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-core:0.49.0")
-    implementation("org.jetbrains.exposed:exposed-java-time:0.49.0")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.49.0")
-
-
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.compose.material:material-icons-extended:1.6.6")
@@ -98,10 +80,6 @@ dependencies {
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
-    //implementation(libs.androidx.compose.material)
-    //implementation(libs.places)
-    // Requerido para usar una API no oficial
-    coreLibraryDesugaring(libs.desugar.jdk.libs)
     // Libreria del calendario
     implementation("com.kizitonwose.calendar:compose:2.5.0")
 

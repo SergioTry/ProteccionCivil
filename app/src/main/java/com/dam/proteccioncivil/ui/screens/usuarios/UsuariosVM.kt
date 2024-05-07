@@ -3,7 +3,6 @@ package com.dam.proteccioncivil.ui.screens.usuarios
 import androidx.lifecycle.ViewModel
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Usuario
-import com.dam.proteccioncivil.data.model.Usuarios
 
 class UsuariosVM: CRUD<Usuario>, ViewModel() {
     override fun getAll(): List<Usuario> {

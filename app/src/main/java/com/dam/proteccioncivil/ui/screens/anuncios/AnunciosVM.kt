@@ -12,16 +12,12 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.Anuncio
-import com.dam.proteccioncivil.data.model.Anuncios
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.repository.AnunciosRepository
-import com.dam.proteccioncivil.data.repository.ApiException
+import com.google.gson.JsonParser
 import kotlinx.coroutines.launch
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
 import retrofit2.HttpException
 import java.io.IOException
-import com.google.gson.JsonParser
 
 sealed interface AnunciosUiState {
     data class Success(val anuncios: List<Anuncio>) : AnunciosUiState
@@ -36,22 +32,6 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
 
     init {
         getAll2()
-    }
-
-    //val listaAnuncios
-    fun printAnuncios() {
-        transaction {
-            Anuncios.selectAll().forEach {
-                println(it[Anuncios.Texto])
-            }
-
-//            Anuncios.insert {
-//                it[FechaPublicacion] = LocalDateTime.now()
-//                it[Texto] = "Prueba"
-//
-//            }
-            //Anuncios.deleteWhere { Anuncios.Texto eq "Prueba" }
-        }
     }
 
     override fun getAll(): List<Anuncio> {

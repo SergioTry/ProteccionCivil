@@ -3,7 +3,6 @@ package com.dam.proteccioncivil.ui.screens.guardia
 import androidx.lifecycle.ViewModel
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Guardia
-import com.dam.proteccioncivil.data.model.Guardias
 
 class GuardiasVM : CRUD<Guardia>, ViewModel() {
     override fun getAll(): List<Guardia> {
