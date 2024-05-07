@@ -3,6 +3,7 @@ package com.dam.proteccioncivil
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -12,10 +13,13 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dam.proteccioncivil.ui.main.MainApp
+import com.dam.proteccioncivil.ui.main.MainVM
 import com.dam.proteccioncivil.ui.theme.ProteccionCivilTheme
 
 class MainActivity : ComponentActivity() {
+    private var mainVM: MainVM? = null
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,11 +31,16 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val windowSize = calculateWindowSizeClass(this)
-                    //val mainVM: MainVM = viewModel(factory = MainVM.Factory)
-                    MainApp(windowSize.widthSizeClass)
+                    this.mainVM = viewModel(factory = MainVM.Factory)
+                    MainApp(mainVM!!, windowSize.widthSizeClass)
                 }
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mainVM?.savePreferences()
     }
 }
 

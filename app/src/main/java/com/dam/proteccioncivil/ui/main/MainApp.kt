@@ -52,6 +52,7 @@ import com.dam.proteccioncivil.pantallas.home.MainScreen
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
 import com.dam.proteccioncivil.ui.screens.login.LoginScreen
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
+import com.dam.proteccioncivil.ui.screens.preferencias.PrefScreen
 import com.dam.proteccioncivil.ui.screens.splash.SplashScreen
 import com.dam.proteccioncivil.ui.theme.ProteccionCivilTheme
 import kotlinx.coroutines.CoroutineScope
@@ -74,6 +75,7 @@ enum class AppScreens(@StringRes val title: Int) {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainApp(
+    mainVM: MainVM,
     windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
@@ -93,9 +95,6 @@ fun MainApp(
     val anunciosVM: AnunciosVM =
         viewModel(factory = AnunciosVM.Factory)
 
-    val mainVM: MainVM =
-        viewModel(factory = MainVM.Factory)
-
     val menuOptions = mapOf(
         Icons.Default.Home to stringResource(R.string.screen_name_home),
         Icons.Default.CalendarMonth to stringResource(R.string.screen_name_calendar),
@@ -103,9 +102,6 @@ fun MainApp(
         Icons.AutoMirrored.Filled.Chat to stringResource(R.string.screen_name_chat),
         Icons.Default.DirectionsCar to stringResource(R.string.screen_name_vehicles),
     )
-
-
-    var connection: Connection;
 
     if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT
         && windowSize == WindowWidthSizeClass.Compact
@@ -118,11 +114,11 @@ fun MainApp(
                         scope = scope,
                         isLandscape = false,
                         currentScreen = currentScreen,
-                        canNavigateBack = false,
+                        canNavigateBack = (currentScreen.name != AppScreens.Splash.name),
                         showLoginScreen = { navController.navigate(AppScreens.Login.name) },
                         showPrefScreen = { navController.navigate(AppScreens.Preferences.name) },
                         navigateUp = {
-                            //backButtonNavigation(currentScreen, navController)
+                            backButtonNavigation(currentScreen, navController)
                         }
                     )
                 }
@@ -202,6 +198,14 @@ private fun NavHostRoutes(
                 savedToken = mainVM.uiPrefState.token.isNotBlank() && mainVM.uiPrefState.token.isNotEmpty()
             )
         }
+        composable(route = AppScreens.Preferences.name) {
+            PrefScreen(
+                mainVM = mainVM,
+                onNavUp = {
+                    navController.navigate(AppScreens.Home.name)
+                }
+            )
+        }
         composable(route = AppScreens.Calendar.name) {
             MainScreen()
         }
@@ -267,6 +271,20 @@ private fun selectOption(
 //            incsVM.resetInfoState()
             navController.navigate(AppScreens.Vehicles.name)
         }
+    }
+}
+
+private fun backButtonNavigation(
+    currentScreen: AppScreens,
+    navController: NavHostController
+) {
+    //TODO
+    when (currentScreen.name) {
+        "DptosBus", "AulasBus", "IncsBus" -> navController.navigate(
+            AppScreens.Home.name
+        )
+
+        else -> navController.navigateUp()
     }
 }
 
@@ -367,12 +385,4 @@ fun MainTopAppBar(
 
         }
     )
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun MainAppPreview() {
-    ProteccionCivilTheme {
-        MainApp(WindowWidthSizeClass.Compact)
-    }
 }
