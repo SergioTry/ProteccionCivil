@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dam.proteccioncivil.MainApplication
+import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.repository.LoginRepository
 import com.dam.proteccioncivil.ui.main.MainVM
 import com.google.gson.JsonParser
@@ -64,7 +65,7 @@ class LoginVM(
     }
 
     private fun guardarToken(mainVM: MainVM, token: String, saveToken: Boolean) {
-        mainVM.tokenTemporal = token;
+        mainVM.decodificarToken(token)
         if (saveToken) {
             mainVM.setToken(token)
             mainVM.savePreferences()

@@ -127,7 +127,8 @@ fun MainApp(
                 if (currentScreen != AppScreens.Splash && currentScreen != AppScreens.Login) {
                     MainBottomBar(
                         menuOptions = menuOptions,
-                        navController = navController
+                        navController = navController,
+                        anunciosVM = anunciosVM
                     )
                 }
             },
@@ -143,10 +144,7 @@ fun MainApp(
                 loginVM,
             )
         }
-    } else {
-        //ModalNavigationDrawer?
     }
-
 }
 
 
@@ -193,7 +191,7 @@ private fun NavHostRoutes(
         composable(route = AppScreens.Login.name) {
             LoginScreen(
                 version = "0.0.0", mainVM = mainVM, loginVM = loginVM, onNavUp = {
-                    navController.navigate(AppScreens.Home.name)
+                    selectOption(Icons.Default.Home,navController,anunciosVM)
                 },
                 savedToken = mainVM.uiPrefState.token.isNotBlank() && mainVM.uiPrefState.token.isNotEmpty()
             )
@@ -219,6 +217,7 @@ private fun NavHostRoutes(
 fun MainBottomBar(
     menuOptions: Map<ImageVector, String>,
     navController: NavHostController,
+    anunciosVM: AnunciosVM,
     modifier: Modifier = Modifier
 ) {
     NavigationBar {
@@ -230,7 +229,8 @@ fun MainBottomBar(
                 onClick = {
                     selectOption(
                         clave = clave,
-                        navController = navController
+                        navController = navController,
+                        anunciosVM = anunciosVM
                     )
                 },
                 enabled = true
@@ -241,12 +241,16 @@ fun MainBottomBar(
 
 private fun selectOption(
     clave: ImageVector,
-    navController: NavHostController
+    navController: NavHostController,
+    anunciosVM: AnunciosVM
 ) {
     when (clave.name) {
-        Icons.Default.Home.name -> navController.navigate(
-            AppScreens.Home.name
-        )
+        Icons.Default.Home.name -> {
+            anunciosVM.getAll2()
+            navController.navigate(
+                AppScreens.Home.name
+            )
+        }
 
         Icons.Default.CalendarMonth.name -> navController.navigate(
             AppScreens.Calendar.name

@@ -53,7 +53,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -76,6 +75,9 @@ dependencies {
 
     //Json
     implementation("com.google.code.gson:gson:2.10.1")
+
+    //Decodificador del payload del JsonWebToken
+    implementation("org.bitbucket.b_c:jose4j:0.7.9")
 
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")

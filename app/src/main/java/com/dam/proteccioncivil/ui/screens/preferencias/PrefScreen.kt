@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.ui.main.MainVM
 
 
@@ -55,7 +56,7 @@ fun PrefScreen(
                     if (mainVM.uiPrefState.token.isNotEmpty() && mainVM.uiPrefState.token.isNotBlank()) {
                         mainVM.resetToken()
                     } else {
-                        mainVM.setToken(mainVM.tokenTemporal)
+                        mainVM.setToken(Token.token!!)
                     }
                 },
                 colors = SwitchDefaults.colors(

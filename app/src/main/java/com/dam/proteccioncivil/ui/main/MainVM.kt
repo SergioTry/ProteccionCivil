@@ -9,12 +9,18 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dam.proteccioncivil.MainApplication
-
+import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.repository.MainRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import org.jose4j.jwt.JwtClaims
+import org.jose4j.jwt.consumer.JwtConsumerBuilder
 import java.io.IOException
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class MainVM(private val mainRepository: MainRepository) : ViewModel() {
     var uiMainState by mutableStateOf(MainState())
@@ -24,10 +30,6 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
     var uiPrefState by mutableStateOf(PrefState())
         private set
 
-    var tokenTemporal: String = ""
-        set(value) {
-            field = value
-        }
     suspend fun getPreferences() {
         viewModelScope.async {
             mainRepository.getPreferences().take(1).collect {
@@ -38,6 +40,10 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
                 uiMainState = uiMainState.copy(
                     token = uiPrefState.token
                 )
+                if (uiPrefState.token != "") {
+                    decodificarToken(uiPrefState.token)
+                }
+
             }
         }.await()
     }
@@ -68,6 +74,32 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
         uiPrefState = uiPrefState.copy(
             token = ""
         )
+    }
+
+    fun decodificarToken(token: String) {
+        val jwtClaims = decodeJWT(token)
+        Token.token = token
+        Token.username = jwtClaims.getClaimValue("Username").toString()
+        Token.fechaNacimiento =
+            parsearFecha(jwtClaims.getClaimValue("FechaNacimiento").toString())
+        Token.rango = jwtClaims.getClaimValue("Rango").toString()
+        Token.conductor = jwtClaims.getClaimValue("Conductor").toString().toInt()
+    }
+
+
+    private fun decodeJWT(jwt: String): JwtClaims {
+        val jwtConsumer = JwtConsumerBuilder()
+            .setSkipAllValidators()
+            .setDisableRequireSignature()
+            .setSkipSignatureVerification()
+            .build()
+
+        return jwtConsumer.processToClaims(jwt)
+    }
+
+    private fun parsearFecha(fecha: String): LocalDateTime {
+        val instant = Instant.parse(fecha)
+        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
     }
 
     companion object {

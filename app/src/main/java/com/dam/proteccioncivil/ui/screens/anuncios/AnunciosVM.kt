@@ -30,9 +30,6 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
     var anunciosUiState: AnunciosUiState by mutableStateOf(AnunciosUiState.Loading)
         private set
 
-    init {
-        getAll2()
-    }
 
     override fun getAll(): List<Anuncio> {
         TODO("Not yet implemented")
@@ -42,7 +39,8 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
         viewModelScope.launch {
             anunciosUiState = AnunciosUiState.Loading
             anunciosUiState = try {
-                AnunciosUiState.Success(anunciosRepository.getAnuncios())
+                val anuncios = anunciosRepository.getAnuncios()
+                AnunciosUiState.Success(anuncios)
             } catch (e: IOException) {
                 AnunciosUiState.Error("e1")
             } catch (e: HttpException) {
@@ -56,7 +54,6 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
                 } else {
                     AnunciosUiState.Error("Error")
                 }
-
             }
         }
     }
