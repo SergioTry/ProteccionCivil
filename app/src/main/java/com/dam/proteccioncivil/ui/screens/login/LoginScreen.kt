@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -77,11 +78,7 @@ fun LoginScreen(
                     .size(200.dp)
                     .align(Alignment.CenterHorizontally)
             )
-            Spacer(modifier = Modifier.size(12.dp))
-            Text(
-                text = stringResource(R.string.username),
-                modifier = Modifier.padding(top = 14.dp, start = 58.dp)
-            )
+            Spacer(modifier = Modifier.height(24.dp))
             OutlinedTextField(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Color.LightGray,
@@ -104,10 +101,6 @@ fun LoginScreen(
                 onValueChange = { loginVM.setUsername(it) },
                 isError = !uiLoginState.datosObligatorios,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            Text(
-                text = stringResource(R.string.lbl_password),
-                modifier = Modifier.padding(top = 8.dp, start = 58.dp)
             )
             OutlinedTextField(colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = Color.LightGray,
