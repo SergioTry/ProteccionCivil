@@ -46,6 +46,7 @@ class DefaultAppContainer(
     override val anunciosRepository: AnunciosRepository by lazy {
         NetworkAnunciosRepository(retrofitAnunciosService)
     }
+
     override val loginRepository: LoginRepository by lazy {
         NetworkLoginRepository(retrofitLoginService)
     }

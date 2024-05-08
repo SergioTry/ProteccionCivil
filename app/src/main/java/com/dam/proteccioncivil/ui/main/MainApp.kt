@@ -39,7 +39,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -48,15 +47,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.pantallas.chat.PantallaMensajes
-import com.dam.proteccioncivil.pantallas.home.MainScreen
+import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosScreen
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
 import com.dam.proteccioncivil.ui.screens.login.LoginScreen
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
 import com.dam.proteccioncivil.ui.screens.preferencias.PrefScreen
 import com.dam.proteccioncivil.ui.screens.splash.SplashScreen
-import com.dam.proteccioncivil.ui.theme.ProteccionCivilTheme
 import kotlinx.coroutines.CoroutineScope
-import java.sql.Connection
 
 enum class AppScreens(@StringRes val title: Int) {
     Splash(title = R.string.screen_name_splash),
@@ -191,7 +188,7 @@ private fun NavHostRoutes(
         composable(route = AppScreens.Login.name) {
             LoginScreen(
                 version = "0.0.0", mainVM = mainVM, loginVM = loginVM, onNavUp = {
-                    selectOption(Icons.Default.Home,navController,anunciosVM)
+                    selectOption(Icons.Default.Home, navController, anunciosVM)
                 },
                 savedToken = mainVM.uiPrefState.token.isNotBlank() && mainVM.uiPrefState.token.isNotEmpty()
             )
@@ -205,7 +202,10 @@ private fun NavHostRoutes(
             )
         }
         composable(route = AppScreens.Calendar.name) {
-            MainScreen()
+            AnunciosScreen(
+                anunciosUiState = anunciosVM.anunciosUiState,
+                anunciosVM = anunciosVM,
+                retryAction = { anunciosVM::getAll2 })
         }
         composable(route = AppScreens.Chat.name) {
             PantallaMensajes()
@@ -246,15 +246,18 @@ private fun selectOption(
 ) {
     when (clave.name) {
         Icons.Default.Home.name -> {
-            anunciosVM.getAll2()
+
             navController.navigate(
                 AppScreens.Home.name
             )
         }
 
-        Icons.Default.CalendarMonth.name -> navController.navigate(
-            AppScreens.Calendar.name
-        )
+        Icons.Default.CalendarMonth.name -> {
+            anunciosVM.getAll2()
+            navController.navigate(
+                AppScreens.Calendar.name
+            )
+        }
 
         Icons.Default.Notifications.name -> {
 //            aulasVM.cargarAulas()
