@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -54,6 +55,7 @@ import com.dam.proteccioncivil.ui.screens.login.LoginVM
 import com.dam.proteccioncivil.ui.screens.preferencias.PrefScreen
 import com.dam.proteccioncivil.ui.screens.splash.SplashScreen
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 enum class AppScreens(@StringRes val title: Int) {
     Splash(title = R.string.screen_name_splash),
@@ -65,6 +67,8 @@ enum class AppScreens(@StringRes val title: Int) {
     NewsMto(title = R.string.screen_name_news_mto),
     Vehicles(title = R.string.screen_name_vehicles),
     VehiclesMto(title = R.string.screen_name_vehicles_mto),
+    Anuncios(title = R.string.screen_name_announces),
+    AnunciosMto(title = R.string.screen_name_announces_mto),
     Chat(title = R.string.screen_name_chat),
     PreventivosMto(title = R.string.screen_name_preventidos_mto)
 }
@@ -114,6 +118,10 @@ fun MainApp(
                         canNavigateBack = (currentScreen.name != AppScreens.Splash.name),
                         showLoginScreen = { navController.navigate(AppScreens.Login.name) },
                         showPrefScreen = { navController.navigate(AppScreens.Preferences.name) },
+                        showAnoScreen = {
+                            anunciosVM.getAll()
+                            navController.navigate(AppScreens.Anuncios.name)
+                        },
                         navigateUp = {
                             backButtonNavigation(currentScreen, navController)
                         }
@@ -183,7 +191,7 @@ private fun NavHostRoutes(
         composable(route = AppScreens.Home.name) {
             PruebaScreen(
                 anunciosUiState = anunciosVM.anunciosUiState,
-                retryAction = { anunciosVM::getAll2 })
+                retryAction = { anunciosVM::getAll })
         }
         composable(route = AppScreens.Login.name) {
             LoginScreen(
@@ -202,10 +210,15 @@ private fun NavHostRoutes(
             )
         }
         composable(route = AppScreens.Calendar.name) {
+        }
+
+        composable(route = AppScreens.Anuncios.name) {
             AnunciosScreen(
                 anunciosUiState = anunciosVM.anunciosUiState,
                 anunciosVM = anunciosVM,
-                retryAction = { anunciosVM::getAll2 })
+                retryAction = { anunciosVM::getAll },
+                onNavUp = { if (it) navController.navigate(AppScreens.Anuncios.name) else navController.navigate(AppScreens.Home.name)},
+                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
         }
         composable(route = AppScreens.Chat.name) {
             PantallaMensajes()
@@ -253,7 +266,7 @@ private fun selectOption(
         }
 
         Icons.Default.CalendarMonth.name -> {
-            anunciosVM.getAll2()
+            anunciosVM.getAll()
             navController.navigate(
                 AppScreens.Calendar.name
             )
@@ -304,6 +317,7 @@ fun MainTopAppBar(
     canNavigateBack: Boolean,
     showLoginScreen: () -> Unit,
     showPrefScreen: () -> Unit,
+    showAnoScreen: () -> Unit,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -319,7 +333,10 @@ fun MainTopAppBar(
         modifier = modifier,
         navigationIcon = {
             if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
+                IconButton(
+                    onClick =
+                    navigateUp
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = null
@@ -333,28 +350,32 @@ fun MainTopAppBar(
         },
         actions = {
             if (currentScreen.name.equals(AppScreens.Home.name)) {
-                IconButton(onClick = { showMenu = !showMenu }) {
-                    Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
-                }
-                DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                Row() {
+                    IconButton(onClick = { showAnoScreen() }) {
+                        Icon(imageVector = Icons.Default.Notifications, contentDescription = null)
+                    }
+                    IconButton(onClick = { showMenu = !showMenu }) {
+                        Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
+                    }
+                    DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
 
-                    DropdownMenuItem(text = { Text(text = stringResource(R.string.screen_name_login)) },
-                        onClick = {
-                            showLoginScreen()
-                            showMenu = false
-                        })
+                        DropdownMenuItem(text = { Text(text = stringResource(R.string.screen_name_login)) },
+                            onClick = {
+                                showLoginScreen()
+                                showMenu = false
+                            })
 
-                    DropdownMenuItem(text = { Text(text = stringResource(R.string.screen_name_preferences)) },
-                        onClick = {
-                            showPrefScreen()
-                            showMenu = false
-                        })
+                        DropdownMenuItem(text = { Text(text = stringResource(R.string.screen_name_preferences)) },
+                            onClick = {
+                                showPrefScreen()
+                                showMenu = false
+                            })
 
-                    DropdownMenuItem(text = { Text(text = stringResource(R.string.menu_salir)) },
-                        onClick = {
-                            //mainVM.setShowDlgSalir(true)
-                        })
-                }
+                        DropdownMenuItem(text = { Text(text = stringResource(R.string.menu_salir)) },
+                            onClick = {
+                                //mainVM.setShowDlgSalir(true)
+                            })
+                    }
 //                if (mainVM.uiMainState.showDlgSalir) {
 //                    showMenu = false
 //                    DlgConfirmacion(
@@ -365,6 +386,7 @@ fun MainTopAppBar(
 //                            activity?.finish()
 //                        })
 //                }
+                }
             } else {
 //                when (currentScreen.name) {
 //                    "AulasBus" -> {

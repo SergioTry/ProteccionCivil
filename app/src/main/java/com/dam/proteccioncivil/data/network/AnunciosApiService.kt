@@ -6,6 +6,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface AnunciosApiService {
@@ -20,6 +21,13 @@ interface AnunciosApiService {
     suspend fun deleteAnuncio(
         @Header("Authorization") authToken: String,
         @Path("codAnuncio") id: Int
+    )
+
+    @PUT("anuncios/{codAnuncio}")
+    suspend fun updateAnuncio(
+        @Header("Authorization") authToken: String,
+        @Path("codAnuncio") id: Int,
+        @Body body: Map<String, String>
     )
 
 }

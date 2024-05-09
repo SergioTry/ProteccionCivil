@@ -31,4 +31,6 @@
     <string name="lbl_password">Contraseña</string>
     <string name="lbl_username">Usuario</string>
     <string name="username">Nombre de usuario</string>
+    <string name="screen_name_announces">Anuncios</string>
+    <string name="screen_name_announces_mto">Anuncios Mto\n</string>
 </resources>

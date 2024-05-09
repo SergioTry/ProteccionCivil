@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.Anuncio
 import com.dam.proteccioncivil.data.model.CRUD
+import com.dam.proteccioncivil.data.model.ObjectToStringMap
 import com.dam.proteccioncivil.data.repository.AnunciosRepository
 import com.google.gson.JsonParser
 import kotlinx.coroutines.launch
@@ -42,12 +43,12 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
     var uiAnuncioState by mutableStateOf(AnunciosMtoState())
         private set
 
+    var anunciosBusState by mutableStateOf(AnunciosBusState())
 
-    override fun getAll(): List<Anuncio> {
-        TODO("Not yet implemented")
+    fun resetInfoState() {
+        anunciosMessageState = AnunciosMessageState.Loading
     }
-
-    fun getAll2() {
+    override fun getAll() {
         viewModelScope.launch {
             anunciosUiState = AnunciosUiState.Loading
             anunciosUiState = try {
@@ -61,7 +62,7 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (getAll2) ", errorBodyString)
+                    Log.e("AnunciosVM (getAll) ", errorBodyString)
                     AnunciosUiState.Error(error)
                 } else {
                     AnunciosUiState.Error("Error")
@@ -70,17 +71,12 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
         }
     }
 
-
-    override fun getAllBy(fieldname: String, value: String): List<Anuncio> {
-        TODO("Not yet implemented")
-    }
-
-    override fun deleteBy(fieldname: String, value: String) {
+    override fun deleteBy() {
         //TODO poner un pop up de confirmación
         viewModelScope.launch {
             anunciosMessageState = AnunciosMessageState.Loading
             anunciosMessageState = try {
-                anunciosRepository.deleteAnuncio(value.toInt())
+                anunciosRepository.deleteAnuncio(anunciosBusState.anuncioSelected)
                 AnunciosMessageState.Success
             } catch (e: IOException) {
                 AnunciosMessageState.Error("e1")
@@ -95,22 +91,48 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
                 } else {
                     AnunciosMessageState.Error("Error")
                 }
+            } catch (e: KotlinNullPointerException) {
+                AnunciosMessageState.Success
             }
         }
     }
 
-    override fun update(instance: Anuncio, fieldname: String, value: String) {
-        TODO("Not yet implemented")
-    }
-
-    fun probarAlta() {
+    override fun update() {
         viewModelScope.launch {
             anunciosMessageState = AnunciosMessageState.Loading
             anunciosMessageState = try {
-                uiAnuncioState = uiAnuncioState.copy(
-                    "3","02/02/2022","Prueba android",true
+                anunciosRepository.updateAnuncio(
+                    uiAnuncioState.codAnuncio.toInt(),
+                    ObjectToStringMap.use(uiAnuncioState.toAnuncio())
                 )
-                val anuncioMap = objectToStringMap(uiAnuncioState.toAnuncio())
+                AnunciosMessageState.Success
+            } catch (e: IOException) {
+                AnunciosMessageState.Error("e1")
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()
+                val errorBodyString = errorBody?.string()
+                if (errorBodyString != null) {
+                    val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
+                    val error = jsonObject["body"]?.asString ?: ""
+                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    AnunciosMessageState.Error(error)
+                } else {
+                    AnunciosMessageState.Error("Error")
+                }
+            } catch (e: KotlinNullPointerException) {
+                //Esta excepcion se lanza cuando recibimos el 204, ya que este al no tener body provoca
+                //error aunque el comportamiento es el que queremos, de ahi que al tratarla se maneje
+                //como success
+                AnunciosMessageState.Success
+            }
+        }
+    }
+
+    override fun setNew() {
+        viewModelScope.launch {
+            anunciosMessageState = AnunciosMessageState.Loading
+            anunciosMessageState = try {
+                val anuncioMap = ObjectToStringMap.use(uiAnuncioState.toAnuncio())
                 anunciosRepository.setAnuncio(anuncioMap)
                 AnunciosMessageState.Success
             } catch (e: IOException) {
@@ -130,30 +152,24 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
         }
     }
 
-
-    override fun setNew(instance: Anuncio) {
-
+    fun setCodAnuncio(codAnuncio: Int) {
+        anunciosBusState = anunciosBusState.copy(
+            anuncioSelected = codAnuncio
+        )
     }
 
-    // Esto si funciona hay que sacarlo y hacerlo para que se
-    // pueda usar desde todas las clases
-    fun objectToStringMap(obj: Any): Map<String, String> {
-        val map = mutableMapOf<String, String>()
+    fun setTexto(texto: String) {
+        uiAnuncioState = uiAnuncioState.copy(
+            texto = texto,
+            datosObligatorios = (texto != "" && uiAnuncioState.fechaPublicacion != "")
+        )
+    }
 
-        val declaredFields = obj.javaClass.declaredFields.filter { !it.name.startsWith('$') }
-
-        for (field in declaredFields) {
-            field.isAccessible = true
-            val value = field.get(obj)
-
-            when (value) {
-                is String -> map[field.name] = value
-                is Int -> map[field.name] = value.toString()
-                else -> throw IllegalArgumentException("Unsupported field type: ${field.type}")
-            }
-        }
-
-        return map
+    fun setFechaPublicacion(fecha: String) {
+        uiAnuncioState = uiAnuncioState.copy(
+            fechaPublicacion = fecha,
+            datosObligatorios = (fecha != "" && uiAnuncioState.texto != "")
+        )
     }
 
     companion object {

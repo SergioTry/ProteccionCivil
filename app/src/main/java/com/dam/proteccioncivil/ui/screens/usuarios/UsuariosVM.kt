@@ -5,23 +5,21 @@ import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Usuario
 
 class UsuariosVM: CRUD<Usuario>, ViewModel() {
-    override fun getAll(): List<Usuario> {
+    override fun getAll() {
         TODO("Not yet implemented")
     }
 
-    override fun getAllBy(fieldname: String, value: String): List<Usuario> {
+    override fun deleteBy() {
         TODO("Not yet implemented")
     }
 
-    override fun deleteBy(fieldname: String, value: String) {
+    override fun setNew() {
         TODO("Not yet implemented")
     }
 
-    override fun update(instance: Usuario, fieldname: String, value: String) {
+    override fun update() {
         TODO("Not yet implemented")
     }
 
-    override fun setNew(instance: Usuario) {
-        TODO("Not yet implemented")
-    }
+
 }

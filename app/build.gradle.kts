@@ -84,6 +84,7 @@ dependencies {
 
     // Libreria del calendario
     implementation("com.kizitonwose.calendar:compose:2.5.0")
+    implementation(libs.androidx.constraintlayout)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -93,3 +94,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+
+//Voy pedreto, firmado por miga y taja.

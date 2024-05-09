@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class Anuncio(
     @SerialName("CodAnuncio") val codAnuncio: Int,
     @SerialName("FechaPublicacion") val fechaPublicacion: String,
-    @SerialName("Texto") val texto: String
+    @SerialName("Texto") var texto: String
 )

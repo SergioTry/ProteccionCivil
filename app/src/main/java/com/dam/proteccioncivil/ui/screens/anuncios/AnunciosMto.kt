@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -24,14 +23,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.FormatDate
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AnuncioMtoScreen() {
+fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackbar: (String) -> Unit) {
+
+    val mensage: String
+    val contexto = LocalContext.current
+    val anuncio = anunciosVM.uiAnuncioState
+
+    when (anunciosVM.anunciosMessageState) {
+        is AnunciosMessageState.Loading -> {
+        }
+
+        is AnunciosMessageState.Success -> {
+            mensage = "chuupalo"
+            //ContextCompat.getString(contexto, "chuupalo") "
+            onShowSnackbar(mensage)
+            anunciosVM.setCodAnuncio(-1)
+            anunciosVM.resetInfoState()
+        }
+
+        is AnunciosMessageState.Error -> {
+            mensage = "chuupalo pero hubo errores"
+            //ContextCompat.getString(contexto, "chuupalo pero hubo errores")
+            onShowSnackbar(mensage)
+            anunciosVM.resetInfoState()
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -52,15 +77,12 @@ fun AnuncioMtoScreen() {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     OutlinedTextField(
-                        value = "Titulo",
-                        onValueChange = {},
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.size(8.dp))
-                    OutlinedTextField(
-                        value = "Cuerpo", onValueChange = {}, modifier = Modifier
-                            .fillMaxHeight()
+                        value = anuncio.texto,
+                        onValueChange = { anunciosVM.setTexto(it) },
+                        label = { Text(text = "Texto") },
+                        modifier = Modifier
                             .fillMaxWidth()
+                            .fillMaxHeight()
                     )
                 }
             }
@@ -74,22 +96,23 @@ fun AnuncioMtoScreen() {
             horizontalArrangement = Arrangement.Center
         ) {
             Button(
-                onClick = { }
+                onClick = {}
             ) {
                 Text(text = "Cancelar")
             }
             Spacer(modifier = Modifier.width(100.dp))
             Button(
-                onClick = {}
+                onClick = {
+                    if (anuncio.codAnuncio.isBlank()) {
+                        anunciosVM.setFechaPublicacion(FormatDate.use())
+                        anunciosVM.setNew()
+                    } else {
+                        anunciosVM.update()
+                    }
+                }
             ) {
                 Text(text = "Añadir")
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun DummyScreenPreview() {
-    AnuncioMtoScreen()
 }
