@@ -44,7 +44,8 @@ fun AnunciosBus(
     anunciosVM: AnunciosVM,
     onShowSnackbar: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onNavUp: (isRefresh: Boolean) -> Unit
+    onNavUp: () -> Unit,
+    refresh: () -> Unit
 ) {
     val mensage: String
     val contexto = LocalContext.current
@@ -57,8 +58,10 @@ fun AnunciosBus(
             mensage = "chuupalo"
             //ContextCompat.getString(contexto, "chuupalo") "
             onShowSnackbar(mensage)
-            anunciosVM.setCodAnuncio(-1)
+            anunciosVM.resetUiAnuncioState()
             anunciosVM.resetInfoState()
+            anunciosVM.getAll()
+            refresh()
         }
 
         is AnunciosMessageState.Error -> {
@@ -83,7 +86,7 @@ fun AnunciosBus(
             modifier = modifier.fillMaxSize(),
             content = {
                 items(anuncios) { it ->
-                    AnuncioCard(anuncio = it, onNavUp = { onNavUp(false) }, anunciosVM = anunciosVM)
+                    AnuncioCard(anuncio = it, onNavUp = { onNavUp() }, anunciosVM = anunciosVM)
                 }
             }
         )
@@ -98,6 +101,8 @@ fun AnunciosBus(
             ) {
                 FloatingActionButton(
                     onClick = {
+                        anunciosVM.resetUiAnuncioState()
+                        onNavUp()
                     },
                     contentColor = Color.White,
                     elevation = FloatingActionButtonDefaults.elevation(8.dp)
@@ -134,14 +139,17 @@ fun AnuncioCard(anuncio: Anuncio, anunciosVM: AnunciosVM, onNavUp: () -> Unit) {
             if (true) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     IconButton(onClick = {
-                        anunciosVM.setCodAnuncio(anuncio.codAnuncio)
+                        anunciosVM.resetUiAnuncioState()
+                        anunciosVM.cloneUiAnuncioState(anuncio)
                         anunciosVM.deleteBy()
                     }) {
                         Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
                     }
                     IconButton(onClick = {
-                        anunciosVM.setCodAnuncio(anuncio.codAnuncio)
-                        onNavUp() }) {
+                        anunciosVM.resetUiAnuncioState()
+                        anunciosVM.cloneUiAnuncioState(anuncio)
+                        onNavUp()
+                    }) {
                         Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
                     }
                 }

@@ -48,6 +48,7 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
     fun resetInfoState() {
         anunciosMessageState = AnunciosMessageState.Loading
     }
+
     override fun getAll() {
         viewModelScope.launch {
             anunciosUiState = AnunciosUiState.Loading
@@ -150,6 +151,24 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
                 }
             }
         }
+    }
+
+    fun resetUiAnuncioState() {
+        uiAnuncioState = uiAnuncioState.copy(
+            "0",
+            "",
+            "",
+            false
+        )
+    }
+
+    fun cloneUiAnuncioState(anuncio: Anuncio) {
+        uiAnuncioState = uiAnuncioState.copy(
+            anuncio.codAnuncio.toString(),
+            anuncio.fechaPublicacion,
+            anuncio.texto,
+            true
+        )
     }
 
     fun setCodAnuncio(codAnuncio: Int) {

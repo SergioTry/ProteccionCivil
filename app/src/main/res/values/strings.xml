@@ -18,6 +18,8 @@
     <string name="screen_name_splash">Splash</string>
     <string name="screen_name_preferences">Preferencias</string>
     <string name="screen_name_preventidos_mto">Preventivos Mto</string>
+    <string name="screen_name_announces">Anuncios</string>
+    <string name="screen_name_announces_mto">Anuncios Mto\n</string>
 
     <!--Opciones de menú-->
     <string name="menu_salir">Salir</string>
@@ -31,6 +33,4 @@
     <string name="lbl_password">Contraseña</string>
     <string name="lbl_username">Usuario</string>
     <string name="username">Nombre de usuario</string>
-    <string name="screen_name_announces">Anuncios</string>
-    <string name="screen_name_announces_mto">Anuncios Mto\n</string>
 </resources>

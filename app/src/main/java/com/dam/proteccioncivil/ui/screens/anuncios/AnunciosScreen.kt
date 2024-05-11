@@ -14,15 +14,29 @@ fun AnunciosScreen(
     anunciosUiState: AnunciosUiState,
     anunciosVM: AnunciosVM,
     retryAction: () -> Unit,
-    onNavUp: (Boolean) -> Unit,
+    onNavUp: () -> Unit,
+    refresh: () -> Unit,
     onShowSnackBar: (String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     when (anunciosUiState) {
         is AnunciosUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is AnunciosUiState.Success -> { if(anunciosVM.anunciosBusState.anuncioSelected != -1) AnunciosMto(anunciosVM,onShowSnackBar) else AnunciosBus(anunciosUiState.anuncios,anunciosVM,onShowSnackBar,modifier,onNavUp)
+        is AnunciosUiState.Success -> {
+            AnunciosBus(
+                anunciosUiState.anuncios,
+                anunciosVM,
+                onShowSnackBar,
+                modifier,
+                onNavUp,
+                refresh
+            )
         }
-        is AnunciosUiState.Error -> ErrorScreen(retryAction, anunciosUiState.err, modifier = modifier.fillMaxSize())
+
+        is AnunciosUiState.Error -> ErrorScreen(
+            retryAction,
+            anunciosUiState.err,
+            modifier = modifier.fillMaxSize()
+        )
     }
 }

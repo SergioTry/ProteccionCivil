@@ -32,7 +32,7 @@ import com.dam.proteccioncivil.data.model.FormatDate
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackbar: (String) -> Unit) {
+fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackBar: (String) -> Unit, refresh: () -> Unit) {
 
     val mensage: String
     val contexto = LocalContext.current
@@ -45,15 +45,16 @@ fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackbar: (String) -> Unit) {
         is AnunciosMessageState.Success -> {
             mensage = "chuupalo"
             //ContextCompat.getString(contexto, "chuupalo") "
-            onShowSnackbar(mensage)
-            anunciosVM.setCodAnuncio(-1)
+            onShowSnackBar(mensage)
             anunciosVM.resetInfoState()
+            anunciosVM.getAll()
+            refresh()
         }
 
         is AnunciosMessageState.Error -> {
             mensage = "chuupalo pero hubo errores"
             //ContextCompat.getString(contexto, "chuupalo pero hubo errores")
-            onShowSnackbar(mensage)
+            onShowSnackBar(mensage)
             anunciosVM.resetInfoState()
         }
     }
@@ -103,12 +104,13 @@ fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackbar: (String) -> Unit) {
             Spacer(modifier = Modifier.width(100.dp))
             Button(
                 onClick = {
-                    if (anuncio.codAnuncio.isBlank()) {
+                    if (anuncio.codAnuncio.equals("0")) {
                         anunciosVM.setFechaPublicacion(FormatDate.use())
                         anunciosVM.setNew()
                     } else {
                         anunciosVM.update()
                     }
+                    anunciosVM.resetInfoState()
                 }
             ) {
                 Text(text = "Añadir")

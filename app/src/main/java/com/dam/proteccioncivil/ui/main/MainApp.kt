@@ -48,6 +48,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.pantallas.chat.PantallaMensajes
+import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosMto
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosScreen
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
 import com.dam.proteccioncivil.ui.screens.login.LoginScreen
@@ -212,14 +213,22 @@ private fun NavHostRoutes(
         composable(route = AppScreens.Calendar.name) {
         }
 
+        composable(route = AppScreens.AnunciosMto.name) {
+            AnunciosMto(anunciosVM = anunciosVM,
+                refresh = { navController.navigate(AppScreens.Anuncios.name) },
+                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+        }
+
         composable(route = AppScreens.Anuncios.name) {
             AnunciosScreen(
                 anunciosUiState = anunciosVM.anunciosUiState,
                 anunciosVM = anunciosVM,
                 retryAction = { anunciosVM::getAll },
-                onNavUp = { if (it) navController.navigate(AppScreens.Anuncios.name) else navController.navigate(AppScreens.Home.name)},
+                onNavUp = { navController.navigate(AppScreens.AnunciosMto.name) },
+                refresh = { navController.navigate(AppScreens.Anuncios.name) },
                 onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
         }
+
         composable(route = AppScreens.Chat.name) {
             PantallaMensajes()
         }
