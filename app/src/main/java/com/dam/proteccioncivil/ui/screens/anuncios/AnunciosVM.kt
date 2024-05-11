@@ -171,12 +171,6 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
         )
     }
 
-    fun setCodAnuncio(codAnuncio: Int) {
-        anunciosBusState = anunciosBusState.copy(
-            anuncioSelected = codAnuncio
-        )
-    }
-
     fun setTexto(texto: String) {
         uiAnuncioState = uiAnuncioState.copy(
             texto = texto,
