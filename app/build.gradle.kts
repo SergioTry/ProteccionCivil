@@ -76,7 +76,7 @@ dependencies {
     //Json
     implementation("com.google.code.gson:gson:2.10.1")
 
-    //Decodificador del payload del JsonWebToken
+    // Decodificador del payload del JsonWebToken
     implementation("org.bitbucket.b_c:jose4j:0.7.9")
 
     // DataStore
@@ -84,7 +84,8 @@ dependencies {
 
     // Libreria del calendario
     implementation("com.kizitonwose.calendar:compose:2.5.0")
-    implementation(libs.androidx.constraintlayout)
+
+    //implementation(libs.androidx.constraintlayout)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

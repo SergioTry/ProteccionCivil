@@ -57,6 +57,7 @@ fun AnunciosBus(
         is AnunciosMessageState.Success -> {
             mensage = "chuupalo"
             //ContextCompat.getString(contexto, "chuupalo") "
+           // anunciosVM.getAll()
             onShowSnackbar(mensage)
             anunciosVM.resetUiAnuncioState()
             anunciosVM.resetInfoState()

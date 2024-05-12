@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.WorkOutline
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -47,7 +49,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.pantallas.chat.PantallaMensajes
+import com.dam.proteccioncivil.pantallas.home.MainScreen
+import com.dam.proteccioncivil.ui.dialogs.DlgRecursos
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosMto
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosScreen
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
@@ -71,7 +76,8 @@ enum class AppScreens(@StringRes val title: Int) {
     Anuncios(title = R.string.screen_name_announces),
     AnunciosMto(title = R.string.screen_name_announces_mto),
     Chat(title = R.string.screen_name_chat),
-    PreventivosMto(title = R.string.screen_name_preventidos_mto)
+    PreventivosMto(title = R.string.screen_name_preventidos_mto),
+    Recursos(title = R.string.screen_name_resources)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -100,9 +106,9 @@ fun MainApp(
     val menuOptions = mapOf(
         Icons.Default.Home to stringResource(R.string.screen_name_home),
         Icons.Default.CalendarMonth to stringResource(R.string.screen_name_calendar),
-        Icons.Default.Notifications to stringResource(R.string.screen_name_news),
+        Icons.Default.WorkOutline to stringResource(R.string.screen_name_preventidos),
+        Icons.Default.Apps to stringResource(R.string.screen_name_resources),
         Icons.AutoMirrored.Filled.Chat to stringResource(R.string.screen_name_chat),
-        Icons.Default.DirectionsCar to stringResource(R.string.screen_name_vehicles),
     )
 
     if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -134,7 +140,8 @@ fun MainApp(
                     MainBottomBar(
                         menuOptions = menuOptions,
                         navController = navController,
-                        anunciosVM = anunciosVM
+                        anunciosVM = anunciosVM,
+                        mainVM = mainVM
                     )
                 }
             },
@@ -150,6 +157,12 @@ fun MainApp(
                 loginVM,
             )
         }
+    }
+    if (mainVM.uiMainState.showDlgRecursos) {
+        DlgRecursos(
+            onCancelarClick = { mainVM.setShowDlgRecursos(false) },
+            onVehiculosClick = { mainVM.setShowDlgRecursos(false) },
+            onVoluntariosClick = { mainVM.setShowDlgRecursos(false) })
     }
 }
 
@@ -190,14 +203,12 @@ private fun NavHostRoutes(
             }, "0.0.0")
         }
         composable(route = AppScreens.Home.name) {
-            PruebaScreen(
-                anunciosUiState = anunciosVM.anunciosUiState,
-                retryAction = { anunciosVM::getAll })
+            MainScreen()
         }
         composable(route = AppScreens.Login.name) {
             LoginScreen(
                 version = "0.0.0", mainVM = mainVM, loginVM = loginVM, onNavUp = {
-                    selectOption(Icons.Default.Home, navController, anunciosVM)
+                    selectOption(Icons.Default.Home, navController, anunciosVM, mainVM = mainVM)
                 },
                 savedToken = mainVM.uiPrefState.token.isNotBlank() && mainVM.uiPrefState.token.isNotEmpty()
             )
@@ -210,7 +221,8 @@ private fun NavHostRoutes(
                 }
             )
         }
-        composable(route = AppScreens.Calendar.name) {
+        composable(route = AppScreens.Vehicles.name) {
+
         }
 
         composable(route = AppScreens.AnunciosMto.name) {
@@ -240,31 +252,72 @@ fun MainBottomBar(
     menuOptions: Map<ImageVector, String>,
     navController: NavHostController,
     anunciosVM: AnunciosVM,
+    mainVM: MainVM,
     modifier: Modifier = Modifier
 ) {
     NavigationBar {
         for ((clave, valor) in menuOptions) {
-            NavigationBarItem(
-                icon = { Icon(clave, contentDescription = null) },
-                label = { Text(valor) },
-                selected = valor == AppScreens.Home.name,
-                onClick = {
-                    selectOption(
-                        clave = clave,
-                        navController = navController,
-                        anunciosVM = anunciosVM
+            if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
+                NavigationBarItem(
+                    icon = { Icon(clave, contentDescription = null) },
+                    label = { Text(valor) },
+                    selected = false,
+                    onClick = {
+                        selectOption(
+                            clave = clave,
+                            navController = navController,
+                            anunciosVM = anunciosVM,
+                            mainVM = mainVM
+                        )
+                    },
+                    enabled = true
+                )
+            } else {
+                if (clave.name == Icons.Default.Apps.name) {
+                    if (Token.conductor == 1) {
+                        NavigationBarItem(
+                            icon = { Icon(Icons.Default.DirectionsCar, contentDescription = null) },
+                            label = { Text(stringResource(R.string.screen_name_vehicles)) },
+                            selected = false,
+                            onClick = {
+                                selectOption(
+                                    clave = Icons.Default.DirectionsCar,
+                                    navController = navController,
+                                    anunciosVM = anunciosVM,
+                                    mainVM = mainVM
+                                )
+                            },
+                            enabled = true
+                        )
+                    }
+                } else {
+                    NavigationBarItem(
+                        icon = { Icon(clave, contentDescription = null) },
+                        label = { Text(valor) },
+                        selected = false,
+                        onClick = {
+                            selectOption(
+                                clave = clave,
+                                navController = navController,
+                                anunciosVM = anunciosVM,
+                                mainVM = mainVM
+                            )
+                        },
+                        enabled = true
                     )
-                },
-                enabled = true
-            )
+                }
+
+            }
         }
     }
 }
 
+
 private fun selectOption(
     clave: ImageVector,
     navController: NavHostController,
-    anunciosVM: AnunciosVM
+    anunciosVM: AnunciosVM,
+    mainVM: MainVM
 ) {
     when (clave.name) {
         Icons.Default.Home.name -> {
@@ -281,12 +334,10 @@ private fun selectOption(
             )
         }
 
-        Icons.Default.Notifications.name -> {
+        Icons.Default.WorkOutline.name -> {
 //            aulasVM.cargarAulas()
 //            aulasVM.resetInfoState()
-            navController.navigate(
-                AppScreens.News.name
-            )
+
         }
 
         Icons.AutoMirrored.Filled.Chat.name -> navController.navigate(
@@ -298,7 +349,19 @@ private fun selectOption(
 //            aulasVM.resetInfoState()
 //            incsVM.cargarIncs()
 //            incsVM.resetInfoState()
-            navController.navigate(AppScreens.Vehicles.name)
+
+            when (Token.rango) {
+                "Voluntario" -> {
+                    if (Token.conductor == 1) {
+                        navController.navigate(AppScreens.Vehicles.name)
+                    }
+                }
+
+                else -> {
+                    // Jefes de servicio y admins
+                    mainVM.setShowDlgRecursos(true)
+                }
+            }
         }
     }
 }

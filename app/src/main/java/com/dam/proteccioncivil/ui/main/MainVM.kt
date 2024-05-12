@@ -102,6 +102,12 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
         return LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
     }
 
+    fun setShowDlgRecursos(mostrar: Boolean) {
+        uiMainState = uiMainState.copy(
+            showDlgRecursos = mostrar,
+        )
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

@@ -33,4 +33,6 @@
     <string name="lbl_password">Contraseña</string>
     <string name="lbl_username">Usuario</string>
     <string name="username">Nombre de usuario</string>
+    <string name="screen_name_resources">Recursos</string>
+    <string name="screen_name_preventidos">Preventivos</string>
 </resources>
