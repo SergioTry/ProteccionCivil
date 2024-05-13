@@ -1,12 +1,13 @@
 package com.dam.proteccioncivil.data.model
 
-import java.time.LocalDateTime
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-
+@Serializable
 data class Infomur(
-    val FechaInfomur: LocalDateTime,
-    val CodInfomur: Int,
-    val Descripcion: String,
-    val CodUsuario1: Int,
-    val CodUsuario2: Int
+    @SerialName("FechaInfomur") val fechaInfomur: String,
+    @SerialName("CodInfomur") val codInfomur: Int,
+    @SerialName("Descripcion") val descripcion: String,
+    @SerialName("CodUsuario1") val codUsuario1: Int?,
+    @SerialName("CodUsuario2") val codUsuario2: Int?
 )

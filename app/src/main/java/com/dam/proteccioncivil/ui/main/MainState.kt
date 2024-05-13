@@ -5,6 +5,7 @@ import com.dam.proteccioncivil.data.model.Preferencias
 data class MainState(
     val showDlgSalir: Boolean = false,
     val showDlgRecursos: Boolean = false,
+    val showDlgServicios: Boolean = false,
     val token: String = "",
     val showPreferences: Boolean = false
 )

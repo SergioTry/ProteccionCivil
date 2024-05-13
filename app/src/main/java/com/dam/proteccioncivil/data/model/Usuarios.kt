@@ -1,18 +1,19 @@
 package com.dam.proteccioncivil.data.model
 
-import java.time.LocalDateTime
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-
+@Serializable
 data class Usuario(
-    val CodUsuario: Int,
-    val DNI: String,
-    val Username: String?,
-    val Password: String,
-    val Nombre: String,
-    val Apellidos: String,
-    val FechaNacimiento: LocalDateTime,
-    val CorreoElectronico: String,
-    val Telefono: String?,
-    val Rango: String,
-    val Conductor: Short
+    @SerialName("CodUsuario") val codUsuario: Int,
+    @SerialName("DNI") val dni: String,
+    @SerialName("Username") val username: String?,
+    @SerialName("Password") val password: String,
+    @SerialName("Nombre") val nombre: String,
+    @SerialName("Apellidos") val apellidos: String,
+    @SerialName("FechaNacimiento") val fechaNacimiento: String,
+    @SerialName("CorreoElectronico") val correoElectronico: String,
+    @SerialName("Telefono") val telefono: String?,
+    @SerialName("Rango") val rango: String,
+    @SerialName("Conductor") val conductor: Short
 )

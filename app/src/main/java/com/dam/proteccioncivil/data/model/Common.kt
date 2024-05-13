@@ -22,15 +22,7 @@ class ObjectToStringMap {
 
                 val strValue = value?.toString() ?: "null"
 
-                val key = if (field.name.equals(
-                        "texto",
-                        ignoreCase = true
-                    )
-                ) "Texto" else if (field.name.equals(
-                        "fechaPublicacion",
-                        ignoreCase = true
-                    )
-                ) "FechaPublicacion" else field.name
+                val key = field.name.get(0).uppercaseChar() + field.name.substring(1)
 
                 map[key] = strValue
             }
@@ -52,10 +44,9 @@ class FormatDate {
                 val formato = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                 fechaParseada.format(formato)
             } else {
-//                val fechaActual = LocalDate.now()
-//                val formato = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-//                fechaActual.format(formato)
-                "11/12/2024"
+                val fechaActual = LocalDate.now()
+                val formato = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                fechaActual.format(formato)
             }
             return fechaFormateada
         }

@@ -9,11 +9,6 @@ data class AnunciosMtoState(
     val datosObligatorios: Boolean = false,
 )
 
-data class AnunciosBusState(
-    val anuncioSelected: Int = -1,
-    val showDlgBorrar: Boolean = false
-)
-
 fun AnunciosMtoState.toAnuncio(): Anuncio = Anuncio(
     codAnuncio = if (codAnuncio.isEmpty()) 0 else codAnuncio.toInt(),
     fechaPublicacion = fechaPublicacion,

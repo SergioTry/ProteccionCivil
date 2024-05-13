@@ -1,6 +1,7 @@
 package com.dam.proteccioncivil.ui.screens.anuncios
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
 
@@ -36,24 +38,31 @@ fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackBar: (String) -> Unit, refres
 
     val mensage: String
     val contexto = LocalContext.current
-    val anuncio = anunciosVM.uiAnuncioState
+    val activity = (LocalContext.current as? Activity)
 
     when (anunciosVM.anunciosMessageState) {
         is AnunciosMessageState.Loading -> {
         }
 
         is AnunciosMessageState.Success -> {
-            mensage = "chuupalo"
-            //ContextCompat.getString(contexto, "chuupalo") "
+            mensage = if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
+                ContextCompat.getString(contexto, R.string.anuncio_create_success)
+            } else {
+                ContextCompat.getString(contexto, R.string.anuncio_edit_success)
+            }
             onShowSnackBar(mensage)
             anunciosVM.resetInfoState()
+            anunciosVM.resetAnuncioMtoState()
             anunciosVM.getAll()
             refresh()
         }
 
         is AnunciosMessageState.Error -> {
-            mensage = "chuupalo pero hubo errores"
-            //ContextCompat.getString(contexto, "chuupalo pero hubo errores")
+            mensage = if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
+                ContextCompat.getString(contexto, R.string.anuncio_create_failure)
+            } else {
+                ContextCompat.getString(contexto, R.string.anuncio_edit_failure)
+            }
             onShowSnackBar(mensage)
             anunciosVM.resetInfoState()
         }
@@ -78,7 +87,7 @@ fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackBar: (String) -> Unit, refres
             Row(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     OutlinedTextField(
-                        value = anuncio.texto,
+                        value = anunciosVM.anunciosMtoState.texto,
                         onValueChange = { anunciosVM.setTexto(it) },
                         label = { Text(text = "Texto") },
                         modifier = Modifier
@@ -97,23 +106,32 @@ fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackBar: (String) -> Unit, refres
             horizontalArrangement = Arrangement.Center
         ) {
             Button(
-                onClick = {}
+                onClick = {
+                    anunciosVM.resetAnuncioMtoState()
+                    activity?.onBackPressed()
+                }
             ) {
                 Text(text = "Cancelar")
             }
             Spacer(modifier = Modifier.width(100.dp))
             Button(
                 onClick = {
-                    if (anuncio.codAnuncio.equals("0")) {
+                    if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
                         anunciosVM.setFechaPublicacion(FormatDate.use())
                         anunciosVM.setNew()
                     } else {
                         anunciosVM.update()
                     }
-                    anunciosVM.resetInfoState()
                 }
             ) {
-                Text(text = "Añadir")
+                Text(
+                    text =
+                    if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
+                        "Añadir"
+                    } else {
+                        "Editar"
+                    }
+                )
             }
         }
     }

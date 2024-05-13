@@ -53,9 +53,16 @@ import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.pantallas.chat.PantallaMensajes
 import com.dam.proteccioncivil.pantallas.home.MainScreen
 import com.dam.proteccioncivil.ui.dialogs.DlgRecursos
+import com.dam.proteccioncivil.ui.dialogs.DlgServicios
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosMto
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosScreen
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
+import com.dam.proteccioncivil.ui.screens.guardia.GuardiaMto
+import com.dam.proteccioncivil.ui.screens.guardia.GuardiasScreen
+import com.dam.proteccioncivil.ui.screens.guardia.GuardiasVM
+import com.dam.proteccioncivil.ui.screens.infomur.InfomurMto
+import com.dam.proteccioncivil.ui.screens.infomur.InfomursScreen
+import com.dam.proteccioncivil.ui.screens.infomur.InfomursVM
 import com.dam.proteccioncivil.ui.screens.login.LoginScreen
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
 import com.dam.proteccioncivil.ui.screens.preferencias.PrefScreen
@@ -75,6 +82,10 @@ enum class AppScreens(@StringRes val title: Int) {
     VehiclesMto(title = R.string.screen_name_vehicles_mto),
     Anuncios(title = R.string.screen_name_announces),
     AnunciosMto(title = R.string.screen_name_announces_mto),
+    Guardias(title = R.string.screen_name_guards),
+    GuardiasMto(title = R.string.screen_name_guards_mto),
+    Infomurs(title = R.string.screen_name_infomurs),
+    InfomursMto(title = R.string.screen_name_infomurs_mto),
     Chat(title = R.string.screen_name_chat),
     PreventivosMto(title = R.string.screen_name_preventidos_mto),
     Recursos(title = R.string.screen_name_resources)
@@ -102,6 +113,12 @@ fun MainApp(
 
     val anunciosVM: AnunciosVM =
         viewModel(factory = AnunciosVM.Factory)
+
+    val guardiasVM: GuardiasVM =
+        viewModel(factory = GuardiasVM.Factory)
+
+    val infomursVM: InfomursVM =
+        viewModel(factory = InfomursVM.Factory)
 
     val menuOptions = mapOf(
         Icons.Default.Home to stringResource(R.string.screen_name_home),
@@ -153,6 +170,8 @@ fun MainApp(
                 scope,
                 snackbarHostState,
                 anunciosVM,
+                guardiasVM,
+                infomursVM,
                 mainVM,
                 loginVM,
             )
@@ -163,6 +182,21 @@ fun MainApp(
             onCancelarClick = { mainVM.setShowDlgRecursos(false) },
             onVehiculosClick = { mainVM.setShowDlgRecursos(false) },
             onVoluntariosClick = { mainVM.setShowDlgRecursos(false) })
+    }
+    if (mainVM.uiMainState.showDlgServicios) {
+        DlgServicios(
+            onCancelarClick = { mainVM.setShowDlgServicios(false) },
+            onPreventivosClick = { mainVM.setShowDlgServicios(false) },
+            onGuardiasClick = {
+                mainVM.setShowDlgServicios(false)
+                guardiasVM.getAll()
+                navController.navigate(AppScreens.Guardias.name)
+            },
+            onInfomursClick = {
+                mainVM.setShowDlgServicios(false)
+                infomursVM.getAll()
+                navController.navigate(AppScreens.Infomurs.name)
+            })
     }
 }
 
@@ -185,6 +219,8 @@ private fun NavHostRoutes(
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
     anunciosVM: AnunciosVM,
+    guardiasVM: GuardiasVM,
+    infomursVM: InfomursVM,
     mainVM: MainVM,
     loginVM: LoginVM
 ) {
@@ -223,6 +259,58 @@ private fun NavHostRoutes(
         }
         composable(route = AppScreens.Vehicles.name) {
 
+        }
+
+        composable(route = AppScreens.GuardiasMto.name) {
+            GuardiaMto(guardiasVM = guardiasVM,
+                refresh = { navController.navigate(AppScreens.Guardias.name) },
+                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+        }
+
+        composable(route = AppScreens.Guardias.name) {
+            GuardiasScreen(
+                guardiasUiState = guardiasVM.guardiasUiState,
+                guardiasVM = guardiasVM,
+                retryAction = { guardiasVM::getAll },
+                onNavUp = { navController.navigate(AppScreens.GuardiasMto.name) },
+                refresh = { navController.navigate(AppScreens.Guardias.name) },
+                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+        }
+
+        composable(route = AppScreens.InfomursMto.name) {
+            InfomurMto(infomursVM = infomursVM,
+                refresh = { navController.navigate(AppScreens.Infomurs.name) },
+                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+        }
+
+        composable(route = AppScreens.Infomurs.name) {
+            InfomursScreen(
+                infomursUiState = infomursVM.infomursUiState,
+                infomursVM = infomursVM,
+                retryAction = { infomursVM::getAll },
+                onNavUp = { navController.navigate(AppScreens.InfomursMto.name) },
+                refresh = { navController.navigate(AppScreens.Infomurs.name) },
+                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+        }
+
+        composable(route = AppScreens.Guardias.name) {
+            GuardiasScreen(
+                guardiasUiState = guardiasVM.guardiasUiState,
+                guardiasVM = guardiasVM,
+                retryAction = { guardiasVM::getAll },
+                onNavUp = { navController.navigate(AppScreens.GuardiasMto.name) },
+                refresh = { navController.navigate(AppScreens.Guardias.name) },
+                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+        }
+
+        composable(route = AppScreens.Anuncios.name) {
+            AnunciosScreen(
+                anunciosUiState = anunciosVM.anunciosUiState,
+                anunciosVM = anunciosVM,
+                retryAction = { anunciosVM::getAll },
+                onNavUp = { navController.navigate(AppScreens.AnunciosMto.name) },
+                refresh = { navController.navigate(AppScreens.Anuncios.name) },
+                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
         }
 
         composable(route = AppScreens.AnunciosMto.name) {
@@ -327,17 +415,15 @@ private fun selectOption(
             )
         }
 
-        Icons.Default.CalendarMonth.name -> {
-            anunciosVM.getAll()
-            navController.navigate(
-                AppScreens.Calendar.name
-            )
-        }
+//        Icons.Default.CalendarMonth.name -> {
+//            anunciosVM.getAll()
+//            navController.navigate(
+//                AppScreens.Calendar.name
+//            )
+//        }
 
         Icons.Default.WorkOutline.name -> {
-//            aulasVM.cargarAulas()
-//            aulasVM.resetInfoState()
-
+            mainVM.setShowDlgServicios(true)
         }
 
         Icons.AutoMirrored.Filled.Chat.name -> navController.navigate(

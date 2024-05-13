@@ -2,7 +2,7 @@
     <string name="app_name">ProteccionCivil</string>
     <string name="db_name">ProteccionCivilDS</string>
 
-<!--    Preferencias-->
+    <!--    Preferencias-->
     <string name="value_pref_token">""</string>
     <string name="value_pref_defaultsplashtime">1</string>
 
@@ -19,7 +19,11 @@
     <string name="screen_name_preferences">Preferencias</string>
     <string name="screen_name_preventidos_mto">Preventivos Mto</string>
     <string name="screen_name_announces">Anuncios</string>
-    <string name="screen_name_announces_mto">Anuncios Mto\n</string>
+    <string name="screen_name_announces_mto">Anuncios Mto</string>
+    <string name="screen_name_guards">Guardias</string>
+    <string name="screen_name_guards_mto">Guardias Mto</string>
+    <string name="screen_name_infomurs">Infomurs</string>
+    <string name="screen_name_infomurs_mto">Infomurs Mto</string>
 
     <!--Opciones de menú-->
     <string name="menu_salir">Salir</string>
@@ -35,4 +39,22 @@
     <string name="username">Nombre de usuario</string>
     <string name="screen_name_resources">Recursos</string>
     <string name="screen_name_preventidos">Preventivos</string>
+    <string name="anuncio_create_success">Creación de anuncio correcta</string>
+    <string name="anuncio_edit_success">Edición de anuncio correcta</string>
+    <string name="anuncio_create_failure">Hubo un error al crear el anuncio</string>
+    <string name="anuncio_edit_failure">Hubo un error al editar el anuncio</string>
+    <string name="anuncios_delete_success">Eliminación de anuncio correcta</string>
+    <string name="anuncios_delete_failure">Hubo un error al eliminar el anuncio</string>
+    <string name="infomurs_delete_failure">Hubo un error al eliminar el infomur</string>
+    <string name="infomurs_delete_success">Exito al eliminar el anuncio</string>
+    <string name="infomur_create_success">Exito al crear el infomur</string>
+    <string name="infomur_create_failure">Hubo un error al crear el infomur</string>
+    <string name="infomur_edit_success">Exito al editar el infomur</string>
+    <string name="infomur_edit_failure">Hubo un error al editar el infomur</string>
+    <string name="guardia_create_failure">Hubo un error al crear la guardia</string>
+    <string name="guardia_edit_failure">Hubo un error al editar la guardia</string>
+    <string name="guardia_edit_success">Exito al editar la guardia</string>
+    <string name="guardia_create_success">Exito al crear la guardia</string>
+    <string name="guardia_delete_success">Exito al eliminar la guardia</string>
+    <string name="guardia_delete_failure">Hubo un error al eliminar la guardia</string>
 </resources>

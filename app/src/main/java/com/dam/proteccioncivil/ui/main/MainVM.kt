@@ -20,7 +20,6 @@ import java.io.IOException
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 class MainVM(private val mainRepository: MainRepository) : ViewModel() {
     var uiMainState by mutableStateOf(MainState())
@@ -105,6 +104,12 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
     fun setShowDlgRecursos(mostrar: Boolean) {
         uiMainState = uiMainState.copy(
             showDlgRecursos = mostrar,
+        )
+    }
+
+    fun setShowDlgServicios(mostrar: Boolean) {
+        uiMainState = uiMainState.copy(
+            showDlgServicios = mostrar,
         )
     }
 

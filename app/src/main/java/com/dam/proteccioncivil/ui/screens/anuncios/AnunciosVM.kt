@@ -40,10 +40,10 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
     var anunciosMessageState: AnunciosMessageState by mutableStateOf(AnunciosMessageState.Loading)
         private set
 
-    var uiAnuncioState by mutableStateOf(AnunciosMtoState())
+    var anunciosMtoState by mutableStateOf(AnunciosMtoState())
         private set
 
-    var anunciosBusState by mutableStateOf(AnunciosBusState())
+    var showDlgConfirmation = false
 
     fun resetInfoState() {
         anunciosMessageState = AnunciosMessageState.Loading
@@ -73,11 +73,10 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
     }
 
     override fun deleteBy() {
-        //TODO poner un pop up de confirmación
         viewModelScope.launch {
             anunciosMessageState = AnunciosMessageState.Loading
             anunciosMessageState = try {
-                anunciosRepository.deleteAnuncio(anunciosBusState.anuncioSelected)
+                anunciosRepository.deleteAnuncio(anunciosMtoState.codAnuncio.toInt())
                 AnunciosMessageState.Success
             } catch (e: IOException) {
                 AnunciosMessageState.Error("e1")
@@ -103,8 +102,8 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
             anunciosMessageState = AnunciosMessageState.Loading
             anunciosMessageState = try {
                 anunciosRepository.updateAnuncio(
-                    uiAnuncioState.codAnuncio.toInt(),
-                    ObjectToStringMap.use(uiAnuncioState.toAnuncio())
+                    anunciosMtoState.codAnuncio.toInt(),
+                    ObjectToStringMap.use(anunciosMtoState.toAnuncio())
                 )
                 AnunciosMessageState.Success
             } catch (e: IOException) {
@@ -133,7 +132,7 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
         viewModelScope.launch {
             anunciosMessageState = AnunciosMessageState.Loading
             anunciosMessageState = try {
-                val anuncioMap = ObjectToStringMap.use(uiAnuncioState.toAnuncio())
+                val anuncioMap = ObjectToStringMap.use(anunciosMtoState.toAnuncio())
                 anunciosRepository.setAnuncio(anuncioMap)
                 AnunciosMessageState.Success
             } catch (e: IOException) {
@@ -153,8 +152,8 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
         }
     }
 
-    fun resetUiAnuncioState() {
-        uiAnuncioState = uiAnuncioState.copy(
+    fun resetAnuncioMtoState() {
+        anunciosMtoState = anunciosMtoState.copy(
             "0",
             "",
             "",
@@ -162,8 +161,8 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
         )
     }
 
-    fun cloneUiAnuncioState(anuncio: Anuncio) {
-        uiAnuncioState = uiAnuncioState.copy(
+    fun cloneAnuncioMtoState(anuncio: Anuncio) {
+        anunciosMtoState = anunciosMtoState.copy(
             anuncio.codAnuncio.toString(),
             anuncio.fechaPublicacion,
             anuncio.texto,
@@ -172,16 +171,16 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
     }
 
     fun setTexto(texto: String) {
-        uiAnuncioState = uiAnuncioState.copy(
+        anunciosMtoState = anunciosMtoState.copy(
             texto = texto,
-            datosObligatorios = (texto != "" && uiAnuncioState.fechaPublicacion != "")
+            datosObligatorios = (texto != "" && anunciosMtoState.fechaPublicacion != "")
         )
     }
 
     fun setFechaPublicacion(fecha: String) {
-        uiAnuncioState = uiAnuncioState.copy(
+        anunciosMtoState = anunciosMtoState.copy(
             fechaPublicacion = fecha,
-            datosObligatorios = (fecha != "" && uiAnuncioState.texto != "")
+            datosObligatorios = (fecha != "" && anunciosMtoState.texto != "")
         )
     }
 

@@ -31,9 +31,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Anuncio
 import com.dam.proteccioncivil.data.model.FormatDate
+import com.dam.proteccioncivil.data.model.Token
+import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosMessageState
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
 
@@ -42,7 +45,7 @@ import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
 fun AnunciosBus(
     anuncios: List<Anuncio>,
     anunciosVM: AnunciosVM,
-    onShowSnackbar: (String) -> Unit,
+    onShowSnackBar: (String) -> Unit,
     modifier: Modifier = Modifier,
     onNavUp: () -> Unit,
     refresh: () -> Unit
@@ -55,20 +58,18 @@ fun AnunciosBus(
         }
 
         is AnunciosMessageState.Success -> {
-            mensage = "chuupalo"
-            //ContextCompat.getString(contexto, "chuupalo") "
-           // anunciosVM.getAll()
-            onShowSnackbar(mensage)
-            anunciosVM.resetUiAnuncioState()
+            mensage = ContextCompat.getString(contexto, R.string.anuncios_delete_success)
+
+            onShowSnackBar(mensage)
+            anunciosVM.resetAnuncioMtoState()
             anunciosVM.resetInfoState()
             anunciosVM.getAll()
             refresh()
         }
 
         is AnunciosMessageState.Error -> {
-            mensage = "chuupalo pero hubo errores"
-            //ContextCompat.getString(contexto, "chuupalo pero hubo errores")
-            onShowSnackbar(mensage)
+            mensage = ContextCompat.getString(contexto, R.string.anuncios_delete_failure)
+            onShowSnackBar(mensage)
             anunciosVM.resetInfoState()
         }
     }
@@ -87,11 +88,15 @@ fun AnunciosBus(
             modifier = modifier.fillMaxSize(),
             content = {
                 items(anuncios) { it ->
-                    AnuncioCard(anuncio = it, onNavUp = { onNavUp() }, anunciosVM = anunciosVM)
+                    AnuncioCard(
+                        anuncio = it,
+                        onNavUp = { onNavUp() },
+                        anunciosVM = anunciosVM,
+                        refresh = { refresh() })
                 }
             }
         )
-        if (true) {
+        if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
             Row(
                 modifier = modifier
                     .fillMaxWidth()
@@ -102,7 +107,7 @@ fun AnunciosBus(
             ) {
                 FloatingActionButton(
                     onClick = {
-                        anunciosVM.resetUiAnuncioState()
+                        anunciosVM.resetAnuncioMtoState()
                         onNavUp()
                     },
                     contentColor = Color.White,
@@ -112,11 +117,29 @@ fun AnunciosBus(
                 }
             }
         }
+        if (anunciosVM.showDlgConfirmation) {
+            DlgConfirmacion(
+                mensaje = 0,
+                onCancelarClick = {
+                    anunciosVM.showDlgConfirmation = false
+                    refresh()
+                },
+                onAceptarClick = {
+                    anunciosVM.showDlgConfirmation = false
+                    anunciosVM.deleteBy()
+                }
+            )
+        }
     }
 }
 
 @Composable
-fun AnuncioCard(anuncio: Anuncio, anunciosVM: AnunciosVM, onNavUp: () -> Unit) {
+fun AnuncioCard(
+    anuncio: Anuncio,
+    anunciosVM: AnunciosVM,
+    onNavUp: () -> Unit,
+    refresh: () -> Unit
+) {
     Card(
         modifier = Modifier
             .padding(16.dp)
@@ -137,18 +160,19 @@ fun AnuncioCard(anuncio: Anuncio, anunciosVM: AnunciosVM, onNavUp: () -> Unit) {
                         .padding(8.dp)
                 )
             }
-            if (true) {
+            if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 Column(modifier = Modifier.padding(12.dp)) {
                     IconButton(onClick = {
-                        anunciosVM.resetUiAnuncioState()
-                        anunciosVM.cloneUiAnuncioState(anuncio)
-                        anunciosVM.deleteBy()
+                        anunciosVM.resetAnuncioMtoState()
+                        anunciosVM.cloneAnuncioMtoState(anuncio)
+                        anunciosVM.showDlgConfirmation = true
+                        refresh()
                     }) {
                         Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
                     }
                     IconButton(onClick = {
-                        anunciosVM.resetUiAnuncioState()
-                        anunciosVM.cloneUiAnuncioState(anuncio)
+                        anunciosVM.resetAnuncioMtoState()
+                        anunciosVM.cloneAnuncioMtoState(anuncio)
                         onNavUp()
                     }) {
                         Icon(imageVector = Icons.Filled.Edit, contentDescription = "")

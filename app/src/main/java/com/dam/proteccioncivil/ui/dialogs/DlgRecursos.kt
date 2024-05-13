@@ -1,6 +1,5 @@
 package com.dam.proteccioncivil.ui.dialogs
 
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -72,6 +71,6 @@ fun DlgRecursos(
 
 @Preview
 @Composable
-fun ScreenPreview() {
-    DlgRecursos({}, {}, {})
+fun DlgRecursosScreenPreview() {
+    DlgRecursos({}, {},{})
 }

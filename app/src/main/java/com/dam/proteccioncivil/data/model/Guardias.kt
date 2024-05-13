@@ -1,12 +1,13 @@
 package com.dam.proteccioncivil.data.model
 
-import java.time.LocalDateTime
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-
+@Serializable
 data class Guardia(
-    val FechaGuardia: LocalDateTime,
-    val CodGuardia: Int,
-    val Descripcion: String,
-    val CodUsuario1: Int,
-    val CodUsuario2: Int
+    @SerialName("FechaGuardia") val fechaGuardia: String,
+    @SerialName("CodGuardia") val codGuardia: Int,
+    @SerialName("Descripcion") val descripcion: String,
+    @SerialName("CodUsuario1") val codUsuario1: Int?,
+    @SerialName("CodUsuario2") val codUsuario2: Int?
 )

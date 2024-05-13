@@ -38,7 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Usuario
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -47,17 +46,17 @@ fun preventivoMtoScreen() {
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     var multidia = false
     val user = Usuario(
-        CodUsuario = 1,
-        DNI = "12345678A",
-        Username = "usuario1",
-        Password = "password123",
-        Nombre = "Juan",
-        Apellidos = "Pérez",
-        FechaNacimiento = LocalDateTime.of(1990, 5, 15, 0, 0),
-        CorreoElectronico = "juan@example.com",
-        Telefono = "123456789",
-        Rango = "Usuario regular",
-        Conductor = 1 // Cambiar a 0 si el usuario no es conductor
+        codUsuario = 1,
+        dni = "12345678A",
+        username = "usuario1",
+        password = "password123",
+        nombre = "Juan",
+        apellidos = "Pérez",
+        fechaNacimiento = "1993-01-01",
+        correoElectronico = "juan@example.com",
+        telefono = "123456789",
+        rango = "Usuario regular",
+        conductor = 1 // Cambiar a 0 si el usuario no es conductor
     )
     val usuarios = listOf<Usuario>(user)
     Box(
