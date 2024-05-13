@@ -41,11 +41,11 @@ class FormatDate {
                 } catch (e: Exception) {
                     LocalDate.now()
                 }
-                val formato = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 fechaParseada.format(formato)
             } else {
                 val fechaActual = LocalDate.now()
-                val formato = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 fechaActual.format(formato)
             }
             return fechaFormateada
