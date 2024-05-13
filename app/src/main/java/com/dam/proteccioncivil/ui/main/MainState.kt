@@ -7,17 +7,18 @@ data class MainState(
     val showDlgRecursos: Boolean = false,
     val showDlgServicios: Boolean = false,
     val showDlgPassword: Boolean = false,
-    val token: String = "",
     val showPreferences: Boolean = false
 )
 
 data class PrefState(
-    val token: String = "",
+    val username: String = "",
+    val password: String = "",
     val defaultTimeSplash: String = "1"
 )
 
 fun PrefState.toPreferencias(): Preferencias = Preferencias(
-    token = token,
+    username = username,
+    password = password,
     defaultTimeSplash = defaultTimeSplash.toInt()
 )
 

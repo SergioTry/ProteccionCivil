@@ -260,7 +260,7 @@ private fun NavHostRoutes(
         modifier = Modifier.padding(it)
     ) {
         composable(route = AppScreens.Splash.name) {
-            SplashScreen(mainVM, {
+            SplashScreen(mainVM, loginVM,{
                 if (it) {
                     navController.navigate(AppScreens.Login.name)
                 } else {
@@ -273,10 +273,18 @@ private fun NavHostRoutes(
         }
         composable(route = AppScreens.Login.name) {
             LoginScreen(
-                version = "0.0.0", mainVM = mainVM, loginVM = loginVM, onNavUp = {
-                    selectOption(Icons.Default.Home, navController, anunciosVM, mainVM = mainVM)
+                version = "0.0.0",
+                mainVM = mainVM,
+                loginVM = loginVM,
+                onNavUp = {
+                    selectOption(
+                        clave = Icons.Default.Home,
+                        navController = navController,
+                        anunciosVM = anunciosVM,
+                        mainVM = mainVM
+                    )
                 },
-                savedToken = mainVM.uiPrefState.token.isNotBlank() && mainVM.uiPrefState.token.isNotEmpty()
+                savedToken = mainVM.uiPrefState.username.isNotEmpty() || mainVM.uiPrefState.password.isNotEmpty()
             )
         }
         composable(route = AppScreens.Preferences.name) {

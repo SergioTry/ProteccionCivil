@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,6 +58,7 @@ fun LoginScreen(
     savedToken: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val scope = rememberCoroutineScope()
     val uiLoginState = loginVM.uiLoginState
     var passwordVisible by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -155,7 +157,9 @@ fun LoginScreen(
             }
             Button(
                 onClick = {
+
                     loginVM.login(mainVM, isChecked)
+
                 },
                 enabled = uiLoginState.datosObligatorios,
                 shape = RoundedCornerShape(5.dp),

@@ -11,6 +11,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.repository.MainRepository
+import com.dam.proteccioncivil.ui.screens.login.LoginUiState
+import com.dam.proteccioncivil.ui.screens.login.LoginVM
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
@@ -29,18 +31,34 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
     var uiPrefState by mutableStateOf(PrefState())
         private set
 
-    suspend fun getPreferences() {
+    suspend fun getPreferences(loginVM: LoginVM, showLogin: (Boolean) -> Unit) {
         viewModelScope.async {
             mainRepository.getPreferences().take(1).collect {
                 uiPrefState = uiPrefState.copy(
-                    token = it.token,
+                    username = it.username,
+                    password = it.password,
                     defaultTimeSplash = it.defaultTimeSplash.toString()
                 )
-                uiMainState = uiMainState.copy(
-                    token = uiPrefState.token
-                )
-                if (uiPrefState.token != "") {
-                    decodificarToken(uiPrefState.token)
+                if (uiPrefState.username != "" && uiPrefState.password != "") {
+                    loginVM.setUsername(uiPrefState.username)
+                    loginVM.setPassword(uiPrefState.password)
+                    loginVM.loginAysnc(
+                        mainVM = this@MainVM,
+                        saveToken = true
+                    )
+                    when(loginVM.uiInfoState) {
+                        is LoginUiState.Loading -> {
+                        }
+                        is LoginUiState.Success -> {
+                            showLogin(false)
+                        }
+                        is LoginUiState.Error -> {
+                            resetCredentials()
+                            showLogin(true)
+                        }
+                    }
+
+
                 }
 
             }
@@ -63,15 +81,17 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
         }
     }
 
-    fun setToken(token: String) {
+    fun setCredentials(credentials: Map<String, String>) {
         uiPrefState = uiPrefState.copy(
-            token = token
+            username = credentials["Username"]!!,
+            password = credentials["Password"]!!
         )
     }
 
-    fun resetToken() {
+    fun resetCredentials() {
         uiPrefState = uiPrefState.copy(
-            token = ""
+            username = "",
+            password = ""
         )
     }
 

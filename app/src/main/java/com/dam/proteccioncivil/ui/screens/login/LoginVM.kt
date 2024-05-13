@@ -14,7 +14,9 @@ import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.repository.LoginRepository
 import com.dam.proteccioncivil.ui.main.MainVM
 import com.google.gson.JsonParser
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -22,6 +24,9 @@ import java.io.IOException
 class LoginVM(
     private val loginRepository: LoginRepository
 ) : ViewModel() {
+
+    //Tiempo máximo de espera
+    val timeoutMillis: Long = 5000
     var uiInfoState: LoginUiState by mutableStateOf(LoginUiState.Loading)
         private set
 
@@ -30,6 +35,44 @@ class LoginVM(
 
     // Ese método recibirá el mainVM en caso de que
     // el usuario quiera activar el autoinicio de sesión.
+    suspend fun loginAysnc(mainVM: MainVM, saveToken: Boolean = false) {
+        uiInfoState = LoginUiState.Loading
+        uiInfoState = try {
+            val credentials = mapOf(
+                "Username" to uiLoginState.username,
+                "Password" to uiLoginState.password
+            )
+            var tokenRecibido: String = ""
+            withTimeoutOrNull(timeoutMillis) {
+                tokenRecibido = loginRepository.login(credentials)
+            }
+            if (!tokenRecibido.equals("")) {
+                Log.d("Token: ", tokenRecibido)
+                guardarToken(mainVM, tokenRecibido, saveToken, credentials)
+                LoginUiState.Success
+            } else {
+                Log.e("Token: ", "token no recibido")
+                LoginUiState.Error("Vuelva a intentarlo")
+            }
+        } catch (e: IOException) {
+            LoginUiState.Error("e1")
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()
+            val errorBodyString = errorBody?.string()
+            if (errorBodyString != null) {
+                val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
+                val error = jsonObject["body"]?.asString ?: ""
+                Log.e("LoginVM (login) ", errorBodyString)
+                LoginUiState.Error(error)
+            } else {
+                LoginUiState.Error("Error")
+            }
+        } catch (ex: TimeoutCancellationException) {
+            LoginUiState.Error("Error, no se ha recibido respuesta del servidor")
+        }
+
+    }
+
     fun login(mainVM: MainVM, saveToken: Boolean = false) {
         viewModelScope.launch {
             uiInfoState = LoginUiState.Loading
@@ -38,10 +81,13 @@ class LoginVM(
                     "Username" to uiLoginState.username,
                     "Password" to uiLoginState.password
                 )
-                val tokenRecibido = loginRepository.login(credentials)
+                var tokenRecibido: String = ""
+                withTimeoutOrNull(timeoutMillis) {
+                    tokenRecibido = loginRepository.login(credentials)
+                }
                 if (!tokenRecibido.equals("")) {
                     Log.d("Token: ", tokenRecibido)
-                    guardarToken(mainVM, tokenRecibido, saveToken)
+                    guardarToken(mainVM, tokenRecibido, saveToken, credentials)
                     LoginUiState.Success
                 } else {
                     Log.e("Token: ", "token no recibido")
@@ -60,17 +106,25 @@ class LoginVM(
                 } else {
                     LoginUiState.Error("Error")
                 }
+            } catch (ex: TimeoutCancellationException) {
+                LoginUiState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
 
-    private fun guardarToken(mainVM: MainVM, token: String, saveToken: Boolean) {
+    private fun guardarToken(
+        mainVM: MainVM,
+        token: String,
+        saveToken: Boolean,
+        credentials: Map<String, String>
+    ) {
         mainVM.decodificarToken(token)
+        Token.password = credentials["Password"]
         if (saveToken) {
-            mainVM.setToken(token)
+            mainVM.setCredentials(credentials)
             mainVM.savePreferences()
         } else {
-            mainVM.resetToken()
+            mainVM.resetCredentials()
             mainVM.savePreferences()
         }
     }

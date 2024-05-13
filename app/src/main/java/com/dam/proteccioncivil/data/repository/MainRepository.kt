@@ -17,7 +17,8 @@ import java.io.IOException
 
 class MainRepository(private val context: Context, private val dataStore: DataStore<Preferences>) {
     private companion object {
-        val TOKEN = stringPreferencesKey("token")
+        val USERNAME = stringPreferencesKey("username")
+        val PASSWORD = stringPreferencesKey("password")
         val DEFAULT_TIME_SPLASH = intPreferencesKey("default_time_splash")
     }
 
@@ -30,7 +31,9 @@ class MainRepository(private val context: Context, private val dataStore: DataSt
             }
         }.map { preferences ->
             Preferencias(
-                preferences[TOKEN]
+                preferences[USERNAME]
+                    ?: context.getString(R.string.value_pref_token),
+                preferences[PASSWORD]
                     ?: context.getString(R.string.value_pref_token),
                 preferences[DEFAULT_TIME_SPLASH]
                     ?: context.getString(R.string.value_pref_defaultsplashtime).toInt()
@@ -39,7 +42,8 @@ class MainRepository(private val context: Context, private val dataStore: DataSt
 
     suspend fun savePreferences(prefs: Preferencias) {
         dataStore.edit { preferences ->
-            preferences[TOKEN] = prefs.token
+            preferences[USERNAME] = prefs.username
+            preferences[PASSWORD] = prefs.password
             preferences[DEFAULT_TIME_SPLASH] = prefs.defaultTimeSplash
         }
     }

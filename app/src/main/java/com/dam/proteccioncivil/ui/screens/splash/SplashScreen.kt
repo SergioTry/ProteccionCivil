@@ -14,25 +14,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.dam.proteccioncivil.R
-import com.dam.proteccioncivil.ui.main.AppScreens
 import com.dam.proteccioncivil.ui.main.MainVM
+import com.dam.proteccioncivil.ui.screens.login.LoginVM
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
     mainVM: MainVM,
+    loginVM: LoginVM,
     showLogin: (Boolean) -> Unit,
     version: String
 ) {
     LaunchedEffect(key1 = true) {
-        mainVM.getPreferences()
+        mainVM.getPreferences(loginVM, showLogin)
         delay(mainVM.uiPrefState.defaultTimeSplash.toInt() * 1000L)
-        showLogin(mainVM.uiPrefState.token.isEmpty() || mainVM.uiPrefState.token.isBlank())
     }
     Surface(
         color = Color.White,
