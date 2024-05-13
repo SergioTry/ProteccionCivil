@@ -13,7 +13,7 @@
     <string name="screen_name_news_mto">Anuncios Mto</string>
     <string name="screen_name_home">Inicio</string>
     <string name="screen_name_login">Inicio de sesion</string>
-    <string name="screen_name_vehicles">Vehiculos</string>
+    <string name="screen_name_vehicles">Vehículos</string>
     <string name="screen_name_vehicles_mto">Vehiculos Mto</string>
     <string name="screen_name_splash">Splash</string>
     <string name="screen_name_preferences">Preferencias</string>
@@ -33,6 +33,12 @@
     <string name="loading">Cargando</string>
     <string name="loading_failed">Error al cargar los datos</string>
 
+    <!--Opciones-->
+    <string name="opc_accept">Aceptar</string>
+    <string name="opc_cancel">Cancelar</string>
+
+    <!--Preguntas-->
+    <string name="question_exit">¿Quieres cerrar la aplicación?</string>
 
     <string name="lbl_password">Contraseña</string>
     <string name="lbl_username">Usuario</string>

@@ -6,7 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
+import com.dam.proteccioncivil.R
 
 @Composable
 fun DlgConfirmacion(
@@ -15,30 +16,24 @@ fun DlgConfirmacion(
     onAceptarClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
+
     AlertDialog(
         onDismissRequest = { },
-        title = { Text("Borrado") },
-        text = { Text("¿Estás seguro de eliminar este elemento?") },
+        text = { Text(stringResource(mensaje, 0)) },
         modifier = modifier,
         dismissButton = {
             TextButton(
                 onClick = onCancelarClick
             ) {
-                Text(text = "Cancelar")
+                Text(text = stringResource(R.string.opc_cancel))
             }
         },
         confirmButton = {
             TextButton(
                 onClick = onAceptarClick
             ) {
-                Text(text = "Aceptar")
+                Text(text = stringResource(R.string.opc_accept))
             }
-        }
-    )
-}
+        })
 
-@Preview
-@Composable
-fun DlgConfirmacionScreenPreview() {
-    DlgConfirmacion(0,{},{})
 }

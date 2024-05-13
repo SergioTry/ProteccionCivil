@@ -6,6 +6,7 @@ data class MainState(
     val showDlgSalir: Boolean = false,
     val showDlgRecursos: Boolean = false,
     val showDlgServicios: Boolean = false,
+    val showDlgPassword: Boolean = false,
     val token: String = "",
     val showPreferences: Boolean = false
 )

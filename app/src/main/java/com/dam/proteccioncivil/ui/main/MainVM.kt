@@ -78,6 +78,7 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
     fun decodificarToken(token: String) {
         val jwtClaims = decodeJWT(token)
         Token.token = token
+        Token.codUsuario = jwtClaims.getClaimValue("CodUsuario").toString().toInt()
         Token.username = jwtClaims.getClaimValue("Username").toString()
         Token.fechaNacimiento =
             parsearFecha(jwtClaims.getClaimValue("FechaNacimiento").toString())
@@ -110,6 +111,18 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
     fun setShowDlgServicios(mostrar: Boolean) {
         uiMainState = uiMainState.copy(
             showDlgServicios = mostrar,
+        )
+    }
+
+    fun setShowDlgSalir(mostrar: Boolean) {
+        uiMainState = uiMainState.copy(
+            showDlgSalir = mostrar,
+        )
+    }
+
+    fun setShowDlgPassword(mostrar: Boolean) {
+        uiMainState = uiMainState.copy(
+            showDlgPassword = mostrar,
         )
     }
 

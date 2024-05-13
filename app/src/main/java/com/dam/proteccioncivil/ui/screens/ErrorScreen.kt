@@ -15,14 +15,15 @@ import androidx.compose.ui.unit.dp
 import com.dam.proteccioncivil.R
 
 @Composable
-fun ErrorScreen(retryAction: () -> Unit, err: String,modifier: Modifier = Modifier) {
+fun ErrorScreen(retryAction: () -> Unit, err: String, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.clouderror_icon_icons_com_54404), contentDescription = ""
+            painter = painterResource(id = R.drawable.clouderror_icon_icons_com_54404),
+            contentDescription = ""
         )
         Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
         Text(text = err, modifier = Modifier.padding(16.dp))

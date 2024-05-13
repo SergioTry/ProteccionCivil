@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class Usuario(
     @SerialName("CodUsuario") val codUsuario: Int,
     @SerialName("DNI") val dni: String,
-    @SerialName("Username") val username: String?,
+    @SerialName("Username") val username: String,
     @SerialName("Password") val password: String,
     @SerialName("Nombre") val nombre: String,
     @SerialName("Apellidos") val apellidos: String,

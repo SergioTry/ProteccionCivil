@@ -13,7 +13,7 @@ import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import java.time.YearMonth
 
 @Composable
-fun MainScreen() {
+fun CalendarioScreen() {
     val currentMonth = remember { YearMonth.now() }
     val startMonth = remember { currentMonth.minusMonths(100) } // Adjust as needed
     val endMonth = remember { currentMonth.plusMonths(100) } // Adjust as needed
@@ -53,7 +53,7 @@ fun Day(day: CalendarDay) {
 @Preview
 @Composable
 fun CalendarPreview() {
-    MainScreen()
+    CalendarioScreen()
 }
 //package com.dam.proteccioncivil.ui.screens.calendario
 //

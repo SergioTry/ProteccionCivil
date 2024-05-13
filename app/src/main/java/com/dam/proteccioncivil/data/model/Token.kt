@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 
 object Token {
     var token: String? = null
+    var codUsuario: Int? = null
     var username: String? = null
     var nombre: String? = null
     var fechaNacimiento: LocalDateTime? = null

@@ -6,6 +6,7 @@ import com.dam.proteccioncivil.data.network.AnunciosApiService
 import com.dam.proteccioncivil.data.network.GuardiasApiService
 import com.dam.proteccioncivil.data.network.InfomursApiService
 import com.dam.proteccioncivil.data.network.LoginApiService
+import com.dam.proteccioncivil.data.network.UsuariosApiService
 import com.dam.proteccioncivil.data.repository.AnunciosRepository
 import com.dam.proteccioncivil.data.repository.GuardiasRepository
 import com.dam.proteccioncivil.data.repository.InfomursRepository
@@ -15,6 +16,8 @@ import com.dam.proteccioncivil.data.repository.NetworkAnunciosRepository
 import com.dam.proteccioncivil.data.repository.NetworkGuardiasRepository
 import com.dam.proteccioncivil.data.repository.NetworkInfomursRepository
 import com.dam.proteccioncivil.data.repository.NetworkLoginRepository
+import com.dam.proteccioncivil.data.repository.NetworkUsuariosRepository
+import com.dam.proteccioncivil.data.repository.UsuariosRepository
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -25,6 +28,7 @@ interface AppContainer {
     val mainRepository: MainRepository
     val loginRepository: LoginRepository
     val anunciosRepository: AnunciosRepository
+    val usuariosRepository: UsuariosRepository
     val guardiasRepository: GuardiasRepository
     val infomursRepository: InfomursRepository
 }
@@ -32,8 +36,8 @@ interface AppContainer {
 class DefaultAppContainer(
     private val context: Context
 ) : AppContainer {
-    //private val baseUrl = "http://192.168.56.1:49999/api/"
-    private val baseUrl = "http://192.168.68.50:49999/api/"
+    private val baseUrl = "http://192.168.56.1:49999/api/"
+    //private val baseUrl = "http://192.168.68.50:49999/api/"
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
@@ -56,6 +60,10 @@ class DefaultAppContainer(
         retrofit.create(LoginApiService::class.java)
     }
 
+    private val retrofitUsuariosService: UsuariosApiService by lazy {
+        retrofit.create(UsuariosApiService::class.java)
+    }
+
     override val mainRepository: MainRepository by lazy {
         MainRepository(context, AppDatastore(context).getDataStore())
     }
@@ -74,5 +82,8 @@ class DefaultAppContainer(
 
     override val loginRepository: LoginRepository by lazy {
         NetworkLoginRepository(retrofitLoginService)
+    }
+    override val usuariosRepository: UsuariosRepository by lazy {
+        NetworkUsuariosRepository(retrofitUsuariosService)
     }
 }

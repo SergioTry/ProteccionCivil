@@ -20,17 +20,6 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-sealed interface AnunciosUiState {
-    data class Success(val anuncios: List<Anuncio>) : AnunciosUiState
-    data class Error(val err: String) : AnunciosUiState
-    object Loading : AnunciosUiState
-}
-
-sealed interface AnunciosMessageState {
-    data object Success : AnunciosMessageState
-    data class Error(val err: String) : AnunciosMessageState
-    data object Loading : AnunciosMessageState
-}
 
 class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anuncio>, ViewModel() {
 
@@ -63,7 +52,7 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (getAll) ", errorBodyString)
+                    Log.e("AnunciosVM (get) ", errorBodyString)
                     AnunciosUiState.Error(error)
                 } else {
                     AnunciosUiState.Error("Error")
@@ -114,7 +103,7 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    Log.e("AnunciosVM (update) ", errorBodyString)
                     AnunciosMessageState.Error(error)
                 } else {
                     AnunciosMessageState.Error("Error")
@@ -143,7 +132,7 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (alta) ", errorBodyString)
+                    Log.e("AnunciosVM (set) ", errorBodyString)
                     AnunciosMessageState.Error(error)
                 } else {
                     AnunciosMessageState.Error("Error")

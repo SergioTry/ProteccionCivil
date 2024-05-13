@@ -1,5 +1,6 @@
 package com.dam.proteccioncivil.pantallas.home
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -10,25 +11,25 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.ui.main.MainVM
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    mainVM: MainVM,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.gris))
     ) {
+        BackHandler(enabled = true, onBack = {
+            mainVM.setShowDlgSalir(true)
+        })
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = "Escudo de Caravaca De La Cruz",
             modifier = Modifier.fillMaxSize(),
         )
     }
-}
-
-
-@Preview
-@Composable
-fun MainScreenPreview() {
-    MainScreen()
 }

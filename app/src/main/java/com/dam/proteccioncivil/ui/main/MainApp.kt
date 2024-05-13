@@ -1,5 +1,6 @@
 package com.dam.proteccioncivil.ui.main
 
+import CalendarioScreen
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.res.Configuration
@@ -52,6 +53,8 @@ import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.pantallas.chat.PantallaMensajes
 import com.dam.proteccioncivil.pantallas.home.MainScreen
+import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
+import com.dam.proteccioncivil.ui.dialogs.DlgPassword
 import com.dam.proteccioncivil.ui.dialogs.DlgRecursos
 import com.dam.proteccioncivil.ui.dialogs.DlgServicios
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosMto
@@ -67,6 +70,7 @@ import com.dam.proteccioncivil.ui.screens.login.LoginScreen
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
 import com.dam.proteccioncivil.ui.screens.preferencias.PrefScreen
 import com.dam.proteccioncivil.ui.screens.splash.SplashScreen
+import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -99,6 +103,7 @@ fun MainApp(
     modifier: Modifier = Modifier
 ) {
     val configuration = LocalConfiguration.current
+    val activity = (LocalContext.current as? Activity)
 
     val navController: NavHostController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -110,6 +115,9 @@ fun MainApp(
 
     val loginVM: LoginVM =
         viewModel(factory = LoginVM.Factory)
+
+    val usuariosVM: UsuariosVM =
+        viewModel(factory = UsuariosVM.Factory)
 
     val anunciosVM: AnunciosVM =
         viewModel(factory = AnunciosVM.Factory)
@@ -128,6 +136,10 @@ fun MainApp(
         Icons.AutoMirrored.Filled.Chat to stringResource(R.string.screen_name_chat),
     )
 
+    if (Token.rango != null && Token.rango == "Nuevo") {
+        mainVM.setShowDlgPassword(true)
+    }
+
     if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT
         && windowSize == WindowWidthSizeClass.Compact
     ) {
@@ -137,14 +149,16 @@ fun MainApp(
                 if (currentScreen != AppScreens.Splash) {
                     MainTopAppBar(
                         scope = scope,
-                        isLandscape = false,
                         currentScreen = currentScreen,
-                        canNavigateBack = (currentScreen.name != AppScreens.Splash.name),
+                        canNavigateBack = (currentScreen.name != AppScreens.Splash.name && currentScreen.name != AppScreens.Home.name),
                         showLoginScreen = { navController.navigate(AppScreens.Login.name) },
                         showPrefScreen = { navController.navigate(AppScreens.Preferences.name) },
                         showAnoScreen = {
                             anunciosVM.getAll()
                             navController.navigate(AppScreens.Anuncios.name)
+                        },
+                        showDlgSalir = {
+                            mainVM.setShowDlgSalir(true)
                         },
                         navigateUp = {
                             backButtonNavigation(currentScreen, navController)
@@ -177,11 +191,27 @@ fun MainApp(
             )
         }
     }
+    if (mainVM.uiMainState.showDlgPassword) {
+        DlgPassword(usuariosVM = usuariosVM, onEstablecerClick = {
+            usuariosVM.changePassword()
+            mainVM.setShowDlgPassword(false)
+        })
+    }
     if (mainVM.uiMainState.showDlgRecursos) {
         DlgRecursos(
             onCancelarClick = { mainVM.setShowDlgRecursos(false) },
             onVehiculosClick = { mainVM.setShowDlgRecursos(false) },
             onVoluntariosClick = { mainVM.setShowDlgRecursos(false) })
+    }
+    if (mainVM.uiMainState.showDlgSalir) {
+        DlgConfirmacion(
+            onCancelarClick = { mainVM.setShowDlgSalir(false) },
+            onAceptarClick = {
+                mainVM.setShowDlgSalir(false)
+                activity?.finish()
+            },
+            mensaje = R.string.question_exit
+        )
     }
     if (mainVM.uiMainState.showDlgServicios) {
         DlgServicios(
@@ -239,7 +269,7 @@ private fun NavHostRoutes(
             }, "0.0.0")
         }
         composable(route = AppScreens.Home.name) {
-            MainScreen()
+            MainScreen(mainVM)
         }
         composable(route = AppScreens.Login.name) {
             LoginScreen(
@@ -329,6 +359,10 @@ private fun NavHostRoutes(
                 onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
         }
 
+        composable(route = AppScreens.Calendar.name) {
+            CalendarioScreen()
+        }
+
         composable(route = AppScreens.Chat.name) {
             PantallaMensajes()
         }
@@ -407,6 +441,7 @@ private fun selectOption(
     anunciosVM: AnunciosVM,
     mainVM: MainVM
 ) {
+    navController.popBackStack(AppScreens.Home.name, false)
     when (clave.name) {
         Icons.Default.Home.name -> {
 
@@ -415,12 +450,11 @@ private fun selectOption(
             )
         }
 
-//        Icons.Default.CalendarMonth.name -> {
-//            anunciosVM.getAll()
-//            navController.navigate(
-//                AppScreens.Calendar.name
-//            )
-//        }
+        Icons.Default.CalendarMonth.name -> {
+            navController.navigate(
+                AppScreens.Calendar.name
+            )
+        }
 
         Icons.Default.WorkOutline.name -> {
             mainVM.setShowDlgServicios(true)
@@ -470,17 +504,16 @@ private fun backButtonNavigation(
 @Composable
 fun MainTopAppBar(
     scope: CoroutineScope,
-    isLandscape: Boolean,
     currentScreen: AppScreens,
     canNavigateBack: Boolean,
     showLoginScreen: () -> Unit,
     showPrefScreen: () -> Unit,
     showAnoScreen: () -> Unit,
+    showDlgSalir: () -> Unit,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
-    val activity = (LocalContext.current as? Activity)
 
     CenterAlignedTopAppBar(
         title = {
@@ -500,10 +533,6 @@ fun MainTopAppBar(
                         contentDescription = null
                     )
                 }
-            } else if (isLandscape && currentScreen.name != AppScreens.Splash.name) {
-//                IconButton(onClick = { scope.launch { drawerState.open() } }) {
-//                    Icon(imageVector = Icons.Filled.Menu, contentDescription = null)
-//                }
             }
         },
         actions = {
@@ -531,7 +560,8 @@ fun MainTopAppBar(
 
                         DropdownMenuItem(text = { Text(text = stringResource(R.string.menu_salir)) },
                             onClick = {
-                                //mainVM.setShowDlgSalir(true)
+                                showDlgSalir()
+                                showMenu = false
                             })
                     }
 //                if (mainVM.uiMainState.showDlgSalir) {
