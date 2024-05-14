@@ -151,7 +151,10 @@ fun LoginScreen(
                     .padding(16.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
-                Checkbox(checked = isChecked, onCheckedChange = null)
+                Checkbox(
+                    checked = isChecked,
+                    onCheckedChange = null
+                )
                 Spacer(Modifier.size(6.dp))
                 Text("Recuérdame")
             }

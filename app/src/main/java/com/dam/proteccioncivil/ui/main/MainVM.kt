@@ -46,21 +46,19 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
                         mainVM = this@MainVM,
                         saveToken = true
                     )
-                    when(loginVM.uiInfoState) {
-                        is LoginUiState.Loading -> {
-                        }
-                        is LoginUiState.Success -> {
-                            showLogin(false)
-                        }
-                        is LoginUiState.Error -> {
-                            resetCredentials()
-                            showLogin(true)
-                        }
-                    }
-
-
                 }
-
+                when(loginVM.uiInfoState) {
+                    is LoginUiState.Loading -> {
+                        showLogin(true)
+                    }
+                    is LoginUiState.Success -> {
+                        showLogin(false)
+                    }
+                    is LoginUiState.Error -> {
+                        resetCredentials()
+                        showLogin(true)
+                    }
+                }
             }
         }.await()
     }

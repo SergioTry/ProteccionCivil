@@ -26,7 +26,7 @@ class LoginVM(
 ) : ViewModel() {
 
     //Tiempo máximo de espera
-    val timeoutMillis: Long = 5000
+    val timeoutMillis: Long = 3000
     var uiInfoState: LoginUiState by mutableStateOf(LoginUiState.Loading)
         private set
 

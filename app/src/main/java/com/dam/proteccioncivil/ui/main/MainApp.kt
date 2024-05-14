@@ -284,7 +284,7 @@ private fun NavHostRoutes(
                         mainVM = mainVM
                     )
                 },
-                savedToken = mainVM.uiPrefState.username.isNotEmpty() || mainVM.uiPrefState.password.isNotEmpty()
+                savedToken = loginVM.uiLoginState.username.isNotEmpty() && loginVM.uiLoginState.password.isNotEmpty()
             )
         }
         composable(route = AppScreens.Preferences.name) {
