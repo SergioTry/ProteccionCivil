@@ -19,7 +19,7 @@ fun DlgConfirmacion(
 
     AlertDialog(
         onDismissRequest = { },
-        text = { Text(stringResource(mensaje, 0)) },
+        text = { Text(stringResource(mensaje)) },
         modifier = modifier,
         dismissButton = {
             TextButton(

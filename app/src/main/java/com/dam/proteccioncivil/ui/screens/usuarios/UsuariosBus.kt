@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -35,24 +36,55 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.Token
+import com.dam.proteccioncivil.data.model.Usuario
+import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
 import java.time.format.DateTimeFormatter
-
-class Usuario(
-    val id: String,
-    val nombre: String
-)
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun vehiculoBusScreen() {
-    val sampleMessages = listOf(
-        "cxosa", "cxosa",
-        "cxosa", "cxosa"
-    )
+fun UsuariosBus(
+    usuarios: List<Usuario>,
+    usuarioVM: UsuariosVM,
+    onShowSnackBar: (String) -> Unit,
+    modifier: Modifier,
+    onNavUp: () -> Unit,
+    refresh: () -> Unit
+) {
+    val mensage: String
+    val contexto = LocalContext.current
+
+    when (usuarioVM.usuariosMessageState) {
+        is UsuariosMessageState.Loading -> {
+        }
+
+        is UsuariosMessageState.Success -> {
+            mensage = ContextCompat.getString(
+                contexto,
+                R.string.guardia_delete_success
+            )
+            onShowSnackBar(mensage)
+            usuarioVM.resetUsuarioMtoState()
+            usuarioVM.resetInfoState()
+            usuarioVM.getAll()
+            refresh()
+        }
+
+        is UsuariosMessageState.Error -> {
+            mensage = ContextCompat.getString(
+                contexto,
+                R.string.guardia_delete_failure
+            )
+            onShowSnackBar(mensage)
+            usuarioVM.resetInfoState()
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -68,7 +100,8 @@ fun vehiculoBusScreen() {
                 Box(
                     modifier = Modifier
                         .padding(1.dp)
-                        .border(BorderStroke(1.dp, Color.Black)).width(160.dp),
+                        .border(BorderStroke(1.dp, Color.Black))
+                        .width(160.dp),
                 ) {
                     Row(
                         modifier = Modifier
@@ -92,7 +125,10 @@ fun vehiculoBusScreen() {
                             onClick = { /*TODO*/ }, modifier = Modifier
                                 .align(Alignment.CenterVertically)
                         ) {
-                            Icon(imageVector = Icons.Filled.KeyboardArrowDown, contentDescription = "")
+                            Icon(
+                                imageVector = Icons.Filled.KeyboardArrowDown,
+                                contentDescription = ""
+                            )
                         }
                     }
                 }
@@ -127,18 +163,18 @@ fun vehiculoBusScreen() {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 content = {
-                    items(sampleMessages.size) { index ->
+                    items(usuarios) { it ->
                         usuarioCard(
-                            usuario = Usuario(
-                                "15-V-02",
-                                "Paco"
-                            )
-                        )
+                            usuario = it,
+                            onNavUp = { onNavUp() },
+                            usuariosVM = usuarioVM,
+                            modifier = modifier,
+                            refresh = { refresh() })
                     }
                 }
             )
         }
-        if (true) {
+        if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -156,11 +192,30 @@ fun vehiculoBusScreen() {
                 }
             }
         }
+        if (usuarioVM.showDlgConfirmation) {
+            DlgConfirmacion(
+                mensaje = R.string.guardia_delete_confirmation,
+                onCancelarClick = {
+                    usuarioVM.showDlgConfirmation = false
+                    refresh()
+                },
+                onAceptarClick = {
+                    usuarioVM.showDlgConfirmation = false
+                    usuarioVM.deleteBy()
+                }
+            )
+        }
     }
 }
 
 @Composable
-fun usuarioCard(usuario: Usuario) {
+fun usuarioCard(
+    usuario: Usuario,
+    onNavUp: () -> Unit,
+    usuariosVM: UsuariosVM,
+    modifier: Modifier,
+    refresh: () -> Unit
+) {
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     Card(
         modifier = Modifier
@@ -179,30 +234,32 @@ fun usuarioCard(usuario: Usuario) {
             Spacer(modifier = Modifier.width(28.dp))
             Column {
                 Spacer(modifier = Modifier.height(18.dp))
-                Text(text = usuario.id)
+                Text(text = usuario.codUsuario.toString())
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = usuario.nombre)
             }
             Spacer(modifier = Modifier.width(90.dp))
-            if (true) {
+            if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 Row {
                     Spacer(modifier = Modifier.height(28.dp))
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        usuariosVM.resetUsuarioMtoState()
+                        usuariosVM.cloneUsuarioMtoState(usuario)
+                        usuariosVM.showDlgConfirmation = true
+                        refresh()
+                    }) {
                         Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
                     }
                     Spacer(modifier = Modifier.height(28.dp))
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        usuariosVM.resetUsuarioMtoState()
+                        usuariosVM.cloneUsuarioMtoState(usuario)
+                        onNavUp()
+                    }) {
                         Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
                     }
                 }
             }
         }
     }
-}
-
-
-@Preview
-@Composable
-fun vehiculoBusScreenPreview() {
-    vehiculoBusScreen()
 }

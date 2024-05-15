@@ -59,7 +59,6 @@ fun AnunciosBus(
 
         is AnunciosMessageState.Success -> {
             mensage = ContextCompat.getString(contexto, R.string.anuncios_delete_success)
-
             onShowSnackBar(mensage)
             anunciosVM.resetAnuncioMtoState()
             anunciosVM.resetInfoState()
@@ -119,7 +118,7 @@ fun AnunciosBus(
         }
         if (anunciosVM.showDlgConfirmation) {
             DlgConfirmacion(
-                mensaje = 0,
+                mensaje = R.string.anuncios_delete_confirmation,
                 onCancelarClick = {
                     anunciosVM.showDlgConfirmation = false
                     refresh()

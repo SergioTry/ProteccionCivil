@@ -70,6 +70,8 @@ import com.dam.proteccioncivil.ui.screens.login.LoginScreen
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
 import com.dam.proteccioncivil.ui.screens.preferencias.PrefScreen
 import com.dam.proteccioncivil.ui.screens.splash.SplashScreen
+import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosMto
+import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosScreen
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -86,6 +88,8 @@ enum class AppScreens(@StringRes val title: Int) {
     VehiclesMto(title = R.string.screen_name_vehicles_mto),
     Anuncios(title = R.string.screen_name_announces),
     AnunciosMto(title = R.string.screen_name_announces_mto),
+    Usuarios(title = R.string.screen_name_users),
+    UsuariosMto(title = R.string.screen_name_users_mto),
     Guardias(title = R.string.screen_name_guards),
     GuardiasMto(title = R.string.screen_name_guards_mto),
     Infomurs(title = R.string.screen_name_infomurs),
@@ -184,6 +188,7 @@ fun MainApp(
                 scope,
                 snackbarHostState,
                 anunciosVM,
+                usuariosVM,
                 guardiasVM,
                 infomursVM,
                 mainVM,
@@ -201,7 +206,11 @@ fun MainApp(
         DlgRecursos(
             onCancelarClick = { mainVM.setShowDlgRecursos(false) },
             onVehiculosClick = { mainVM.setShowDlgRecursos(false) },
-            onVoluntariosClick = { mainVM.setShowDlgRecursos(false) })
+            onVoluntariosClick = {
+                mainVM.setShowDlgRecursos(false)
+                usuariosVM.getAll()
+                navController.navigate(AppScreens.Usuarios.name)
+            })
     }
     if (mainVM.uiMainState.showDlgSalir) {
         DlgConfirmacion(
@@ -249,6 +258,7 @@ private fun NavHostRoutes(
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
     anunciosVM: AnunciosVM,
+    usuariosVM: UsuariosVM,
     guardiasVM: GuardiasVM,
     infomursVM: InfomursVM,
     mainVM: MainVM,
@@ -256,11 +266,11 @@ private fun NavHostRoutes(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AppScreens.Splash.name,
+        startDestination = AppScreens.Login.name,
         modifier = Modifier.padding(it)
     ) {
         composable(route = AppScreens.Splash.name) {
-            SplashScreen(mainVM, loginVM,{
+            SplashScreen(mainVM, loginVM, {
                 if (it) {
                     navController.navigate(AppScreens.Login.name)
                 } else {
@@ -295,15 +305,6 @@ private fun NavHostRoutes(
                 }
             )
         }
-        composable(route = AppScreens.Vehicles.name) {
-
-        }
-
-        composable(route = AppScreens.GuardiasMto.name) {
-            GuardiaMto(guardiasVM = guardiasVM,
-                refresh = { navController.navigate(AppScreens.Guardias.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
-        }
 
         composable(route = AppScreens.Guardias.name) {
             GuardiasScreen(
@@ -315,9 +316,9 @@ private fun NavHostRoutes(
                 onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
         }
 
-        composable(route = AppScreens.InfomursMto.name) {
-            InfomurMto(infomursVM = infomursVM,
-                refresh = { navController.navigate(AppScreens.Infomurs.name) },
+        composable(route = AppScreens.GuardiasMto.name) {
+            GuardiaMto(guardiasVM = guardiasVM,
+                refresh = { navController.navigate(AppScreens.Guardias.name) },
                 onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
         }
 
@@ -331,13 +332,9 @@ private fun NavHostRoutes(
                 onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
         }
 
-        composable(route = AppScreens.Guardias.name) {
-            GuardiasScreen(
-                guardiasUiState = guardiasVM.guardiasUiState,
-                guardiasVM = guardiasVM,
-                retryAction = { guardiasVM::getAll },
-                onNavUp = { navController.navigate(AppScreens.GuardiasMto.name) },
-                refresh = { navController.navigate(AppScreens.Guardias.name) },
+        composable(route = AppScreens.InfomursMto.name) {
+            InfomurMto(infomursVM = infomursVM,
+                refresh = { navController.navigate(AppScreens.Infomurs.name) },
                 onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
         }
 
@@ -357,18 +354,28 @@ private fun NavHostRoutes(
                 onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
         }
 
-        composable(route = AppScreens.Anuncios.name) {
-            AnunciosScreen(
-                anunciosUiState = anunciosVM.anunciosUiState,
-                anunciosVM = anunciosVM,
-                retryAction = { anunciosVM::getAll },
-                onNavUp = { navController.navigate(AppScreens.AnunciosMto.name) },
-                refresh = { navController.navigate(AppScreens.Anuncios.name) },
+        composable(route = AppScreens.Usuarios.name) {
+            UsuariosScreen(
+                usuariosUiState = usuariosVM.usuariosUiState,
+                usuariosVM = usuariosVM,
+                retryAction = { usuariosVM::getAll },
+                onNavUp = { navController.navigate(AppScreens.UsuariosMto.name) },
+                refresh = { navController.navigate(AppScreens.Usuarios.name) },
+                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+        }
+
+        composable(route = AppScreens.UsuariosMto.name) {
+            UsuariosMto(usuariosVM = usuariosVM,
+                refresh = { navController.navigate(AppScreens.Usuarios.name) },
                 onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
         }
 
         composable(route = AppScreens.Calendar.name) {
             CalendarioScreen()
+        }
+
+        composable(route = AppScreens.Vehicles.name) {
+
         }
 
         composable(route = AppScreens.Chat.name) {

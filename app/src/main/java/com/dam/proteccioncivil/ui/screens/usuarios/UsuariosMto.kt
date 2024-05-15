@@ -26,17 +26,46 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import com.dam.proteccioncivil.data.model.FormatDate
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun UsuarioMtoScreen() {
-    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+fun UsuariosMto(refresh: () -> Unit, usuariosVM: UsuariosVM, onShowSnackBar: (String) -> Unit) {
+
+    val mensage: String
+    val contexto = LocalContext.current
+
+    when (usuariosVM.usuariosMessageState) {
+        is UsuariosMessageState.Loading -> {
+        }
+
+        is UsuariosMessageState.Success -> {
+            mensage = ContextCompat.getString(
+                contexto,
+                R.string.guardia_delete_success
+            )
+            onShowSnackBar(mensage)
+            usuariosVM.resetUsuarioMtoState()
+            usuariosVM.resetInfoState()
+            usuariosVM.getAll()
+            refresh()
+        }
+
+        is UsuariosMessageState.Error -> {
+            mensage = ContextCompat.getString(
+                contexto,
+                R.string.guardia_delete_failure
+            )
+            onShowSnackBar(mensage)
+            usuariosVM.resetInfoState()
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -105,7 +134,7 @@ fun UsuarioMtoScreen() {
                             modifier = Modifier.weight(1f)
                         ) {
                             OutlinedTextField(
-                                value = LocalDate.now().format(formatter),
+                                value = FormatDate.use(),
                                 onValueChange = { },
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -144,10 +173,4 @@ fun UsuarioMtoScreen() {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun DummyScreenPreview() {
-    UsuarioMtoScreen()
 }

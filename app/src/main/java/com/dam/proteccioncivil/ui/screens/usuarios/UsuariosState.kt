@@ -25,6 +25,7 @@ data class UsuariosMtoState(
     val rango: String = "",
     val telefono: String = "",
     val conductor: Boolean = false,
+    val datosObligatorios: Boolean = false,
 )
 
 data class NewUsuarioState(

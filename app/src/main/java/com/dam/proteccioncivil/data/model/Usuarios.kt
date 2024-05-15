@@ -15,5 +15,6 @@ data class Usuario(
     @SerialName("CorreoElectronico") val correoElectronico: String,
     @SerialName("Telefono") val telefono: String?,
     @SerialName("Rango") val rango: String,
-    @SerialName("Conductor") val conductor: Short
+    @SerialName("Conductor") val conductor: Short,
+    @SerialName("Permisos") val permisos: List<Permiso> = listOf()
 )

@@ -129,7 +129,7 @@ fun InfomurBus(
         }
         if (infomursVM.showDlgConfirmation) {
             DlgConfirmacion(
-                mensaje = 0,
+                mensaje = R.string.infomurs_delete_confirmation,
                 onCancelarClick = {
                     infomursVM.showDlgConfirmation = false
                     refresh()

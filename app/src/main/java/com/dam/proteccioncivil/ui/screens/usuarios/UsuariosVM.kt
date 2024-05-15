@@ -15,8 +15,6 @@ import com.dam.proteccioncivil.data.model.ObjectToStringMap
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
-import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
-import com.dam.proteccioncivil.ui.screens.anuncios.toAnuncio
 import com.google.gson.JsonParser
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -36,20 +34,113 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
     var usuarioNewState by mutableStateOf(NewUsuarioState())
         private set
 
+    var showDlgConfirmation = false
+
+    fun resetInfoState() {
+        usuariosMessageState = UsuariosMessageState.Loading
+    }
+
     override fun getAll() {
-        TODO("Not yet implemented")
+        viewModelScope.launch {
+            usuariosUiState = UsuariosUiState.Loading
+            usuariosUiState = try {
+                val usuarios = usuariosRepository.getUsuarios()
+                UsuariosUiState.Success(usuarios)
+            } catch (e: IOException) {
+                UsuariosUiState.Error("e1")
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()
+                val errorBodyString = errorBody?.string()
+                if (errorBodyString != null) {
+                    val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
+                    val error = jsonObject["body"]?.asString ?: ""
+                    Log.e("infomursVM (getAll) ", errorBodyString)
+                    UsuariosUiState.Error(error)
+                } else {
+                    UsuariosUiState.Error("Error")
+                }
+            }
+        }
     }
 
     override fun deleteBy() {
-        TODO("Not yet implemented")
-    }
-
-    override fun setNew() {
-        TODO("Not yet implemented")
+        viewModelScope.launch {
+            usuariosMessageState = UsuariosMessageState.Loading
+            usuariosMessageState = try {
+                usuariosRepository.deleteUsuario(usuariosMtoState.codUsuario.toInt())
+                UsuariosMessageState.Success
+            } catch (e: IOException) {
+                UsuariosMessageState.Error("e1")
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()
+                val errorBodyString = errorBody?.string()
+                if (errorBodyString != null) {
+                    val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
+                    val error = jsonObject["body"]?.asString ?: ""
+                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    UsuariosMessageState.Error(error)
+                } else {
+                    UsuariosMessageState.Error("Error")
+                }
+            } catch (e: KotlinNullPointerException) {
+                UsuariosMessageState.Success
+            }
+        }
     }
 
     override fun update() {
-        TODO("Not yet implemented")
+        viewModelScope.launch {
+            usuariosMessageState = UsuariosMessageState.Loading
+            usuariosMessageState = try {
+                usuariosRepository.updateUsuario(
+                    usuariosMtoState.codUsuario.toInt(),
+                    ObjectToStringMap.use(usuariosMtoState.toUsuario())
+                )
+                UsuariosMessageState.Success
+            } catch (e: IOException) {
+                UsuariosMessageState.Error("e1")
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()
+                val errorBodyString = errorBody?.string()
+                if (errorBodyString != null) {
+                    val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
+                    val error = jsonObject["body"]?.asString ?: ""
+                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    UsuariosMessageState.Error(error)
+                } else {
+                    UsuariosMessageState.Error("Error")
+                }
+            } catch (e: KotlinNullPointerException) {
+                //Esta excepcion se lanza cuando recibimos el 204, ya que este al no tener body provoca
+                //error aunque el comportamiento es el que queremos, de ahi que al tratarla se maneje
+                //como success
+                UsuariosMessageState.Success
+            }
+        }
+    }
+
+    override fun setNew() {
+        viewModelScope.launch {
+            usuariosMessageState = UsuariosMessageState.Loading
+            usuariosMessageState = try {
+                val usuarioMap = ObjectToStringMap.use(usuariosMtoState.toUsuario())
+                usuariosRepository.setUsuario(usuarioMap)
+                UsuariosMessageState.Success
+            } catch (e: IOException) {
+                UsuariosMessageState.Error("e1")
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()
+                val errorBodyString = errorBody?.string()
+                if (errorBodyString != null) {
+                    val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
+                    val error = jsonObject["body"]?.asString ?: ""
+                    Log.e("AnunciosVM (alta) ", errorBodyString)
+                    UsuariosMessageState.Error(error)
+                } else {
+                    UsuariosMessageState.Error("Error")
+                }
+            }
+        }
     }
 
     fun setNewPassword(password: String) {
@@ -63,6 +154,40 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
         usuarioNewState = usuarioNewState.copy(
             confirmPassword = password,
             contraseñasCorrectass = usuarioNewState.password.equals(password)
+        )
+    }
+
+    fun resetUsuarioMtoState() {
+        usuariosMtoState = usuariosMtoState.copy(
+            "0",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            false,
+            false
+        )
+    }
+
+    fun cloneUsuarioMtoState(usuario: Usuario) {
+        usuariosMtoState = usuariosMtoState.copy(
+            usuario.codUsuario.toString(),
+            usuario.dni,
+            usuario.username,
+            usuario.password,
+            usuario.nombre,
+            usuario.apellidos,
+            usuario.fechaNacimiento,
+            usuario.correoElectronico,
+            usuario.rango,
+            if (usuario.telefono != null) usuario.telefono.toString() else "",
+            false,
+            true
         )
     }
 
@@ -101,7 +226,8 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MainApplication)
+                val application =
+                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MainApplication)
                 val usuariosRepository = application.container.usuariosRepository
                 UsuariosVM(usuariosRepository = usuariosRepository)
             }

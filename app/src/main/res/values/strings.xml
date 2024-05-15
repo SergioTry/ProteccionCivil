@@ -52,7 +52,7 @@
     <string name="anuncios_delete_success">Eliminación de anuncio correcta</string>
     <string name="anuncios_delete_failure">Hubo un error al eliminar el anuncio</string>
     <string name="infomurs_delete_failure">Hubo un error al eliminar el infomur</string>
-    <string name="infomurs_delete_success">Exito al eliminar el anuncio</string>
+    <string name="infomurs_delete_success">Exito al eliminar el infomur</string>
     <string name="infomur_create_success">Exito al crear el infomur</string>
     <string name="infomur_create_failure">Hubo un error al crear el infomur</string>
     <string name="infomur_edit_success">Exito al editar el infomur</string>
@@ -63,4 +63,9 @@
     <string name="guardia_create_success">Exito al crear la guardia</string>
     <string name="guardia_delete_success">Exito al eliminar la guardia</string>
     <string name="guardia_delete_failure">Hubo un error al eliminar la guardia</string>
+    <string name="anuncios_delete_confirmation">Esta seguro de que desea eliminar este anuncio</string>
+    <string name="infomurs_delete_confirmation">Esta seguro de que quiere eliminar este infomur</string>
+    <string name="guardia_delete_confirmation">Esta seguro de que quiere eliminar esta guardia</string>
+    <string name="screen_name_users">Usuarios</string>
+    <string name="screen_name_users_mto">UsuariosMto</string>
 </resources>

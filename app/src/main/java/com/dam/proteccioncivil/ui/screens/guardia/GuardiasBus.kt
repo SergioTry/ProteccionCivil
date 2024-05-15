@@ -132,7 +132,7 @@ fun GuardiasBus(
         }
         if (guardiasVM.showDlgConfirmation) {
             DlgConfirmacion(
-                mensaje = 0,
+                mensaje = R.string.guardia_delete_confirmation,
                 onCancelarClick = {
                     guardiasVM.showDlgConfirmation = false
                     refresh()
