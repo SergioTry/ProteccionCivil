@@ -160,9 +160,7 @@ fun LoginScreen(
             }
             Button(
                 onClick = {
-
                     loginVM.login(mainVM, isChecked)
-
                 },
                 enabled = uiLoginState.datosObligatorios,
                 shape = RoundedCornerShape(5.dp),

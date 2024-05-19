@@ -1,7 +1,10 @@
 package com.dam.proteccioncivil.data.model
 
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.Locale
 
 class ObjectToStringMap {
     companion object {
@@ -52,3 +55,4 @@ class FormatDate {
         }
     }
 }
+

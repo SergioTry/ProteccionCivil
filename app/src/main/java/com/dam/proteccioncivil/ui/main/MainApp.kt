@@ -266,7 +266,7 @@ private fun NavHostRoutes(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AppScreens.Login.name,
+        startDestination = AppScreens.Splash.name,
         modifier = Modifier.padding(it)
     ) {
         composable(route = AppScreens.Splash.name) {
