@@ -1,6 +1,7 @@
 package com.dam.proteccioncivil.ui.screens.calendario
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -37,7 +41,7 @@ import java.time.DayOfWeek
 import java.time.YearMonth
 
 
-private val selectedItemColor: Color @Composable get() = Color.Gray
+private val selectedItemColor: Color @Composable get() = Color.Black
 private val inActiveTextColor: Color @Composable get() = Color.LightGray
 
 //private val itemBackgroundColor: Color @Composable get() = colorResource(R.color.example_5_item_view_bg_color)
@@ -62,15 +66,25 @@ fun SimpleCalendarTitle(
             contentDescription = "Previous",
             onClick = goToPrevious,
         )
-        Text(
+        Box(
             modifier = Modifier
                 .weight(1f)
-                .testTag("MonthTitle"),
-            text = currentMonth.displayText(),
-            fontSize = 22.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Medium,
-        )
+                .height(40.dp)
+                .testTag("MonthTitle")
+                .background(
+                    color = Color(161, 102, 42),
+                    shape = RoundedCornerShape(10.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = currentMonth.displayText(),
+                fontSize = 24.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Medium,
+                color = Color.White,
+            )
+        }
         CalendarNavigationIcon(
             icon = painterResource(id = R.drawable.ic_right),
             contentDescription = "Next",
@@ -112,13 +126,8 @@ fun Day(
     Box(
         modifier = Modifier
             .aspectRatio(1f)
-            .border(
-                width = if (isSelected) 1.dp else 0.dp,
-                color = if (isSelected) selectedItemColor else Color.Black,
-            )
             .padding(1.dp)
             .background(color = itemBackgroundColor)
-            // Disable clicks on inDates/outDates
             .clickable(
                 enabled = day.position == DayPosition.MonthDate,
                 onClick = { onClick(day) },
@@ -128,6 +137,12 @@ fun Day(
             DayPosition.MonthDate -> Color.Unspecified
             DayPosition.InDate, DayPosition.OutDate -> inActiveTextColor
         }
+        if (isSelected)
+            Image(
+                painter = painterResource(id = R.drawable.lupa),
+                contentDescription = "Lupa",
+                modifier = Modifier.fillMaxSize(),
+            )
         Text(
             modifier = Modifier
                 .align(Alignment.Center),
@@ -148,13 +163,17 @@ fun Day(
                 )
             }
         }
+
     }
 }
 
 @Composable
 fun ColoredCircle(color: Color) {
     Canvas(modifier = Modifier.size(10.dp)) {
-        drawCircle(color = color)
+        val strokeWidth = 1.5f // Ancho del borde
+        val radius = size.minDimension / 2f // Radio del círculo
+        drawCircle(color = color, radius = radius - strokeWidth)
+        drawCircle(color = Color.Black, radius = radius, style = Stroke(width = strokeWidth))
     }
 }
 

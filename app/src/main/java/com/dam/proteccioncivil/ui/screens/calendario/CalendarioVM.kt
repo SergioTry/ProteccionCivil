@@ -118,7 +118,7 @@ class CalendarioVM(
         }
 
         if (servicio.preventivo != null) {
-            colors.add(Color.Green)
+            colors.add(if (servicio.preventivo.riesgo.toInt() == 0) Color.Green else Color.Red)
         }
 
         return colors
