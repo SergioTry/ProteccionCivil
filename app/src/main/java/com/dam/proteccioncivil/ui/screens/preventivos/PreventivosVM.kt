@@ -9,13 +9,13 @@ import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Preventivo
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.data.model.Vehiculo
-import com.dam.proteccioncivil.data.repository.PreventivoRepository
+import com.dam.proteccioncivil.data.repository.PreventivosRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class PreventivosVM(
-    private val preventivoRepository: PreventivoRepository
+    private val preventivoRepository: PreventivosRepository
 ) : CRUD<Preventivo>, ViewModel() {
     var uiPreventivoState: StateFlow<PrevState> = MutableStateFlow(PrevState())
         private set
@@ -69,64 +69,64 @@ class PreventivosVM(
     fun resetPreventivoState() {
     }
 
-    fun altaPreventivo(preventivo: Preventivo) {
-        viewModelScope.launch {
-            try {
-                preventivoRepository.insertPreventivo(preventivo)
-            } catch (e: Exception) {
-            }
-        }
-    }
+//    fun altaPreventivo(preventivo: Preventivo) {
+//        viewModelScope.launch {
+//            try {
+//                preventivoRepository.insertPreventivo(preventivo)
+//            } catch (e: Exception) {
+//            }
+//        }
+//    }
+//
+//    fun editarPreventivo(preventivo: Preventivo) {
+//        viewModelScope.launch {
+//            try {
+//                preventivoRepository.updatePreventivo(preventivo)
+//            } catch (e: Exception) {
+//            }
+//        }
+//    }
+//
+//    fun eliminarPreventivo(preventivo: Preventivo) {
+//        viewModelScope.launch {
+//            try {
+//                preventivoRepository.deletePreventivo(preventivo)
+//            } catch (e: Exception) {
+//            }
+//        }
+//    }
 
-    fun editarPreventivo(preventivo: Preventivo) {
-        viewModelScope.launch {
-            try {
-                preventivoRepository.updatePreventivo(preventivo)
-            } catch (e: Exception) {
-            }
-        }
-    }
-
-    fun eliminarPreventivo(preventivo: Preventivo) {
-        viewModelScope.launch {
-            try {
-                preventivoRepository.deletePreventivo(preventivo)
-            } catch (e: Exception) {
-            }
-        }
-    }
-
-    fun asignarPersona(usuario: Usuario, posPreventivo: Int) {
-        val preventivo = uiPreventivoState.value.preventivos[posPreventivo]
-        val nuevaListaUsuarios = preventivo.usuarios?.toMutableList() ?: mutableListOf()
-        nuevaListaUsuarios.add(usuario)
-        val nuevoPreventivo = preventivo.copy(usuarios = nuevaListaUsuarios)
-        editarPreventivo(nuevoPreventivo)
-    }
-
-    fun desasignarPersona(usuario: Usuario, posPreventivo: Int) {
-        val preventivo = uiPreventivoState.value.preventivos[posPreventivo]
-        val nuevaListaUsuarios = preventivo.usuarios?.toMutableList() ?: mutableListOf()
-        nuevaListaUsuarios.remove(usuario)
-        val nuevoPreventivo = preventivo.copy(usuarios = nuevaListaUsuarios)
-        editarPreventivo(nuevoPreventivo)
-    }
-
-    fun asignarVehiculo(vehiculo: Vehiculo, posPreventivo: Int) {
-        val preventivo = uiPreventivoState.value.preventivos[posPreventivo]
-        val nuevaListaVehiculos = preventivo.vehiculos?.toMutableList() ?: mutableListOf()
-        nuevaListaVehiculos.add(vehiculo)
-        val nuevoPreventivo = preventivo.copy(vehiculos = nuevaListaVehiculos)
-        editarPreventivo(nuevoPreventivo)
-    }
-
-    fun desasignarVehiculo(vehiculo: Vehiculo, posPreventivo: Int) {
-        val preventivo = uiPreventivoState.value.preventivos[posPreventivo]
-        val nuevaListaVehiculos = preventivo.vehiculos?.toMutableList() ?: mutableListOf()
-        nuevaListaVehiculos.remove(vehiculo)
-        val nuevoPreventivo = preventivo.copy(vehiculos = nuevaListaVehiculos)
-        editarPreventivo(nuevoPreventivo)
-    }
+//    fun asignarPersona(usuario: Usuario, posPreventivo: Int) {
+//        val preventivo = uiPreventivoState.value.preventivos[posPreventivo]
+//        val nuevaListaUsuarios = preventivo.usuarios?.toMutableList() ?: mutableListOf()
+//        nuevaListaUsuarios.add(usuario)
+//        val nuevoPreventivo = preventivo.copy(usuarios = nuevaListaUsuarios)
+//        editarPreventivo(nuevoPreventivo)
+//    }
+//
+//    fun desasignarPersona(usuario: Usuario, posPreventivo: Int) {
+//        val preventivo = uiPreventivoState.value.preventivos[posPreventivo]
+//        val nuevaListaUsuarios = preventivo.usuarios?.toMutableList() ?: mutableListOf()
+//        nuevaListaUsuarios.remove(usuario)
+//        val nuevoPreventivo = preventivo.copy(usuarios = nuevaListaUsuarios)
+//        editarPreventivo(nuevoPreventivo)
+//    }
+//
+//    fun asignarVehiculo(vehiculo: Vehiculo, posPreventivo: Int) {
+//        val preventivo = uiPreventivoState.value.preventivos[posPreventivo]
+//        val nuevaListaVehiculos = preventivo.vehiculos?.toMutableList() ?: mutableListOf()
+//        nuevaListaVehiculos.add(vehiculo)
+//        val nuevoPreventivo = preventivo.copy(vehiculos = nuevaListaVehiculos)
+//        editarPreventivo(nuevoPreventivo)
+//    }
+//
+//    fun desasignarVehiculo(vehiculo: Vehiculo, posPreventivo: Int) {
+//        val preventivo = uiPreventivoState.value.preventivos[posPreventivo]
+//        val nuevaListaVehiculos = preventivo.vehiculos?.toMutableList() ?: mutableListOf()
+//        nuevaListaVehiculos.remove(vehiculo)
+//        val nuevoPreventivo = preventivo.copy(vehiculos = nuevaListaVehiculos)
+//        editarPreventivo(nuevoPreventivo)
+//    }
 
     override fun getAll() {
         TODO("Not yet implemented")

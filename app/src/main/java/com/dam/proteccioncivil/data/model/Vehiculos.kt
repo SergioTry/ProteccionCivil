@@ -1,15 +1,16 @@
 package com.dam.proteccioncivil.data.model
 
-import java.time.LocalDateTime
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-
+@Serializable
 data class Vehiculo(
-    val CodVehiculo: Int,
-    val Matricula: String,
-    val Marca: String,
-    val Modelo: String,
-    val Km: Float,
-    val Disponible: Short,
-    val FechaMantenimiento: LocalDateTime,
-    val Descripcion: String
+    @SerialName("CodVehiculo") val codVehiculo: Int,
+    @SerialName("Matricula") val matricula: String,
+    @SerialName("Marca") val marca: String,
+    @SerialName("Modelo") val modelo: String,
+    @SerialName("Km") val km: Float,
+    @SerialName("Disponible") val disponible: Short,
+    @SerialName("FechaMantenimiento") val fechaMantenimiento: String,
+    @SerialName("Descripcion") val descripcion: String
 )

@@ -1,6 +1,5 @@
 package com.dam.proteccioncivil.ui.main
 
-import CalendarioScreen
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.res.Configuration
@@ -60,6 +59,8 @@ import com.dam.proteccioncivil.ui.dialogs.DlgServicios
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosMto
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosScreen
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
+import com.dam.proteccioncivil.ui.screens.calendario.CalendarioScreen
+import com.dam.proteccioncivil.ui.screens.calendario.CalendarioVM
 import com.dam.proteccioncivil.ui.screens.guardia.GuardiaMto
 import com.dam.proteccioncivil.ui.screens.guardia.GuardiasScreen
 import com.dam.proteccioncivil.ui.screens.guardia.GuardiasVM
@@ -132,6 +133,9 @@ fun MainApp(
     val infomursVM: InfomursVM =
         viewModel(factory = InfomursVM.Factory)
 
+    val calendarioVM: CalendarioVM =
+        viewModel(factory = CalendarioVM.Factory)
+
     val menuOptions = mapOf(
         Icons.Default.Home to stringResource(R.string.screen_name_home),
         Icons.Default.CalendarMonth to stringResource(R.string.screen_name_calendar),
@@ -176,7 +180,8 @@ fun MainApp(
                         menuOptions = menuOptions,
                         navController = navController,
                         anunciosVM = anunciosVM,
-                        mainVM = mainVM
+                        mainVM = mainVM,
+                        calendarioVM = calendarioVM
                     )
                 }
             },
@@ -191,8 +196,10 @@ fun MainApp(
                 usuariosVM,
                 guardiasVM,
                 infomursVM,
+                calendarioVM,
                 mainVM,
                 loginVM,
+
             )
         }
     }
@@ -261,6 +268,7 @@ private fun NavHostRoutes(
     usuariosVM: UsuariosVM,
     guardiasVM: GuardiasVM,
     infomursVM: InfomursVM,
+    calendarioVM: CalendarioVM,
     mainVM: MainVM,
     loginVM: LoginVM
 ) {
@@ -291,7 +299,8 @@ private fun NavHostRoutes(
                         clave = Icons.Default.Home,
                         navController = navController,
                         anunciosVM = anunciosVM,
-                        mainVM = mainVM
+                        mainVM = mainVM,
+                        calendarioVM = calendarioVM
                     )
                 },
                 savedToken = loginVM.uiLoginState.username.isNotEmpty() && loginVM.uiLoginState.password.isNotEmpty()
@@ -371,7 +380,13 @@ private fun NavHostRoutes(
         }
 
         composable(route = AppScreens.Calendar.name) {
-            CalendarioScreen()
+            CalendarioScreen(
+                calendarioUiState = calendarioVM.calendarioUiState,
+                calendarioVM = calendarioVM,
+                retryAction = {},
+                refresh = {},
+                onShowSnackBar = {}
+            )
         }
 
         composable(route = AppScreens.Vehicles.name) {
@@ -389,6 +404,7 @@ fun MainBottomBar(
     menuOptions: Map<ImageVector, String>,
     navController: NavHostController,
     anunciosVM: AnunciosVM,
+    calendarioVM: CalendarioVM,
     mainVM: MainVM,
     modifier: Modifier = Modifier
 ) {
@@ -404,7 +420,8 @@ fun MainBottomBar(
                             clave = clave,
                             navController = navController,
                             anunciosVM = anunciosVM,
-                            mainVM = mainVM
+                            mainVM = mainVM,
+                            calendarioVM = calendarioVM
                         )
                     },
                     enabled = true
@@ -421,7 +438,8 @@ fun MainBottomBar(
                                     clave = Icons.Default.DirectionsCar,
                                     navController = navController,
                                     anunciosVM = anunciosVM,
-                                    mainVM = mainVM
+                                    mainVM = mainVM,
+                                    calendarioVM = calendarioVM
                                 )
                             },
                             enabled = true
@@ -437,7 +455,8 @@ fun MainBottomBar(
                                 clave = clave,
                                 navController = navController,
                                 anunciosVM = anunciosVM,
-                                mainVM = mainVM
+                                mainVM = mainVM,
+                                calendarioVM = calendarioVM
                             )
                         },
                         enabled = true
@@ -454,6 +473,7 @@ private fun selectOption(
     clave: ImageVector,
     navController: NavHostController,
     anunciosVM: AnunciosVM,
+    calendarioVM: CalendarioVM,
     mainVM: MainVM
 ) {
     navController.popBackStack(AppScreens.Home.name, false)
@@ -466,6 +486,7 @@ private fun selectOption(
         }
 
         Icons.Default.CalendarMonth.name -> {
+            calendarioVM.getAll()
             navController.navigate(
                 AppScreens.Calendar.name
             )

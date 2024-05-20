@@ -6,6 +6,7 @@ import com.dam.proteccioncivil.data.network.AnunciosApiService
 import com.dam.proteccioncivil.data.network.GuardiasApiService
 import com.dam.proteccioncivil.data.network.InfomursApiService
 import com.dam.proteccioncivil.data.network.LoginApiService
+import com.dam.proteccioncivil.data.network.PreventivosApiService
 import com.dam.proteccioncivil.data.network.UsuariosApiService
 import com.dam.proteccioncivil.data.repository.AnunciosRepository
 import com.dam.proteccioncivil.data.repository.GuardiasRepository
@@ -16,7 +17,9 @@ import com.dam.proteccioncivil.data.repository.NetworkAnunciosRepository
 import com.dam.proteccioncivil.data.repository.NetworkGuardiasRepository
 import com.dam.proteccioncivil.data.repository.NetworkInfomursRepository
 import com.dam.proteccioncivil.data.repository.NetworkLoginRepository
+import com.dam.proteccioncivil.data.repository.NetworkPreventivosRepository
 import com.dam.proteccioncivil.data.repository.NetworkUsuariosRepository
+import com.dam.proteccioncivil.data.repository.PreventivosRepository
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -31,6 +34,7 @@ interface AppContainer {
     val usuariosRepository: UsuariosRepository
     val guardiasRepository: GuardiasRepository
     val infomursRepository: InfomursRepository
+    val preventivosRepository: PreventivosRepository
 }
 
 class DefaultAppContainer(
@@ -60,6 +64,10 @@ class DefaultAppContainer(
         retrofit.create(LoginApiService::class.java)
     }
 
+    private val retrofitPreventivosService: PreventivosApiService by lazy {
+        retrofit.create(PreventivosApiService::class.java)
+    }
+
     private val retrofitUsuariosService: UsuariosApiService by lazy {
         retrofit.create(UsuariosApiService::class.java)
     }
@@ -83,6 +91,11 @@ class DefaultAppContainer(
     override val loginRepository: LoginRepository by lazy {
         NetworkLoginRepository(retrofitLoginService)
     }
+
+    override val preventivosRepository: PreventivosRepository by lazy {
+        NetworkPreventivosRepository(retrofitPreventivosService)
+    }
+
     override val usuariosRepository: UsuariosRepository by lazy {
         NetworkUsuariosRepository(retrofitUsuariosService)
     }

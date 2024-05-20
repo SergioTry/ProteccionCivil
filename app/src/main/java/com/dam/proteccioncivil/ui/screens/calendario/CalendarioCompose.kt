@@ -43,6 +43,8 @@ private val inActiveTextColor: Color @Composable get() = Color.LightGray
 //private val itemBackgroundColor: Color @Composable get() = colorResource(R.color.example_5_item_view_bg_color)
 private val itemBackgroundColor: Color @Composable get() = Color.White
 
+//private val guardias = generarGuardias().groupBy { it.FechaGuardia.toLocalDate() }
+
 @Composable
 fun SimpleCalendarTitle(
     modifier: Modifier,
@@ -50,6 +52,7 @@ fun SimpleCalendarTitle(
     goToPrevious: () -> Unit,
     goToNext: () -> Unit,
 ) {
+
     Row(
         modifier = modifier.height(40.dp),
         verticalAlignment = Alignment.CenterVertically,
