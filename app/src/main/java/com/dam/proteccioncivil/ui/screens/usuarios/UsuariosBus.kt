@@ -66,7 +66,7 @@ fun UsuariosBus(
         is UsuariosMessageState.Success -> {
             mensage = ContextCompat.getString(
                 contexto,
-                R.string.guardia_delete_success
+                R.string.usuario_delete_success
             )
             onShowSnackBar(mensage)
             usuarioVM.resetUsuarioMtoState()
@@ -78,7 +78,7 @@ fun UsuariosBus(
         is UsuariosMessageState.Error -> {
             mensage = ContextCompat.getString(
                 contexto,
-                R.string.guardia_delete_failure
+                R.string.usuario_delete_failure
             )
             onShowSnackBar(mensage)
             usuarioVM.resetInfoState()
@@ -184,7 +184,10 @@ fun UsuariosBus(
                 horizontalArrangement = Arrangement.End
             ) {
                 FloatingActionButton(
-                    onClick = {},
+                    onClick = {
+                        usuarioVM.resetUsuarioMtoState()
+                        onNavUp()
+                    },
                     contentColor = Color.White,
                     elevation = FloatingActionButtonDefaults.elevation(8.dp)
                 ) {
@@ -234,9 +237,11 @@ fun usuarioCard(
             Spacer(modifier = Modifier.width(28.dp))
             Column {
                 Spacer(modifier = Modifier.height(18.dp))
-                Text(text = usuario.codUsuario.toString())
+                Text(text = usuario.username)
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = usuario.nombre)
+                Text(
+                    text = usuario.nombre//+ " " + usuario.apellidos)
+                )
             }
             Spacer(modifier = Modifier.width(90.dp))
             if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
@@ -254,6 +259,7 @@ fun usuarioCard(
                     IconButton(onClick = {
                         usuariosVM.resetUsuarioMtoState()
                         usuariosVM.cloneUsuarioMtoState(usuario)
+                        usuariosVM.setPassword("")
                         onNavUp()
                     }) {
                         Icon(imageVector = Icons.Filled.Edit, contentDescription = "")

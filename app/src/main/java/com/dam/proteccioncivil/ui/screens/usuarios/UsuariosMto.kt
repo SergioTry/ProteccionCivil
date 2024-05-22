@@ -1,6 +1,7 @@
 package com.dam.proteccioncivil.ui.screens.usuarios
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,16 +14,28 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,35 +45,52 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
+import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
+import com.dam.proteccioncivil.ui.screens.preferencias.LabelledSwitch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun UsuariosMto(refresh: () -> Unit, usuariosVM: UsuariosVM, onShowSnackBar: (String) -> Unit) {
+fun UsuariosMto(
+    refresh: () -> Unit,
+    usuariosVM: UsuariosVM,
+    onShowSnackBar: (String) -> Unit,
+    refreshNav: () -> Unit
+) {
 
     val mensage: String
     val contexto = LocalContext.current
+    val activity = (LocalContext.current as? Activity)
+    val scrollState = rememberScrollState()
+    var changePassword by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
+    val opciones = listOf("administrador", "jefeservicio", "voluntario", "nuevo")
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
 
     when (usuariosVM.usuariosMessageState) {
         is UsuariosMessageState.Loading -> {
         }
 
         is UsuariosMessageState.Success -> {
-            mensage = ContextCompat.getString(
-                contexto,
-                R.string.guardia_delete_success
-            )
+            mensage = if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
+                ContextCompat.getString(contexto, R.string.usuario_create_success)
+            } else {
+                ContextCompat.getString(contexto, R.string.usuario_edit_success)
+            }
             onShowSnackBar(mensage)
-            usuariosVM.resetUsuarioMtoState()
             usuariosVM.resetInfoState()
+            usuariosVM.resetUsuarioMtoState()
             usuariosVM.getAll()
-            refresh()
+            refreshNav()
         }
 
         is UsuariosMessageState.Error -> {
-            mensage = ContextCompat.getString(
-                contexto,
-                R.string.guardia_delete_failure
-            )
+            mensage = if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
+                ContextCompat.getString(contexto, R.string.usuario_create_failure)
+            } else {
+                ContextCompat.getString(contexto, R.string.usuario_edit_failure)
+            }
             onShowSnackBar(mensage)
             usuariosVM.resetInfoState()
         }
@@ -81,65 +111,170 @@ fun UsuariosMto(refresh: () -> Unit, usuariosVM: UsuariosVM, onShowSnackBar: (St
                 .padding(8.dp),
             shape = RoundedCornerShape(8.dp)
         ) {
-            Column {
+            Column(modifier = Modifier.verticalScroll(scrollState)) {
                 Column(modifier = Modifier.padding(12.dp)) {
-                    Text(text = "Nombre")
                     OutlinedTextField(
-                        value = "", onValueChange = {}, modifier = Modifier
+                        label = { Text(text = "DNI") },
+                        value = usuariosVM.usuariosMtoState.dni,
+                        onValueChange = { usuariosVM.setDni(it) },
+                        modifier = Modifier
                             .fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.size(16.dp))
-                    Text(text = "Apellidos")
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        label = { Text(text = "Nombre") },
+                        value = usuariosVM.usuariosMtoState.nombre,
+                        onValueChange = { usuariosVM.setNombre(it) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.size(16.dp))
+                    OutlinedTextField(
+                        label = { Text(text = "Apellidos") },
+                        value = usuariosVM.usuariosMtoState.apellidos,
+                        onValueChange = { usuariosVM.setApellidos(it) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.size(16.dp))
-                    Text(text = "Correo electronico")
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        label = { Text(text = "Correo Electronico") },
+                        value = usuariosVM.usuariosMtoState.correoElectronico,
+                        onValueChange = { usuariosVM.setCorreoElectronico(it) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.size(16.dp))
-                    Text(text = "Identificador")
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        label = { Text(text = "Identificador") },
+                        value = usuariosVM.usuariosMtoState.username,
+                        onValueChange = { usuariosVM.setUsername(it) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.size(16.dp))
-                    Text(text = "Telefono")
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        label = { Text(text = "Telefono") },
+                        value = usuariosVM.usuariosMtoState.telefono,
+                        onValueChange = { usuariosVM.setTelefono(it) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.size(16.dp))
-                    Text(
-                        text = "Rango"
-                    )
-                    OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = { expanded = !expanded }
+                    ) {
+                        OutlinedTextField(
+                            label = { Text(text = "Rango") },
+                            value = if (usuariosVM.usuariosMtoState.rango.lowercase() == "jefeservicio") {
+                                "Jefe de Servicio"
+                            } else if (usuariosVM.usuariosMtoState.rango.lowercase() == "admin") {
+                                "Administrador"
+                            } else {
+                                usuariosVM.usuariosMtoState.rango.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+                            },
+                            onValueChange = { usuariosVM.setRango(it) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .menuAnchor(),
+                            readOnly = true,
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                            }
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            opciones.forEach { opcion ->
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            if (opcion == "jefeservicio") {
+                                                "Jefe de Servicio"
+                                            } else if (opcion == "administrador") {
+                                                "Administrador"
+                                            } else {
+                                                opcion.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+                                            }
+                                        )
+                                    },
+                                    onClick = {
+                                        usuariosVM.setRango(
+                                            if (opcion == "jefeservicio") {
+                                                "JefeServicio"
+                                            } else if (opcion == "administrador") {
+                                                "Admin"
+                                            } else {
+                                                opcion.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+                                            }
+                                        )
+                                        expanded = false
+                                    }
+                                )
+                            }
+                        }
+                    }
                     Spacer(modifier = Modifier.size(16.dp))
-                    Text(
-                        text = "Fecha Nacimiento"
-                    )
                     Row {
                         Box(
                             modifier = Modifier.weight(1f)
                         ) {
                             OutlinedTextField(
-                                value = FormatDate.use(),
-                                onValueChange = { },
+                                label = { Text(text = "Contraseña") },
+                                value = password,
+                                enabled = if (usuariosVM.usuariosMtoState.codUsuario == "0") true else changePassword,
+                                onValueChange = { password = it },
                                 modifier = Modifier.fillMaxWidth()
                             )
                             IconButton(
                                 onClick = {
+                                    changePassword = !changePassword
+                                    if (!changePassword) {
+                                        password = ""
+                                        confirmPassword = ""
+                                    }
+                                },
+                                modifier = Modifier.align(Alignment.CenterEnd)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = "Calendar Month Icon"
+                                )
+                            }
+                        }
+                    }
+                    OutlinedTextField(
+                        label = { Text(text = "Confirmar contraseña") },
+                        value = confirmPassword,
+                        enabled = if (usuariosVM.usuariosMtoState.codUsuario == "0") true else changePassword,
+                        onValueChange = { confirmPassword = it },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.size(16.dp))
+                    LabelledSwitch(
+                        checked = usuariosVM.usuariosMtoState.conductor,
+                        label = "Conductor",
+                        onCheckedChange = {
+                            usuariosVM.setConductor(it)
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = Color.Blue,
+                            uncheckedThumbColor = Color.Gray
+                        )
+                    )
+                    Spacer(modifier = Modifier.size(16.dp))
+                    Row {
+                        Box(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            OutlinedTextField(
+                                label = { Text(text = "Fecha Nacimiento") },
+                                value = FormatDate.use(usuariosVM.usuariosMtoState.fechaNacimiento),
+                                onValueChange = {},
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            IconButton(
+                                onClick = {
+                                    usuariosVM.showDlgDate = true
+                                    refresh()
                                 },
                                 modifier = Modifier.align(Alignment.CenterEnd)
                             ) {
@@ -159,16 +294,52 @@ fun UsuariosMto(refresh: () -> Unit, usuariosVM: UsuariosVM, onShowSnackBar: (St
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Button(
-                        onClick = { }
+                        onClick = {
+                            usuariosVM.resetUsuarioMtoState()
+                            activity?.onBackPressed()
+                        }
                     ) {
                         Text(text = "Cancelar")
                     }
                     Spacer(modifier = Modifier.width(100.dp))
                     Button(
-                        onClick = {}
+                        onClick = {
+                            if (!changePassword && !usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
+                                if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
+                                    usuariosVM.setNew()
+                                } else {
+                                    usuariosVM.update()
+                                }
+                            } else {
+                                usuariosVM.setPassword(password)
+                                usuariosVM.setConfirmPassword(confirmPassword)
+                                if (usuariosVM.passwordCorrect()) {
+                                    if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
+                                        usuariosVM.setNew()
+                                    } else {
+                                        usuariosVM.update()
+                                    }
+                                }
+                            }
+                        }
                     ) {
-                        Text(text = "Añadir")
+                        Text(
+                            text = if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
+                                "Añadir"
+                            } else {
+                                "Editar"
+                            }
+                        )
                     }
+                }
+                if (usuariosVM.showDlgDate) {
+                    DlgSeleccionFecha(
+                        modifier = Modifier,
+                        onClick = {
+                            usuariosVM.showDlgDate = false
+                            usuariosVM.setFechaNacimiento(it)
+                        }
+                    )
                 }
             }
         }

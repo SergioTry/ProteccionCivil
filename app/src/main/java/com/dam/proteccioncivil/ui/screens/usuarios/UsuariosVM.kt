@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.ObjectToStringMap
+import com.dam.proteccioncivil.data.model.ShortToBoolean
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
@@ -27,7 +28,6 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
 
     var usuariosMessageState: UsuariosMessageState by mutableStateOf(UsuariosMessageState.Loading)
         private set
-
     var usuariosMtoState by mutableStateOf(UsuariosMtoState())
         private set
 
@@ -35,6 +35,8 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
         private set
 
     var showDlgConfirmation = false
+
+    var showDlgDate = false
 
     fun resetInfoState() {
         usuariosMessageState = UsuariosMessageState.Loading
@@ -143,19 +145,19 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
         }
     }
 
-    fun setNewPassword(password: String) {
-        usuarioNewState = usuarioNewState.copy(
-            password = password,
-            contraseñasCorrectass = usuarioNewState.confirmPassword.equals(password)
-        )
-    }
-
-    fun setConfirmPassword(password: String) {
-        usuarioNewState = usuarioNewState.copy(
-            confirmPassword = password,
-            contraseñasCorrectass = usuarioNewState.password.equals(password)
-        )
-    }
+//    fun setNewPassword(password: String) {
+//        usuarioNewState = usuarioNewState.copy(
+//            password = password,
+//            contraseñasCorrectass = usuarioNewState.confirmPassword.equals(password)
+//        )
+//    }
+//
+//    fun setConfirmPassword(password: String) {
+//        usuarioNewState = usuarioNewState.copy(
+//            confirmPassword = password,
+//            contraseñasCorrectass = usuarioNewState.password.equals(password)
+//        )
+//    }
 
     fun resetUsuarioMtoState() {
         usuariosMtoState = usuariosMtoState.copy(
@@ -168,6 +170,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             "",
             "",
             "",
+            "Nuevo",
             "",
             false,
             false
@@ -180,14 +183,269 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             usuario.dni,
             usuario.username,
             usuario.password,
+            "",
             usuario.nombre,
             usuario.apellidos,
             usuario.fechaNacimiento,
             usuario.correoElectronico,
             usuario.rango,
             if (usuario.telefono != null) usuario.telefono.toString() else "",
-            false,
+            ShortToBoolean.use(usuario.conductor),
             true
+        )
+    }
+
+    fun setConductor(conductor: Boolean) {
+        usuariosMtoState = usuariosMtoState.copy(
+            codUsuario = usuariosMtoState.codUsuario,
+            dni = usuariosMtoState.dni,
+            username = usuariosMtoState.username,
+            nombre = usuariosMtoState.nombre,
+            apellidos = usuariosMtoState.apellidos,
+            fechaNacimiento = usuariosMtoState.fechaNacimiento,
+            correoElectronico = usuariosMtoState.correoElectronico,
+            rango = usuariosMtoState.rango,
+            telefono = usuariosMtoState.telefono,
+            conductor = conductor,
+            datosObligatorios = (usuariosMtoState.codUsuario != "" &&
+                    usuariosMtoState.dni != "" &&
+                    usuariosMtoState.username != "" &&
+                    usuariosMtoState.nombre != "" &&
+                    usuariosMtoState.apellidos != "" &&
+                    usuariosMtoState.fechaNacimiento != "" &&
+                    usuariosMtoState.correoElectronico != "" &&
+                    usuariosMtoState.rango != "")
+        )
+    }
+
+    fun setPassword(password: String) {
+        usuariosMtoState = usuariosMtoState.copy(
+            codUsuario = usuariosMtoState.codUsuario,
+            dni = usuariosMtoState.dni,
+            username = usuariosMtoState.username,
+            nombre = usuariosMtoState.nombre,
+            password = password,
+            apellidos = usuariosMtoState.apellidos,
+            fechaNacimiento = usuariosMtoState.fechaNacimiento,
+            correoElectronico = usuariosMtoState.correoElectronico,
+            rango = usuariosMtoState.rango,
+            telefono = usuariosMtoState.telefono,
+            conductor = usuariosMtoState.conductor,
+            datosObligatorios = (usuariosMtoState.codUsuario != "" &&
+                    usuariosMtoState.dni != "" &&
+                    password != "" &&
+                    usuariosMtoState.username != "" &&
+                    usuariosMtoState.nombre != "" &&
+                    usuariosMtoState.apellidos != "" &&
+                    usuariosMtoState.fechaNacimiento != "" &&
+                    usuariosMtoState.correoElectronico != "" &&
+                    usuariosMtoState.rango != "")
+        )
+    }
+
+    fun setConfirmPassword(password: String) {
+        usuariosMtoState = usuariosMtoState.copy(
+            codUsuario = usuariosMtoState.codUsuario,
+            dni = usuariosMtoState.dni,
+            username = usuariosMtoState.username,
+            nombre = usuariosMtoState.nombre,
+            password = usuariosMtoState.password,
+            confirmPassword = password,
+            apellidos = usuariosMtoState.apellidos,
+            fechaNacimiento = usuariosMtoState.fechaNacimiento,
+            correoElectronico = usuariosMtoState.correoElectronico,
+            rango = usuariosMtoState.rango,
+            telefono = usuariosMtoState.telefono,
+            conductor = usuariosMtoState.conductor,
+            datosObligatorios = (usuariosMtoState.codUsuario != "" &&
+                    usuariosMtoState.dni != "" &&
+                    password != "" &&
+                    usuariosMtoState.username != "" &&
+                    usuariosMtoState.nombre != "" &&
+                    usuariosMtoState.apellidos != "" &&
+                    usuariosMtoState.fechaNacimiento != "" &&
+                    usuariosMtoState.correoElectronico != "" &&
+                    usuariosMtoState.rango != "")
+        )
+    }
+
+    fun passwordCorrect(): Boolean {
+        return usuariosMtoState.password == usuariosMtoState.confirmPassword
+    }
+
+    fun setDni(dni: String) {
+        usuariosMtoState = usuariosMtoState.copy(
+            codUsuario = usuariosMtoState.codUsuario,
+            dni = dni,
+            username = usuariosMtoState.username,
+            nombre = usuariosMtoState.nombre,
+            apellidos = usuariosMtoState.apellidos,
+            fechaNacimiento = usuariosMtoState.fechaNacimiento,
+            correoElectronico = usuariosMtoState.correoElectronico,
+            rango = usuariosMtoState.rango,
+            telefono = usuariosMtoState.telefono,
+            datosObligatorios = (usuariosMtoState.codUsuario != "" &&
+                    dni != "" &&
+                    usuariosMtoState.username != "" &&
+                    usuariosMtoState.nombre != "" &&
+                    usuariosMtoState.apellidos != "" &&
+                    usuariosMtoState.fechaNacimiento != "" &&
+                    usuariosMtoState.correoElectronico != "" &&
+                    usuariosMtoState.rango != "")
+        )
+    }
+
+    fun setUsername(username: String) {
+        usuariosMtoState = usuariosMtoState.copy(
+            codUsuario = usuariosMtoState.codUsuario,
+            dni = usuariosMtoState.dni,
+            username = username,
+            nombre = usuariosMtoState.nombre,
+            apellidos = usuariosMtoState.apellidos,
+            fechaNacimiento = usuariosMtoState.fechaNacimiento,
+            correoElectronico = usuariosMtoState.correoElectronico,
+            rango = usuariosMtoState.rango,
+            telefono = usuariosMtoState.telefono,
+            datosObligatorios = (usuariosMtoState.codUsuario != "" &&
+                    usuariosMtoState.dni != "" &&
+                    username != "" &&
+                    usuariosMtoState.nombre != "" &&
+                    usuariosMtoState.apellidos != "" &&
+                    usuariosMtoState.fechaNacimiento != "" &&
+                    usuariosMtoState.correoElectronico != "" &&
+                    usuariosMtoState.rango != "")
+        )
+    }
+
+    fun setNombre(nombre: String) {
+        usuariosMtoState = usuariosMtoState.copy(
+            codUsuario = usuariosMtoState.codUsuario,
+            dni = usuariosMtoState.dni,
+            username = usuariosMtoState.username,
+            nombre = nombre,
+            apellidos = usuariosMtoState.apellidos,
+            fechaNacimiento = usuariosMtoState.fechaNacimiento,
+            correoElectronico = usuariosMtoState.correoElectronico,
+            rango = usuariosMtoState.rango,
+            telefono = usuariosMtoState.telefono,
+            datosObligatorios = (usuariosMtoState.codUsuario != "" &&
+                    usuariosMtoState.dni != "" &&
+                    usuariosMtoState.username != "" &&
+                    nombre != "" &&
+                    usuariosMtoState.apellidos != "" &&
+                    usuariosMtoState.fechaNacimiento != "" &&
+                    usuariosMtoState.correoElectronico != "" &&
+                    usuariosMtoState.rango != "")
+        )
+    }
+
+    fun setApellidos(apellidos: String) {
+        usuariosMtoState = usuariosMtoState.copy(
+            codUsuario = usuariosMtoState.codUsuario,
+            dni = usuariosMtoState.dni,
+            username = usuariosMtoState.username,
+            nombre = usuariosMtoState.nombre,
+            apellidos = apellidos,
+            fechaNacimiento = usuariosMtoState.fechaNacimiento,
+            correoElectronico = usuariosMtoState.correoElectronico,
+            rango = usuariosMtoState.rango,
+            telefono = usuariosMtoState.telefono,
+            datosObligatorios = (usuariosMtoState.codUsuario != "" &&
+                    usuariosMtoState.dni != "" &&
+                    usuariosMtoState.username != "" &&
+                    usuariosMtoState.nombre != "" &&
+                    apellidos != "" &&
+                    usuariosMtoState.fechaNacimiento != "" &&
+                    usuariosMtoState.correoElectronico != "" &&
+                    usuariosMtoState.rango != "")
+        )
+    }
+
+    fun setFechaNacimiento(fechaNacimiento: String) {
+        usuariosMtoState = usuariosMtoState.copy(
+            codUsuario = usuariosMtoState.codUsuario,
+            dni = usuariosMtoState.dni,
+            username = usuariosMtoState.username,
+            nombre = usuariosMtoState.nombre,
+            apellidos = usuariosMtoState.apellidos,
+            fechaNacimiento = fechaNacimiento,
+            correoElectronico = usuariosMtoState.correoElectronico,
+            rango = usuariosMtoState.rango,
+            telefono = usuariosMtoState.telefono,
+            datosObligatorios = (usuariosMtoState.codUsuario != "" &&
+                    usuariosMtoState.dni != "" &&
+                    usuariosMtoState.username != "" &&
+                    usuariosMtoState.nombre != "" &&
+                    usuariosMtoState.apellidos != "" &&
+                    fechaNacimiento != "" &&
+                    usuariosMtoState.correoElectronico != "" &&
+                    usuariosMtoState.rango != "")
+        )
+    }
+
+    fun setCorreoElectronico(correoElectronico: String) {
+        usuariosMtoState = usuariosMtoState.copy(
+            codUsuario = usuariosMtoState.codUsuario,
+            dni = usuariosMtoState.dni,
+            username = usuariosMtoState.username,
+            nombre = usuariosMtoState.nombre,
+            apellidos = usuariosMtoState.apellidos,
+            fechaNacimiento = usuariosMtoState.fechaNacimiento,
+            correoElectronico = correoElectronico,
+            rango = usuariosMtoState.rango,
+            telefono = usuariosMtoState.telefono,
+            datosObligatorios = (usuariosMtoState.codUsuario != "" &&
+                    usuariosMtoState.dni != "" &&
+                    usuariosMtoState.username != "" &&
+                    usuariosMtoState.nombre != "" &&
+                    usuariosMtoState.apellidos != "" &&
+                    usuariosMtoState.fechaNacimiento != "" &&
+                    correoElectronico != "" &&
+                    usuariosMtoState.rango != "")
+        )
+    }
+
+    fun setRango(rango: String) {
+        usuariosMtoState = usuariosMtoState.copy(
+            codUsuario = usuariosMtoState.codUsuario,
+            dni = usuariosMtoState.dni,
+            username = usuariosMtoState.username,
+            nombre = usuariosMtoState.nombre,
+            apellidos = usuariosMtoState.apellidos,
+            fechaNacimiento = usuariosMtoState.fechaNacimiento,
+            correoElectronico = usuariosMtoState.correoElectronico,
+            rango = rango,
+            telefono = usuariosMtoState.telefono,
+            datosObligatorios = (usuariosMtoState.codUsuario != "" &&
+                    usuariosMtoState.dni != "" &&
+                    usuariosMtoState.username != "" &&
+                    usuariosMtoState.nombre != "" &&
+                    usuariosMtoState.apellidos != "" &&
+                    usuariosMtoState.fechaNacimiento != "" &&
+                    usuariosMtoState.correoElectronico != "" &&
+                    rango != "")
+        )
+    }
+
+    fun setTelefono(telefono: String) {
+        usuariosMtoState = usuariosMtoState.copy(
+            codUsuario = usuariosMtoState.codUsuario,
+            dni = usuariosMtoState.dni,
+            username = usuariosMtoState.username,
+            nombre = usuariosMtoState.nombre,
+            apellidos = usuariosMtoState.apellidos,
+            fechaNacimiento = usuariosMtoState.fechaNacimiento,
+            correoElectronico = usuariosMtoState.correoElectronico,
+            rango = usuariosMtoState.rango,
+            telefono = telefono,
+            datosObligatorios = (usuariosMtoState.codUsuario != "" &&
+                    usuariosMtoState.dni != "" &&
+                    usuariosMtoState.username != "" &&
+                    usuariosMtoState.nombre != "" &&
+                    usuariosMtoState.apellidos != "" &&
+                    usuariosMtoState.fechaNacimiento != "" &&
+                    usuariosMtoState.correoElectronico != "" &&
+                    usuariosMtoState.rango != "")
         )
     }
 
