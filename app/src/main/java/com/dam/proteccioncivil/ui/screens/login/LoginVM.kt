@@ -94,7 +94,7 @@ class LoginVM(
                     LoginUiState.Error("Vuelva a intentarlo")
                 }
             } catch (e: IOException) {
-                LoginUiState.Error("e1")
+                LoginUiState.Error("e1 "+e.message)
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()

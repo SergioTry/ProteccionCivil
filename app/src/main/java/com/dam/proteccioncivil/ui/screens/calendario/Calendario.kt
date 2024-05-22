@@ -1,10 +1,12 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +32,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Guardia
 import com.dam.proteccioncivil.data.model.Infomur
@@ -133,7 +138,12 @@ fun Calendario(
             },
         )
         HorizontalDivider(color = Color.Gray)
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.height(4.dp))
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 2.dp, end = 2.dp)
+        ) {
             items(items = servicesInSelectedDate.value) { servicio ->
                 ServiceInformation(servicio)
             }
@@ -150,62 +160,127 @@ private fun LazyItemScope.ServiceInformation(servicio: Servicio) {
             .height(IntrinsicSize.Max),
         verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
-        servicio.guardia?.let { GuardiaCalendarCard(it,Modifier.weight(1f)) }
-        servicio.infomur?.let { InfomurCalendarCard(it,Modifier.weight(1f)) }
-        servicio.preventivo?.let { PreventivoCalendarCard(it,Modifier.weight(1f)) }
+
+        servicio.guardia?.let {
+            GuardiaCalendarCard(it)
+        }
+
+        servicio.infomur?.let {
+            InfomurCalendarCard(it)
+        }
     }
-    //HorizontalDivider(thickness = 2.dp, color = pageBackgroundColor)
+
+    servicio.preventivo?.let {
+        PreventivoCalendarCard(it)
+    }
+
 }
 
 @Composable
-fun PreventivoCalendarCard(preventivo: Preventivo,modifier: Modifier = Modifier) {
+fun PreventivoCalendarCard(preventivo: Preventivo, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
-            .background(color = if (preventivo.riesgo.toInt() == 0) Color.Green else Color.Red)
+            .background(
+                color = if (preventivo.riesgo.toInt() == 0) Color.Green else Color.Red,
+                shape = RoundedCornerShape(8.dp)
+            )
             .fillMaxWidth()
-            .fillMaxHeight(),
+            .height(75.dp)
+            .border(3.dp, Color.Black, shape = RoundedCornerShape(8.dp)),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
             modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight()
+                .padding(8.dp)
+                .weight(0.35f)
                 .fillMaxHeight(),
             contentAlignment = Alignment.Center,
         ) {
             Image(
                 painter = painterResource(R.drawable.fondo),
                 contentDescription = "Imagen asociada a preventivo",
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier
+                    .size(50.dp)
+                    .background(Color.White)
             )
         }
-        Text(text = preventivo.titulo, modifier = Modifier.weight(1f))
+        Column(
+            modifier = Modifier.weight(0.65f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = preventivo.titulo, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(text = preventivo.titulo, fontSize = 16.sp)
+        }
     }
 }
 
 @Composable
-fun InfomurCalendarCard(infomur: Infomur,modifier: Modifier = Modifier) {
+fun InfomurCalendarCard(infomur: Infomur, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
-            .background(color = Color.Blue)
+            .background(color = Color.Blue,shape = RoundedCornerShape(8.dp))
             .fillMaxWidth()
-            .fillMaxHeight(),
+            .height(75.dp)
+            .border(3.dp, Color.Black, shape = RoundedCornerShape(8.dp)),
         horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = infomur.descripcion)
+        Box(
+            modifier = Modifier
+                .padding(8.dp)
+                .weight(0.35f)
+                .fillMaxHeight(),
+            contentAlignment = Alignment.Center,
+        ) {
+            Image(
+                painter = painterResource(R.drawable.fondo),
+                contentDescription = "Imagen asociada a infomur",
+                modifier = Modifier
+                    .size(50.dp)
+                    .background(Color.White)
+            )
+        }
+        Column(
+            modifier = Modifier.weight(0.65f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = infomur.descripcion, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        }
     }
 }
 
 @Composable
-fun GuardiaCalendarCard(guardia: Guardia,modifier: Modifier = Modifier) {
+fun GuardiaCalendarCard(guardia: Guardia, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
-            .background(color = Color.Magenta)
+            .background(color = Color(255, 165, 0),shape = RoundedCornerShape(8.dp))
             .fillMaxWidth()
-            .fillMaxHeight(),
+            .height(75.dp)
+            .border(3.dp, Color.Black, shape = RoundedCornerShape(8.dp)),
         horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = guardia.descripcion)
+        Box(
+            modifier = Modifier
+                .padding(8.dp)
+                .weight(0.35f)
+                .fillMaxHeight(),
+            contentAlignment = Alignment.Center,
+        ) {
+            Image(
+                painter = painterResource(R.drawable.fondo),
+                contentDescription = "Imagen asociada a guardia",
+                modifier = Modifier
+                    .size(50.dp)
+                    .background(Color.White)
+            )
+        }
+        Column(
+            modifier = Modifier.weight(0.65f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = guardia.descripcion, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        }
     }
 }
