@@ -8,6 +8,7 @@ import com.dam.proteccioncivil.data.network.InfomursApiService
 import com.dam.proteccioncivil.data.network.LoginApiService
 import com.dam.proteccioncivil.data.network.PreventivosApiService
 import com.dam.proteccioncivil.data.network.UsuariosApiService
+import com.dam.proteccioncivil.data.network.VehiculosApiService
 import com.dam.proteccioncivil.data.repository.AnunciosRepository
 import com.dam.proteccioncivil.data.repository.GuardiasRepository
 import com.dam.proteccioncivil.data.repository.InfomursRepository
@@ -19,8 +20,10 @@ import com.dam.proteccioncivil.data.repository.NetworkInfomursRepository
 import com.dam.proteccioncivil.data.repository.NetworkLoginRepository
 import com.dam.proteccioncivil.data.repository.NetworkPreventivosRepository
 import com.dam.proteccioncivil.data.repository.NetworkUsuariosRepository
+import com.dam.proteccioncivil.data.repository.NetworkVehiculosRepository
 import com.dam.proteccioncivil.data.repository.PreventivosRepository
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
+import com.dam.proteccioncivil.data.repository.VehiculosRepositorys
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -28,6 +31,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 
 interface AppContainer {
+    val vehiculosRepository: VehiculosRepositorys
     val mainRepository: MainRepository
     val loginRepository: LoginRepository
     val anunciosRepository: AnunciosRepository
@@ -40,8 +44,8 @@ interface AppContainer {
 class DefaultAppContainer(
     private val context: Context
 ) : AppContainer {
-    private val baseUrl = "http://192.168.0.93:49999/api/v1/"
-    //private val baseUrl = "http://192.168.68.50:49999/api/v1/"
+    //private val baseUrl = "http://192.168.56.1:49999/api/"
+    private val baseUrl = "http://192.168.68.50:49999/api/v1/"
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
@@ -50,6 +54,10 @@ class DefaultAppContainer(
 
     private val retrofitAnunciosService: AnunciosApiService by lazy {
         retrofit.create(AnunciosApiService::class.java)
+    }
+
+    private val retrofitVehiculosService: VehiculosApiService by lazy {
+        retrofit.create(VehiculosApiService::class.java)
     }
 
     private val retrofitGuardiasService: GuardiasApiService by lazy {
@@ -78,6 +86,10 @@ class DefaultAppContainer(
 
     override val anunciosRepository: AnunciosRepository by lazy {
         NetworkAnunciosRepository(retrofitAnunciosService)
+    }
+
+    override val vehiculosRepository: VehiculosRepositorys by lazy {
+        NetworkVehiculosRepository(retrofitVehiculosService)
     }
 
     override val guardiasRepository: GuardiasRepository by lazy {

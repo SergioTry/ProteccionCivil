@@ -1,10 +1,7 @@
 package com.dam.proteccioncivil.data.model
 
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
-import java.util.Locale
 
 class ObjectToStringMap {
     companion object {
@@ -25,7 +22,11 @@ class ObjectToStringMap {
 
                 val strValue = value?.toString() ?: "null"
 
-                val key = field.name.get(0).uppercaseChar() + field.name.substring(1)
+                var key = field.name.get(0).uppercaseChar() + field.name.substring(1)
+
+                if (key == "Dni") {
+                    key = "DNI"
+                }
 
                 map[key] = strValue
             }
@@ -52,6 +53,18 @@ class FormatDate {
                 fechaActual.format(formato)
             }
             return fechaFormateada
+        }
+    }
+}
+
+class ShortToBoolean {
+    companion object {
+        fun use(short: Short? = null): Boolean {
+            if (short == null || short == 0.toShort()) {
+                return false
+            } else {
+                return true
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -35,27 +36,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.ShortToBoolean
+import com.dam.proteccioncivil.data.model.Token
+import com.dam.proteccioncivil.data.model.Vehiculo
 import java.time.format.DateTimeFormatter
-
-class Vehiculo(
-    val id: String,
-    val matricula: String,
-    val kms: String,
-    val estado: String,
-    val marcaModelo: String
-)
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun vehiculoBusScreen() {
-    val sampleMessages = listOf(
-        "cxosa", "cxosa",
-        "cxosa", "cxosa"
-    )
+fun VehiculosBus(
+    vehiculos: List<Vehiculo>,
+    vehiculosVM: VehiculosVM,
+    onShowSnackBar: (String) -> Unit,
+    modifier: Modifier,
+    onNavUp: () -> Unit,
+    refresh: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -99,16 +97,13 @@ fun vehiculoBusScreen() {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 content = {
-                    items(sampleMessages.size) { index ->
+                    items(vehiculos) { it ->
                         vehiculoCard(
-                            vehiculo = Vehiculo(
-                                "15-T-02",
-                                "PC 0001 C",
-                                "123454",
-                                "libre",
-                                marcaModelo = "Ford Transit"
-                            )
-                        )
+                            vehiculo = it,
+                            onNavUp = { onNavUp() },
+                            vehiculosVM = vehiculosVM,
+                            modifier = modifier,
+                            refresh = { refresh() })
                     }
                 }
             )
@@ -135,7 +130,13 @@ fun vehiculoBusScreen() {
 }
 
 @Composable
-fun vehiculoCard(vehiculo: Vehiculo) {
+fun vehiculoCard(
+    vehiculo: Vehiculo,
+    onNavUp: () -> Unit,
+    refresh: () -> Unit,
+    vehiculosVM: VehiculosVM,
+    modifier: Modifier
+) {
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     Card(
         modifier = Modifier
@@ -147,7 +148,7 @@ fun vehiculoCard(vehiculo: Vehiculo) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Column {
                 Text(
-                    text = vehiculo.id,
+                    text = vehiculo.matricula,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -164,36 +165,36 @@ fun vehiculoCard(vehiculo: Vehiculo) {
             }
             Spacer(modifier = Modifier.width(28.dp))
             Column {
-                Spacer(modifier = Modifier.height(18.dp))
-                Text(
-                    text = vehiculo.matricula,
-                    modifier = Modifier.padding(start = 8.dp, top = 8.dp, end = 8.dp)
-                )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = vehiculo.kms,
+                    text = vehiculo.km.toString(),
                     modifier = Modifier.padding(start = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = vehiculo.estado,
+                    text = if (ShortToBoolean.use(vehiculo.disponible)) "Disponible" else "No Disponible",
                     modifier = Modifier.padding(start = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = vehiculo.marcaModelo,
+                    text = vehiculo.marca + " " + vehiculo.modelo,
                     modifier = Modifier.padding(start = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Button(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                if (Token.rango == "Admin" || Token.rango == "JefeServicio" || ShortToBoolean.use(
+                        Token.conductor?.toShort()
+                    )
                 ) {
-                    Text("Asignar")
+                    Button(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Text("Asignar")
+                    }
                 }
             }
             Spacer(modifier = Modifier.width(36.dp))
-            if (true) {
+            if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 Column {
                     Spacer(modifier = Modifier.height(28.dp))
                     IconButton(onClick = { /*TODO*/ }) {
@@ -207,11 +208,4 @@ fun vehiculoCard(vehiculo: Vehiculo) {
             }
         }
     }
-}
-
-
-@Preview
-@Composable
-fun vehiculoBusScreenPreview() {
-    vehiculoBusScreen()
 }

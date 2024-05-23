@@ -1,8 +1,9 @@
 package com.dam.proteccioncivil.data.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 @Serializable
 data class Permiso(
-    val nombre: String,
-    val nivel: Int
+    @SerialName("Login") val login: Short,
+    @SerialName("CodPermisos") val codPermiso: Int,
 )

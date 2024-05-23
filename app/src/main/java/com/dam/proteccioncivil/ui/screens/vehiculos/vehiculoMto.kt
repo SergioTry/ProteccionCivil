@@ -28,16 +28,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dam.proteccioncivil.R
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import com.dam.proteccioncivil.data.model.FormatDate
+import kotlinx.coroutines.Job
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun vehiculoMtoScreen() {
-    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+fun VehiculoMto(
+    retryAction: Any,
+    vehiculosVM: Any,
+    onNavUp: () -> Unit,
+    refresh: () -> Unit,
+    onShowSnackBar: (String) -> Job
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -110,7 +114,7 @@ fun vehiculoMtoScreen() {
                             modifier = Modifier.weight(1f)
                         ) {
                             OutlinedTextField(
-                                value = LocalDate.now().format(formatter),
+                                value = FormatDate.use(),
                                 onValueChange = { },
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -135,7 +139,7 @@ fun vehiculoMtoScreen() {
                             modifier = Modifier.weight(1f)
                         ) {
                             OutlinedTextField(
-                                value = LocalDate.now().format(formatter),
+                                value = FormatDate.use(),
                                 onValueChange = { },
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -174,10 +178,4 @@ fun vehiculoMtoScreen() {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun DummyScreenPreview() {
-    vehiculoMtoScreen()
 }

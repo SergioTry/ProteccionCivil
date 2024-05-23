@@ -9,7 +9,7 @@ data class Vehiculo(
     @SerialName("Matricula") val matricula: String,
     @SerialName("Marca") val marca: String,
     @SerialName("Modelo") val modelo: String,
-    @SerialName("Km") val km: Float,
+    @SerialName("Km") val km: Long,
     @SerialName("Disponible") val disponible: Short,
     @SerialName("FechaMantenimiento") val fechaMantenimiento: String,
     @SerialName("Descripcion") val descripcion: String
