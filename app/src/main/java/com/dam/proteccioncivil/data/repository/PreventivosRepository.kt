@@ -8,6 +8,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
 
 interface PreventivosRepository {
     suspend fun getPreventivos(): List<Preventivo>
+    suspend fun getPreventivosUsuario(codPreventivo: Int): List<Preventivo>
 }
 
 class NetworkPreventivosRepository(
@@ -15,6 +16,11 @@ class NetworkPreventivosRepository(
 ) : PreventivosRepository {
     override suspend fun getPreventivos(): List<Preventivo> {
         val apiResponse = preventivosApiService.getPreventivos("Bearer ${Token.token}")
+        return Json.decodeFromJsonElement<List<Preventivo>>(apiResponse.body)
+    }
+
+    override suspend fun getPreventivosUsuario(codPreventivo: Int): List<Preventivo> {
+        val apiResponse = preventivosApiService.getPreventivosUsuario("Bearer ${Token.token}",codPreventivo)
         return Json.decodeFromJsonElement<List<Preventivo>>(apiResponse.body)
     }
 }

@@ -16,6 +16,7 @@ import com.dam.proteccioncivil.data.model.Guardia
 import com.dam.proteccioncivil.data.model.Infomur
 import com.dam.proteccioncivil.data.model.Preventivo
 import com.dam.proteccioncivil.data.model.Servicio
+import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.repository.GuardiasRepository
 import com.dam.proteccioncivil.data.repository.InfomursRepository
 import com.dam.proteccioncivil.data.repository.PreventivosRepository
@@ -40,9 +41,9 @@ class CalendarioVM(
         viewModelScope.launch {
             calendarioUiState = CalendarioUiState.Loading
             calendarioUiState = try {
-                val guardias = guardiasRepository.getGuardias()
-                val infomurs = infomursRepository.getInfomurs()
-                val preventivos = preventivoRepository.getPreventivos()
+                val guardias = guardiasRepository.getGuardiasUsuario(Token.codUsuario!!)
+                val infomurs = infomursRepository.getInfomursUsuario(Token.codUsuario!!)
+                val preventivos = preventivoRepository.getPreventivosUsuario(Token.codUsuario!!)
                 val servicios =
                     createServicios(guardias = guardias, infomurs = infomurs, preventivos =  preventivos).groupBy { it.fecha }
                 CalendarioUiState.Success(servicios = servicios)
@@ -62,6 +63,7 @@ class CalendarioVM(
             }
         }
     }
+
     fun createServicios(
         guardias: List<Guardia>,
         preventivos: List<Preventivo>,

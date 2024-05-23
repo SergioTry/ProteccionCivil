@@ -13,6 +13,12 @@ interface GuardiasApiService {
     @GET("guardias")
     suspend fun getGuardias(@Header("Authorization") authToken: String): ApiResponse
 
+    @GET("usuarios/{codUsuario}/guardias")
+    suspend fun getGuardiasUsuario(
+        @Header("Authorization") authToken: String,
+        @Path("codUsuario") codUsuario: Int
+    ): ApiResponse
+
     @POST("guardias")
     suspend fun altaGuardia(
         @Header("Authorization") authToken: String,

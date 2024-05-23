@@ -13,6 +13,12 @@ interface InfomursApiService {
     @GET("infomurs")
     suspend fun getInfomurs(@Header("Authorization") authToken: String): ApiResponse
 
+    @GET("usuarios/{codUsuario}/infomurs")
+    suspend fun getInfomursUsuario(
+        @Header("Authorization") authToken: String,
+        @Path("codUsuario") codUsuario: Int
+    ): ApiResponse
+
     @POST("infomurs")
     suspend fun altaInfomur(
         @Header("Authorization") authToken: String,
