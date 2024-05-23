@@ -25,8 +25,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -37,22 +40,31 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosMessageState
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DlgPassword(
     usuariosVM: UsuariosVM,
     onEstablecerClick: () -> Unit,
+    onPasswordChanged: () -> Unit,
+    onShowSnackBar: (String) -> Unit,
+    backToLogin: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    // Esto es necesario porque sino selecciona controles de fuera del dialog
+    val (passwordFocusRequester, confirmPasswordFocusRequester) = FocusRequester.createRefs()
+
     val focusManager = LocalFocusManager.current
     var password1Visible by remember { mutableStateOf(false) }
     var password2Visible by remember { mutableStateOf(false) }
+
     Dialog(
         onDismissRequest = {}
     ) {
@@ -73,21 +85,24 @@ fun DlgPassword(
                     textDecoration = TextDecoration.Underline,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.LightGray,
-                    focusedBorderColor = Color.Blue,
-                    focusedLabelColor = Color.Blue,
-                    unfocusedLabelColor = Color.Blue
-                ),
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    value = usuariosVM.usuarioNewState.password,
-                    onValueChange = {  },
+                OutlinedTextField(
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = Color.LightGray,
+                        focusedBorderColor = Color.Blue,
+                        focusedLabelColor = Color.Blue,
+                        unfocusedLabelColor = Color.Blue
+                    ),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .focusRequester(passwordFocusRequester),
+                    value = usuariosVM.usuariosMtoState.password,
+                    onValueChange = { usuariosVM.setPassword(it) },
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
                         keyboardType = KeyboardType.Password
                     ),
                     keyboardActions = KeyboardActions(
-                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        onNext = { confirmPasswordFocusRequester.requestFocus() }
                     ),
                     label = {
                         Text(
@@ -96,7 +111,9 @@ fun DlgPassword(
                         )
                     },
                     singleLine = true,
-                    isError = usuariosVM.usuarioNewState.contraseñasCorrectass,
+                    isError = usuariosVM.usuariosMtoState.password == "" ||
+                            usuariosVM.usuariosMtoState.confirmPassword == "" ||
+                            usuariosVM.usuariosMtoState.password != usuariosVM.usuariosMtoState.confirmPassword,
                     visualTransformation = if (password1Visible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
                         val image = if (password1Visible)
@@ -106,24 +123,34 @@ fun DlgPassword(
                         IconButton(onClick = { password1Visible = !password1Visible }) {
                             Icon(imageVector = image, description)
                         }
-                    })
-                OutlinedTextField(colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.LightGray,
-                    focusedBorderColor = Color.Blue,
-                    focusedLabelColor = Color.Blue,
-                    unfocusedLabelColor = Color.Blue
-                ),
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    value = usuariosVM.usuarioNewState.confirmPassword,
-                    onValueChange = {  },
+                    }
+                )
+
+                OutlinedTextField(
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = Color.LightGray,
+                        focusedBorderColor = Color.Blue,
+                        focusedLabelColor = Color.Blue,
+                        unfocusedLabelColor = Color.Blue
+                    ),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .focusRequester(confirmPasswordFocusRequester),
+                    value = usuariosVM.usuariosMtoState.confirmPassword,
+                    onValueChange = { usuariosVM.setConfirmPassword(it) },
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Done,
                         keyboardType = KeyboardType.Password
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            keyboardController?.hide()
-                            onEstablecerClick()
+                            if (usuariosVM.usuariosMtoState.password != "" &&
+                                usuariosVM.usuariosMtoState.confirmPassword != "" &&
+                                usuariosVM.usuariosMtoState.password == usuariosVM.usuariosMtoState.confirmPassword
+                            ) {
+                                focusManager.clearFocus()
+                                onEstablecerClick()
+                            }
                         }
                     ),
                     label = {
@@ -133,7 +160,9 @@ fun DlgPassword(
                         )
                     },
                     singleLine = true,
-                    isError = usuariosVM.usuarioNewState.contraseñasCorrectass,
+                    isError = usuariosVM.usuariosMtoState.password == "" ||
+                            usuariosVM.usuariosMtoState.confirmPassword == "" ||
+                            usuariosVM.usuariosMtoState.password != usuariosVM.usuariosMtoState.confirmPassword,
                     visualTransformation = if (password2Visible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
                         val image = if (password2Visible)
@@ -143,11 +172,22 @@ fun DlgPassword(
                         IconButton(onClick = { password2Visible = !password2Visible }) {
                             Icon(imageVector = image, description)
                         }
-                    })
+                    }
+                )
                 Spacer(modifier = Modifier.height(4.dp))
                 TextButton(
-                    modifier = Modifier.align(Alignment.End).padding(end = 8.dp),
-                    onClick = onEstablecerClick,
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(end = 8.dp),
+                    onClick = {
+                        if (usuariosVM.usuariosMtoState.password != "" &&
+                            usuariosVM.usuariosMtoState.confirmPassword != "" &&
+                            usuariosVM.usuariosMtoState.password == usuariosVM.usuariosMtoState.confirmPassword
+                        ) {
+                            keyboardController?.hide()
+                            onEstablecerClick()
+                        }
+                    },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors()
                 ) {
@@ -155,6 +195,24 @@ fun DlgPassword(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
+        }
+    }
+
+    when (usuariosVM.usuariosMessageState) {
+        is UsuariosMessageState.Loading -> {
+        }
+
+        is UsuariosMessageState.Success -> {
+            backToLogin()
+            // Preferencias
+            onShowSnackBar("Contraseña modificada")
+            usuariosVM.resetInfoState()
+        }
+
+        is UsuariosMessageState.Error -> {
+            if ((usuariosVM.usuariosMessageState as UsuariosMessageState.Error).backToLogin) backToLogin()
+            onShowSnackBar((usuariosVM.usuariosMessageState as UsuariosMessageState.Error).err)
+            usuariosVM.resetInfoState()
         }
     }
 }

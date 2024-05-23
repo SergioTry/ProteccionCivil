@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.Token
+import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.LoginRepository
 import com.dam.proteccioncivil.ui.main.MainVM
 import com.google.gson.JsonParser
@@ -25,8 +26,6 @@ class LoginVM(
     private val loginRepository: LoginRepository
 ) : ViewModel() {
 
-    //Tiempo máximo de espera
-    val timeoutMillis: Long = 3000
     var uiInfoState: LoginUiState by mutableStateOf(LoginUiState.Loading)
         private set
 
@@ -120,6 +119,9 @@ class LoginVM(
     ) {
         mainVM.decodificarToken(token)
         Token.password = credentials["Password"]
+        if (Token.rango == "Nuevo") {
+            mainVM.setShowDlgPassword(true);
+        }
         if (saveToken) {
             mainVM.setCredentials(credentials)
             mainVM.savePreferences()

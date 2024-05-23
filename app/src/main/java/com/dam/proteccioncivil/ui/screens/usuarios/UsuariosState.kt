@@ -9,7 +9,7 @@ sealed interface UsuariosUiState {
 
 sealed interface UsuariosMessageState {
     data object Success : UsuariosMessageState
-    data class Error(val err: String) : UsuariosMessageState
+    data class Error(val err: String, val backToLogin: Boolean = false) : UsuariosMessageState
     data object Loading : UsuariosMessageState
 }
 
@@ -27,12 +27,6 @@ data class UsuariosMtoState(
     val telefono: String = "",
     val conductor: Boolean = false,
     val datosObligatorios: Boolean = false,
-)
-
-data class NewUsuarioState(
-    val password: String = "",
-    val confirmPassword: String = "",
-    val contraseñasCorrectass: Boolean = false,
 )
 
 fun UsuariosMtoState.toUsuario(): Usuario = Usuario(

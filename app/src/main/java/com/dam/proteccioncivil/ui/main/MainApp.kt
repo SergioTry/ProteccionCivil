@@ -149,10 +149,6 @@ fun MainApp(
         Icons.AutoMirrored.Filled.Chat to stringResource(R.string.screen_name_chat),
     )
 
-    if (Token.rango != null && Token.rango == "Nuevo") {
-        mainVM.setShowDlgPassword(true)
-    }
-
     if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT
         && windowSize == WindowWidthSizeClass.Compact
     ) {
@@ -209,10 +205,21 @@ fun MainApp(
         }
     }
     if (mainVM.uiMainState.showDlgPassword) {
-        DlgPassword(usuariosVM = usuariosVM, onEstablecerClick = {
-            usuariosVM.changePassword()
-            mainVM.setShowDlgPassword(false)
-        })
+        DlgPassword(usuariosVM = usuariosVM,
+            onEstablecerClick = {
+                usuariosVM.changePassword()
+            },
+            onShowSnackBar = {
+                scope.launch { snackbarHostState.showSnackbar(it) }
+            },
+            onPasswordChanged = {
+                usuariosVM.resetUsuarioMtoState()
+                mainVM.setShowDlgPassword(false)
+            },
+            backToLogin = {
+                mainVM.setShowDlgPassword(false)
+                navController.navigate(AppScreens.Login.name)
+            })
     }
     if (mainVM.uiMainState.showDlgRecursos) {
         DlgRecursos(

@@ -52,9 +52,12 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
                         showLogin(true)
                     }
                     is LoginUiState.Success -> {
+                        loginVM.resetInfoState()
+                        loginVM.resetLogin()
                         showLogin(false)
                     }
                     is LoginUiState.Error -> {
+                        loginVM.resetInfoState()
                         resetCredentials()
                         showLogin(true)
                     }

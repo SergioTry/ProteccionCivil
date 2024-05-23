@@ -119,6 +119,7 @@ fun LoginScreen(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
+                        focusManager.clearFocus()
                         keyboardController?.hide()
                         if (uiLoginState.datosObligatorios) {
                             loginVM.login(mainVM, isChecked)

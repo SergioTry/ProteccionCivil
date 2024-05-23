@@ -15,9 +15,12 @@ import com.dam.proteccioncivil.data.model.ObjectToStringMap
 import com.dam.proteccioncivil.data.model.ShortToBoolean
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Usuario
+import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
 import com.google.gson.JsonParser
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -29,9 +32,6 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
     var usuariosMessageState: UsuariosMessageState by mutableStateOf(UsuariosMessageState.Loading)
         private set
     var usuariosMtoState by mutableStateOf(UsuariosMtoState())
-        private set
-
-    var usuarioNewState by mutableStateOf(NewUsuarioState())
         private set
 
     var showDlgConfirmation = false
@@ -454,11 +454,19 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             usuariosMessageState =
                 UsuariosMessageState.Loading
             usuariosMessageState = try {
-                usuariosRepository.updateUsuario(
-                    Token.codUsuario!!,
-                    mapOf("Password" to usuarioNewState.password)
-                )
-                UsuariosMessageState.Success
+                val result = withTimeoutOrNull(timeoutMillis) {
+                    usuariosRepository.updateUsuario(
+                        Token.codUsuario!!,
+                        mapOf("Password" to usuariosMtoState.password)
+                    )
+                }
+                if (result == null) {
+                    // Si el tiempo de espera se excede, result será null
+                    UsuariosMessageState.Error("Error, no se ha recibido respuesta del servidor", true)
+                } else {
+                    // Si result no es null, la operación se completó dentro del tiempo de espera
+                    UsuariosMessageState.Success
+                }
             } catch (e: IOException) {
                 UsuariosMessageState.Error("e1")
             } catch (e: HttpException) {
@@ -477,6 +485,8 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
                 //error aunque el comportamiento es el que queremos, de ahi que al tratarla se maneje
                 //como success
                 UsuariosMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                UsuariosMessageState.Error("Error, no se ha recibido respuesta del servidor", true)
             }
         }
     }

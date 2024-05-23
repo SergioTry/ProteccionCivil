@@ -3,6 +3,9 @@ package com.dam.proteccioncivil.data.model
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+//Tiempo máximo de espera
+val timeoutMillis: Long = 3500
+
 class ObjectToStringMap {
     companion object {
         fun use(obj: Any): Map<String, String> {
