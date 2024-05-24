@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
@@ -41,7 +42,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.Usuario
+import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -49,7 +52,8 @@ import com.dam.proteccioncivil.data.model.Usuario
 fun InfomurMto(
     infomursVM: InfomursVM,
     onShowSnackBar: (String) -> Unit,
-    refresh: () -> Unit
+    refresh: () -> Unit,
+    users: List<Usuario>
 ) {
 
     val mensage: String
@@ -57,7 +61,6 @@ fun InfomurMto(
     val activity = (LocalContext.current as? Activity)
     var expandedUser1 by remember { mutableStateOf(false) }
     var expandedUser2 by remember { mutableStateOf(false) }
-    val users: List<Usuario> = listOf()
 
     when (infomursVM.infomursMessageState) {
         is InfomursMessageState.Loading -> {
@@ -100,45 +103,41 @@ fun InfomurMto(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(330.dp)
+                .height(380.dp)
                 .padding(8.dp),
             shape = RoundedCornerShape(8.dp)
         ) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(12.dp)) {
-//                    Row {
-//                        Text(
-//                            text = "Infomur ",
-//                            fontWeight = FontWeight.Bold,
-//                            fontSize = 16.sp,
-//                            modifier = Modifier
-//                                .padding(start = 8.dp, top = 18.dp, end = 8.dp)
-//                        )
-//                        Box(
-//                            modifier = Modifier.weight(1f)
-//                        ) {
-//                            OutlinedTextField(
-//                                value = LocalDate.now().format(formatter),
-//                                onValueChange = { },
-//                                modifier = Modifier.fillMaxWidth()
-//                            )
-//                            IconButton(
-//                                onClick = {
-//                                },
-//                                modifier = Modifier.align(Alignment.CenterEnd)
-//                            ) {
-//                                Icon(
-//                                    imageVector = Icons.Filled.DateRange,
-//                                    contentDescription = "Calendar Month Icon"
-//                                )
-//                            }
-//                        }
-//                    }
+                    Row {
+                        Box(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            OutlinedTextField(
+                                label = { Text(text = "Fecha Infomur") },
+                                value = FormatDate.use(infomursVM.infomursMtoState.fechaInfomur),
+                                onValueChange = {},
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            IconButton(
+                                onClick = {
+                                    infomursVM.showDlgDate = true
+                                    refresh()
+                                },
+                                modifier = Modifier.align(Alignment.CenterEnd)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.DateRange,
+                                    contentDescription = "Calendar Month Icon"
+                                )
+                            }
+                        }
+                    }
                     Spacer(modifier = Modifier.size(8.dp))
                     OutlinedTextField(
                         value = infomursVM.infomursMtoState.descripcion,
-                        onValueChange = { infomursVM.setDescripcion(it)},
-                        label = {Text(text = "Descripcion")},
+                        onValueChange = { infomursVM.setDescripcion(it) },
+                        label = { Text(text = "Descripcion") },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(80.dp)
@@ -149,7 +148,7 @@ fun InfomurMto(
                         onExpandedChange = { expandedUser1 = !expandedUser1 },
                     ) {
                         OutlinedTextField(
-                            value = infomursVM.infomursMtoState.codUsuario1,
+                            value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario1 }?.nombre ?: "",
                             onValueChange = { },
                             label = { Text("Usuario1") },
                             readOnly = true,
@@ -180,12 +179,6 @@ fun InfomurMto(
                                         expandedUser1 = false
                                     })
                             }
-                            DropdownMenuItem(
-                                text = { Text("Ande vas tonto") },
-                                onClick = {
-                                    infomursVM.setUsuarios("6", "7")
-                                    expandedUser1 = false
-                                })
                         }
                     }
                     Spacer(modifier = Modifier.size(4.dp))
@@ -194,9 +187,9 @@ fun InfomurMto(
                         onExpandedChange = { expandedUser2 = !expandedUser2 },
                     ) {
                         OutlinedTextField(
-                            value = infomursVM.infomursMtoState.codUsuario2,
+                            value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario2 }?.nombre ?: "",
                             onValueChange = { },
-                            label = { Text("Usuario1") },
+                            label = { Text("Usuario2") },
                             readOnly = true,
                             trailingIcon = {
                                 IconButton(
@@ -225,12 +218,6 @@ fun InfomurMto(
                                         expandedUser2 = false
                                     })
                             }
-                            DropdownMenuItem(
-                                text = { Text("Ande vas tonto") },
-                                onClick = {
-                                    infomursVM.setUsuarios("6", "7")
-                                    expandedUser2 = false
-                                })
                         }
                     }
                 }
@@ -268,6 +255,15 @@ fun InfomurMto(
                         "Añadir"
                     } else {
                         "Editar"
+                    }
+                )
+            }
+            if (infomursVM.showDlgDate) {
+                DlgSeleccionFecha(
+                    modifier = Modifier,
+                    onClick = {
+                        infomursVM.showDlgDate = false
+                        infomursVM.setFechaInfomur(FormatDate.use(it))
                     }
                 )
             }

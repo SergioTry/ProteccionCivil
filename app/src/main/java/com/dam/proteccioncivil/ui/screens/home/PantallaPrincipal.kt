@@ -7,11 +7,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.main.MainVM
+import com.dam.proteccioncivil.ui.theme.AppColors
 
 @Composable
 fun MainScreen(
@@ -19,17 +18,17 @@ fun MainScreen(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.gris))
+            .background(AppColors.Blue)
     ) {
         BackHandler(enabled = true, onBack = {
             mainVM.setShowDlgSalir(true)
         })
         Image(
-            painter = painterResource(id = R.drawable.fondo),
+            painter = painterResource(id = R.drawable.fondologin),
             contentDescription = "Escudo de Caravaca De La Cruz",
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
         )
     }
 }

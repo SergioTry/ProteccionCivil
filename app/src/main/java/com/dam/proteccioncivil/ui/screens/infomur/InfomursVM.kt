@@ -1,5 +1,6 @@
 package com.dam.proteccioncivil.ui.screens.infomur
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,7 +14,9 @@ import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Infomur
 import com.dam.proteccioncivil.data.model.ObjectToStringMap
+import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.data.repository.InfomursRepository
+import com.dam.proteccioncivil.data.repository.UsuariosRepository
 import com.google.gson.JsonParser
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -31,7 +34,15 @@ sealed interface InfomursMessageState {
     data object Loading : InfomursMessageState
 }
 
-class InfomursVM(private val infomursRepository: InfomursRepository) : CRUD<Infomur>, ViewModel() {
+data class UsuariosInfomurListState(
+    val userList: MutableList<Usuario> = mutableListOf()
+)
+
+@SuppressLint("MutableCollectionMutableState")
+class InfomursVM(
+    private val infomursRepository: InfomursRepository,
+    private val usuarioRepository: UsuariosRepository,
+) : CRUD<Infomur>, ViewModel() {
 
     var infomursUiState: InfomursUiState by mutableStateOf(InfomursUiState.Loading)
         private set
@@ -44,6 +55,10 @@ class InfomursVM(private val infomursRepository: InfomursRepository) : CRUD<Info
 
     var showDlgConfirmation = false
 
+    var showDlgDate = false
+
+    var users by mutableStateOf(UsuariosInfomurListState().userList)
+
     fun resetInfoState() {
         infomursMessageState = InfomursMessageState.Loading
     }
@@ -52,6 +67,7 @@ class InfomursVM(private val infomursRepository: InfomursRepository) : CRUD<Info
         viewModelScope.launch {
             infomursUiState = InfomursUiState.Loading
             infomursUiState = try {
+                users.addAll(usuarioRepository.getUsuarios())
                 val infomurs = infomursRepository.getInfomurs()
                 InfomursUiState.Success(infomurs)
             } catch (e: IOException) {
@@ -225,7 +241,11 @@ class InfomursVM(private val infomursRepository: InfomursRepository) : CRUD<Info
                 val application =
                     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MainApplication)
                 val infomursRepository = application.container.infomursRepository
-                InfomursVM(infomursRepository = infomursRepository)
+                val usuarioRepository = application.container.usuariosRepository
+                InfomursVM(
+                    infomursRepository = infomursRepository,
+                    usuarioRepository = usuarioRepository
+                )
             }
         }
     }

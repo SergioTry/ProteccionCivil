@@ -12,29 +12,30 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
+import com.dam.proteccioncivil.ui.theme.AppColors
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackBar: (String) -> Unit, refresh: () -> Unit) {
+fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackBar: (String) -> Unit, refresh: () -> Unit, modifier: Modifier) {
 
     val mensage: String
     val contexto = LocalContext.current
@@ -70,7 +71,7 @@ fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackBar: (String) -> Unit, refres
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(AppColors.Blue)
     ) {
         Image(
             painter = painterResource(id = R.drawable.fondo),
@@ -78,11 +79,12 @@ fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackBar: (String) -> Unit, refres
             modifier = Modifier.fillMaxSize(),
         )
         Card(
-            modifier = Modifier
+            modifier = modifier
+                .padding(16.dp)
                 .fillMaxWidth()
-                .height(300.dp)
-                .padding(8.dp),
-            shape = RoundedCornerShape(8.dp)
+                .heightIn(180.dp, 280.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(AppColors.posit)
         ) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(12.dp)) {

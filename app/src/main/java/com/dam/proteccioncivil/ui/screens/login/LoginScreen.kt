@@ -1,8 +1,10 @@
 package com.dam.proteccioncivil.ui.screens.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,18 +21,17 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +41,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,6 +50,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.main.MainVM
+import com.dam.proteccioncivil.ui.theme.AppColors
 
 @Composable
 fun LoginScreen(
@@ -58,19 +61,22 @@ fun LoginScreen(
     savedToken: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val scope = rememberCoroutineScope()
     val uiLoginState = loginVM.uiLoginState
     var passwordVisible by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     var isChecked by remember { mutableStateOf(savedToken) }
 
-    Surface(
-        color = Color.White,
-        modifier = Modifier.fillMaxSize()
+    Box(
+        modifier = modifier.fillMaxSize().background(AppColors.Blue)
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.fondo),
+            contentDescription = "Escudo de Caravaca De La Cruz",
+            modifier = modifier.fillMaxSize(),
+        )
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center
         ) {
             Image(
@@ -80,13 +86,15 @@ fun LoginScreen(
                     .size(200.dp)
                     .align(Alignment.CenterHorizontally)
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = modifier.height(24.dp))
             OutlinedTextField(
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.LightGray,
                     focusedBorderColor = Color.Blue,
                     focusedLabelColor = Color.Blue,
-                    unfocusedLabelColor = Color.Blue
+                    unfocusedLabelColor = Color.Black,
+                    unfocusedBorderColor = Color.Black,
+                    errorBorderColor = AppColors.errorCarmesi,
+                    errorLabelColor = Color.Black
                 ),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 keyboardActions = KeyboardActions(
@@ -101,16 +109,20 @@ fun LoginScreen(
                 singleLine = true,
                 value = uiLoginState.username,
                 onValueChange = { loginVM.setUsername(it) },
-                isError = !uiLoginState.datosObligatorios,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                isError = uiLoginState.username == "",
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .background(Color.Transparent)
             )
             OutlinedTextField(colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color.LightGray,
                 focusedBorderColor = Color.Blue,
                 focusedLabelColor = Color.Blue,
-                unfocusedLabelColor = Color.Blue
+                unfocusedLabelColor = Color.Black,
+                unfocusedBorderColor = Color.Black,
+                errorBorderColor = AppColors.errorCarmesi,
+                errorLabelColor = Color.Black
             ),
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                modifier = modifier.align(Alignment.CenterHorizontally).background(Color.Transparent),
                 value = uiLoginState.password,
                 onValueChange = { loginVM.setPassword(it) },
                 keyboardOptions = KeyboardOptions(
@@ -133,7 +145,7 @@ fun LoginScreen(
                     )
                 },
                 singleLine = true,
-                isError = !uiLoginState.datosObligatorios,
+                isError = uiLoginState.password == "",
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     val image = if (passwordVisible)
@@ -141,11 +153,11 @@ fun LoginScreen(
                     else Icons.Filled.VisibilityOff
                     val description = if (passwordVisible) "Hide password" else "Show password"
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                        Icon(imageVector = image, description)
+                        Icon(imageVector = image, description,tint = Color.White)
                     }
                 })
             Row(
-                Modifier
+                modifier
                     .clickable(
                         onClick = { isChecked = !isChecked }
                     )
@@ -154,9 +166,10 @@ fun LoginScreen(
             ) {
                 Checkbox(
                     checked = isChecked,
-                    onCheckedChange = null
+                    onCheckedChange = null,
+                    modifier = modifier.background(Color.White)
                 )
-                Spacer(Modifier.size(6.dp))
+                Spacer(modifier.size(6.dp))
                 Text("Recuérdame")
             }
             Button(
@@ -165,9 +178,15 @@ fun LoginScreen(
                 },
                 enabled = uiLoginState.datosObligatorios,
                 shape = RoundedCornerShape(5.dp),
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
-                    .padding(start = 56.dp, end = 56.dp)
+                    .padding(start = 56.dp, end = 56.dp),
+                colors = ButtonColors(
+                    contentColor = AppColors.White,
+                    containerColor = AppColors.OrangeColor,
+                    disabledContentColor = AppColors.White,
+                    disabledContainerColor = AppColors.GreyDisabled
+                )
             ) {
                 Text("Login")
                 Icon(imageVector = Icons.Filled.Check, contentDescription = null)
@@ -179,14 +198,14 @@ fun LoginScreen(
         ) {
             Text(
                 text = "Versión: $version",
-                modifier = Modifier.padding(16.dp),
-                textAlign = androidx.compose.ui.text.style.TextAlign.End
+                modifier = modifier.padding(16.dp).align(Alignment.End),
+                textAlign = androidx.compose.ui.text.style.TextAlign.End,
+                style = TextStyle(AppColors.White)
             )
         }
     }
     when (loginVM.uiInfoState) {
         is LoginUiState.Loading -> {
-
         }
 
         is LoginUiState.Success -> {
@@ -199,17 +218,4 @@ fun LoginScreen(
             loginVM.resetInfoState()
         }
     }
-
 }
-//No he conseguido mostrar los string con el stringResources
-//                    try {
-//                        keyboardController?.hide()
-//                        if (mainVM.login(uiDptosState.departamentos)) {
-//                            onShowSnackbar("Login correcto")
-//                            onNavUp()
-//                        } else {
-//                            onShowSnackbar("Login incorrecto")
-//                        }
-//                    } catch (e: Exception) {
-//                        onShowSnackbar("Campos obligatorios incompletos")
-//                    }

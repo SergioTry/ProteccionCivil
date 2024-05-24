@@ -29,6 +29,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,10 +39,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -77,6 +80,7 @@ import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
 import com.dam.proteccioncivil.ui.screens.vehiculos.VehiculoMto
 import com.dam.proteccioncivil.ui.screens.vehiculos.VehiculosScreen
 import com.dam.proteccioncivil.ui.screens.vehiculos.VehiculosVM
+import com.dam.proteccioncivil.ui.theme.AppColors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -143,7 +147,6 @@ fun MainApp(
 
     val menuOptions = mapOf(
         Icons.Default.Home to stringResource(R.string.screen_name_home),
-        Icons.Default.CalendarMonth to stringResource(R.string.screen_name_calendar),
         Icons.Default.WorkOutline to stringResource(R.string.screen_name_preventidos),
         Icons.Default.Apps to stringResource(R.string.screen_name_resources),
         Icons.AutoMirrored.Filled.Chat to stringResource(R.string.screen_name_chat),
@@ -157,7 +160,6 @@ fun MainApp(
             topBar = {
                 if (currentScreen != AppScreens.Splash) {
                     MainTopAppBar(
-                        scope = scope,
                         currentScreen = currentScreen,
                         canNavigateBack = (currentScreen.name != AppScreens.Splash.name && currentScreen.name != AppScreens.Home.name),
                         showLoginScreen = { navController.navigate(AppScreens.Login.name) },
@@ -171,7 +173,9 @@ fun MainApp(
                         },
                         navigateUp = {
                             backButtonNavigation(currentScreen, navController)
-                        }
+                        },
+                        navController = navController,
+                        calendarioVM = calendarioVM
                     )
                 }
             },
@@ -180,7 +184,6 @@ fun MainApp(
                     MainBottomBar(
                         menuOptions = menuOptions,
                         navController = navController,
-                        anunciosVM = anunciosVM,
                         mainVM = mainVM,
                         calendarioVM = calendarioVM
                     )
@@ -315,7 +318,6 @@ private fun NavHostRoutes(
                     selectOption(
                         clave = Icons.Default.Home,
                         navController = navController,
-                        anunciosVM = anunciosVM,
                         mainVM = mainVM,
                         calendarioVM = calendarioVM
                     )
@@ -361,7 +363,9 @@ private fun NavHostRoutes(
         composable(route = AppScreens.InfomursMto.name) {
             InfomurMto(infomursVM = infomursVM,
                 refresh = { navController.navigate(AppScreens.Infomurs.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it)}},
+                users = infomursVM.users
+            )
         }
 
         composable(route = AppScreens.Anuncios.name) {
@@ -377,7 +381,8 @@ private fun NavHostRoutes(
         composable(route = AppScreens.AnunciosMto.name) {
             AnunciosMto(anunciosVM = anunciosVM,
                 refresh = { navController.navigate(AppScreens.Anuncios.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } },
+                modifier = Modifier)
         }
 
         composable(route = AppScreens.Usuarios.name) {
@@ -435,23 +440,32 @@ private fun NavHostRoutes(
 fun MainBottomBar(
     menuOptions: Map<ImageVector, String>,
     navController: NavHostController,
-    anunciosVM: AnunciosVM,
     calendarioVM: CalendarioVM,
-    mainVM: MainVM,
-    modifier: Modifier = Modifier
+    mainVM: MainVM
 ) {
-    NavigationBar {
+    NavigationBar(containerColor = AppColors.OrangeColor) {
         for ((clave, valor) in menuOptions) {
             if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 NavigationBarItem(
-                    icon = { Icon(clave, contentDescription = null) },
-                    label = { Text(valor) },
+                    icon = {
+                        Icon(
+                            clave, contentDescription = null,
+                            tint = Color.White
+                        )
+                    },
+                    label = {
+                        Text(
+                            text = valor,
+                            style = TextStyle(
+                                color = Color.White
+                            )
+                        )
+                    },
                     selected = false,
                     onClick = {
                         selectOption(
                             clave = clave,
                             navController = navController,
-                            anunciosVM = anunciosVM,
                             mainVM = mainVM,
                             calendarioVM = calendarioVM
                         )
@@ -462,14 +476,18 @@ fun MainBottomBar(
                 if (clave.name == Icons.Default.Apps.name) {
                     if (Token.conductor == 1) {
                         NavigationBarItem(
-                            icon = { Icon(Icons.Default.DirectionsCar, contentDescription = null) },
+                            icon = {
+                                Icon(
+                                    Icons.Default.DirectionsCar, contentDescription = null,
+                                    tint = Color.White
+                                )
+                            },
                             label = { Text(stringResource(R.string.screen_name_vehicles)) },
                             selected = false,
                             onClick = {
                                 selectOption(
                                     clave = Icons.Default.DirectionsCar,
                                     navController = navController,
-                                    anunciosVM = anunciosVM,
                                     mainVM = mainVM,
                                     calendarioVM = calendarioVM
                                 )
@@ -479,14 +497,18 @@ fun MainBottomBar(
                     }
                 } else {
                     NavigationBarItem(
-                        icon = { Icon(clave, contentDescription = null) },
+                        icon = {
+                            Icon(
+                                clave, contentDescription = null,
+                                tint = Color.White
+                            )
+                        },
                         label = { Text(valor) },
                         selected = false,
                         onClick = {
                             selectOption(
                                 clave = clave,
                                 navController = navController,
-                                anunciosVM = anunciosVM,
                                 mainVM = mainVM,
                                 calendarioVM = calendarioVM
                             )
@@ -494,7 +516,6 @@ fun MainBottomBar(
                         enabled = true
                     )
                 }
-
             }
         }
     }
@@ -504,7 +525,6 @@ fun MainBottomBar(
 private fun selectOption(
     clave: ImageVector,
     navController: NavHostController,
-    anunciosVM: AnunciosVM,
     calendarioVM: CalendarioVM,
     mainVM: MainVM
 ) {
@@ -517,13 +537,6 @@ private fun selectOption(
             )
         }
 
-        Icons.Default.CalendarMonth.name -> {
-            calendarioVM.getAll()
-            navController.navigate(
-                AppScreens.Calendar.name
-            )
-        }
-
         Icons.Default.WorkOutline.name -> {
             mainVM.setShowDlgServicios(true)
         }
@@ -533,10 +546,6 @@ private fun selectOption(
         )
 
         else -> {
-//            aulasVM.cargarAulas()
-//            aulasVM.resetInfoState()
-//            incsVM.cargarIncs()
-//            incsVM.resetInfoState()
 
             when (Token.rango) {
                 "Voluntario" -> {
@@ -560,7 +569,7 @@ private fun backButtonNavigation(
 ) {
     //TODO
     when (currentScreen.name) {
-        "DptosBus", "AulasBus", "IncsBus" -> navController.navigate(
+        "", "AulasBus", "IncsBus" -> navController.navigate(
             AppScreens.Home.name
         )
 
@@ -571,11 +580,12 @@ private fun backButtonNavigation(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopAppBar(
-    scope: CoroutineScope,
+    navController: NavHostController,
     currentScreen: AppScreens,
     canNavigateBack: Boolean,
     showLoginScreen: () -> Unit,
     showPrefScreen: () -> Unit,
+    calendarioVM: CalendarioVM,
     showAnoScreen: () -> Unit,
     showDlgSalir: () -> Unit,
     navigateUp: () -> Unit,
@@ -584,6 +594,18 @@ fun MainTopAppBar(
     var showMenu by rememberSaveable { mutableStateOf(false) }
 
     CenterAlignedTopAppBar(
+        colors =
+        if (currentScreen.title != R.string.screen_name_splash) {
+            TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = AppColors.OrangeColor,
+                titleContentColor = AppColors.White
+            )
+        } else {
+            TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = AppColors.White,
+                titleContentColor = Color.Black
+            )
+        },
         title = {
             if (currentScreen.title != R.string.screen_name_splash) {
                 Text(text = stringResource(currentScreen.title))
@@ -598,19 +620,39 @@ fun MainTopAppBar(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
+            } else {
+                IconButton(
+                    onClick = {
+                        calendarioVM.getAll()
+                        navController.navigate(AppScreens.Calendar.name)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.CalendarMonth,
+                        contentDescription = null,
+                        tint = Color.White
                     )
                 }
             }
         },
         actions = {
-            if (currentScreen.name.equals(AppScreens.Home.name)) {
+            if (currentScreen.name == AppScreens.Home.name) {
                 Row() {
                     IconButton(onClick = { showAnoScreen() }) {
-                        Icon(imageVector = Icons.Default.Notifications, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.Default.Notifications, contentDescription = null,
+                            tint = Color.White
+                        )
                     }
                     IconButton(onClick = { showMenu = !showMenu }) {
-                        Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert, contentDescription = null,
+                            tint = Color.White
+                        )
                     }
                     DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
 
@@ -632,42 +674,8 @@ fun MainTopAppBar(
                                 showMenu = false
                             })
                     }
-//                if (mainVM.uiMainState.showDlgSalir) {
-//                    showMenu = false
-//                    DlgConfirmacion(
-//                        mensaje = R.string.txt_salir,
-//                        onCancelarClick = { mainVM.setShowDlgSalir(false) },
-//                        onAceptarClick = {
-//                            mainVM.setShowDlgSalir(false)
-//                            activity?.finish()
-//                        })
-//                }
                 }
-            } else {
-//                when (currentScreen.name) {
-//                    "AulasBus" -> {
-//                        // Validación de que solo se pueda filtrar si eres admin
-//                        if (mainVM.uiMainState.dptoLog != null && mainVM.uiMainState.dptoLog!!.id == 0) {
-//                            IconButton(onClick = { showFilterScreen() }) {
-//                                Icon(
-//                                    imageVector = Icons.Filled.FilterAlt,
-//                                    contentDescription = null
-//                                )
-//                            }
-//                        }
-//                    }
-//
-//                    "IncsBus" -> {
-//                        IconButton(onClick = { showFilterScreen() }) {
-//                            Icon(
-//                                imageVector = Icons.Filled.FilterAlt,
-//                                contentDescription = null
-//                            )
-//                        }
-//                    }
-//                }
             }
-
         }
     )
 }

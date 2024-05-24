@@ -9,16 +9,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -31,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Anuncio
@@ -39,6 +43,7 @@ import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosMessageState
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
+import com.dam.proteccioncivil.ui.theme.AppColors
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -76,7 +81,7 @@ fun AnunciosBus(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(AppColors.Blue)
     ) {
         Image(
             painter = painterResource(id = R.drawable.fondo),
@@ -91,7 +96,9 @@ fun AnunciosBus(
                         anuncio = it,
                         onNavUp = { onNavUp() },
                         anunciosVM = anunciosVM,
-                        refresh = { refresh() })
+                        refresh = { refresh() },
+                        modifier = modifier
+                    )
                 }
             }
         )
@@ -110,9 +117,14 @@ fun AnunciosBus(
                         onNavUp()
                     },
                     contentColor = Color.White,
-                    elevation = FloatingActionButtonDefaults.elevation(8.dp)
+                    elevation = FloatingActionButtonDefaults.elevation(8.dp),
+                    containerColor = AppColors.Blue
                 ) {
-                    Icon(imageVector = Icons.Filled.Add, contentDescription = "Añadir")
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Añadir",
+                        tint = AppColors.White
+                    )
                 }
             }
         }
@@ -137,48 +149,62 @@ fun AnuncioCard(
     anuncio: Anuncio,
     anunciosVM: AnunciosVM,
     onNavUp: () -> Unit,
-    refresh: () -> Unit
+    refresh: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .height(180.dp),
-        shape = RoundedCornerShape(8.dp)
+            .heightIn(180.dp, 280.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(AppColors.posit)
     ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Box(modifier = Modifier.fillMaxSize()) {
             Column {
-                Text(
-                    text = "Anuncio " + FormatDate.use(anuncio.fechaPublicacion),
+                Row(
                     modifier = Modifier
-                        .padding(8.dp)
-                )
-                Text(
-                    text = anuncio.texto,
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Anuncio " + FormatDate.use(anuncio.fechaPublicacion),
+                        modifier = Modifier.padding(top = 8.dp),
+                        fontSize = 18.sp
+                    )
+                    if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
+                        Row {
+                            IconButton(onClick = {
+                                anunciosVM.resetAnuncioMtoState()
+                                anunciosVM.cloneAnuncioMtoState(anuncio)
+                                anunciosVM.showDlgConfirmation = true
+                                refresh()
+                            }) {
+                                Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
+                            }
+                            IconButton(onClick = {
+                                anunciosVM.resetAnuncioMtoState()
+                                anunciosVM.cloneAnuncioMtoState(anuncio)
+                                onNavUp()
+                            }) {
+                                Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
+                            }
+                        }
+                    }
+                }
+                Box(
                     modifier = Modifier
+                        .weight(1f)
                         .padding(8.dp)
-                )
-            }
-            if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    IconButton(onClick = {
-                        anunciosVM.resetAnuncioMtoState()
-                        anunciosVM.cloneAnuncioMtoState(anuncio)
-                        anunciosVM.showDlgConfirmation = true
-                        refresh()
-                    }) {
-                        Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
-                    }
-                    IconButton(onClick = {
-                        anunciosVM.resetAnuncioMtoState()
-                        anunciosVM.cloneAnuncioMtoState(anuncio)
-                        onNavUp()
-                    }) {
-                        Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
-                    }
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(
+                        text = anuncio.texto,
+                        fontSize = 16.sp,
+                    )
                 }
             }
         }
     }
 }
-
