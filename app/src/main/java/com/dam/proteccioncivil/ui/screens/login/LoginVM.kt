@@ -85,6 +85,7 @@ class LoginVM(
                 withTimeoutOrNull(timeoutMillis) {
                     tokenRecibido = loginRepository.login(credentials)
                 }
+
                 if (!tokenRecibido.equals("")) {
                     Log.d("Token: ", tokenRecibido)
                     guardarToken(mainVM, tokenRecibido, saveToken, credentials)

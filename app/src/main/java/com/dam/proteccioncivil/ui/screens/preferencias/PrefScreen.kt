@@ -87,7 +87,8 @@ fun LabelledSwitch(
         modifier = modifier
             .padding(8.dp)
             .border(1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp)),
-        colors = CardDefaults.cardColors(AppColors.White)
+        colors = CardDefaults.cardColors(AppColors.White),
+        shape = RoundedCornerShape(16.dp)
     ) {
         Box(
             modifier = modifier

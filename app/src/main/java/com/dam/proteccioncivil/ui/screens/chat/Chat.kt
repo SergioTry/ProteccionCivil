@@ -33,6 +33,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.dam.proteccioncivil.R
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -53,13 +54,23 @@ fun PantallaMensajes() {
     Scaffold(
         modifier = Modifier.background(Color.Transparent),
         content = {
+
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .zIndex(1f)
+                        .background(Color.Black.copy(alpha = 0.5f)),
+                ) {
+
+                }
+
                 Image(
                     painter = painterResource(id = R.drawable.fondo),
                     contentDescription = "Escudo caravaca de la cruz",
-                    modifier = Modifier.fillMaxSize(),
+                 n   modifier = Modifier.fillMaxSize(),
                 )
                 Column(
                     modifier = Modifier
