@@ -23,9 +23,11 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -322,7 +324,17 @@ private fun NavHostRoutes(
                         calendarioVM = calendarioVM
                     )
                 },
-                savedToken = loginVM.uiLoginState.username.isNotEmpty() && loginVM.uiLoginState.password.isNotEmpty()
+                savedToken = loginVM.uiLoginState.username.isNotEmpty() && loginVM.uiLoginState.password.isNotEmpty(),
+                onShowSnackBar = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            it,
+                            "Hola",
+                            true,
+                            SnackbarDuration.Short
+                        )
+                    }
+                }
             )
         }
         composable(route = AppScreens.Preferences.name) {
@@ -443,7 +455,8 @@ fun MainBottomBar(
     calendarioVM: CalendarioVM,
     mainVM: MainVM
 ) {
-    NavigationBar(containerColor = AppColors.OrangeColor) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    NavigationBar(containerColor = primaryColor) {
         for ((clave, valor) in menuOptions) {
             if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 NavigationBarItem(

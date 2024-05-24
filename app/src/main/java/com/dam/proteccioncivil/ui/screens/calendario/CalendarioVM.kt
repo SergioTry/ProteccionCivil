@@ -111,7 +111,6 @@ class CalendarioVM(
         val colors = mutableListOf<Color>()
 
         if (servicio.guardia != null) {
-
             colors.add(Color(255, 165, 0))
         }
 

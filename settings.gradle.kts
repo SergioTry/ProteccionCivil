@@ -14,6 +14,8 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        // Dependencia necesaria para los iconos de carga
+        maven(url = "https://jitpack.io")
         google()
         mavenCentral()
     }

@@ -16,6 +16,7 @@ import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.ObjectToStringMap
 import com.dam.proteccioncivil.data.repository.AnunciosRepository
 import com.google.gson.JsonParser
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException

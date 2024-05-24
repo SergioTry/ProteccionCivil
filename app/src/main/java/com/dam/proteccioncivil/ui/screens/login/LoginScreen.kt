@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,8 +49,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.main.MainVM
+import com.spr.jetpack_loading.components.indicators.BallClipRotateMultipleIndicator
 import com.dam.proteccioncivil.ui.theme.AppColors
 
 @Composable
@@ -58,6 +61,7 @@ fun LoginScreen(
     mainVM: MainVM,
     loginVM: LoginVM,
     onNavUp: () -> Unit,
+    onShowSnackBar: (String) -> Unit,
     savedToken: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -67,9 +71,26 @@ fun LoginScreen(
     val focusManager = LocalFocusManager.current
     var isChecked by remember { mutableStateOf(savedToken) }
 
+    var loading by remember { mutableStateOf(false) }
+
     Box(
         modifier = modifier.fillMaxSize().background(AppColors.Blue)
     ) {
+        if (loading) {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .zIndex(1f)
+                    .background(Color.Black.copy(alpha = 0.5f)),
+                contentAlignment = Alignment.Center
+            ) {
+                BallClipRotateMultipleIndicator(
+                    color = Color(255, 165, 0),
+                    canvasSize = 170F,
+                    penThickness = 8.dp
+                )
+            }
+        }
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = "Escudo de Caravaca De La Cruz",
@@ -79,13 +100,6 @@ fun LoginScreen(
             modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.img),
-                contentDescription = "SplashScreen image",
-                modifier = Modifier
-                    .size(200.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
             Spacer(modifier = modifier.height(24.dp))
             OutlinedTextField(
                 colors = OutlinedTextFieldDefaults.colors(
@@ -106,6 +120,7 @@ fun LoginScreen(
                         fontWeight = FontWeight.Bold
                     )
                 },
+                enabled = !loading,
                 singleLine = true,
                 value = uiLoginState.username,
                 onValueChange = { loginVM.setUsername(it) },
@@ -133,7 +148,8 @@ fun LoginScreen(
                     onDone = {
                         focusManager.clearFocus()
                         keyboardController?.hide()
-                        if (uiLoginState.datosObligatorios) {
+                        if (uiLoginState.datosObligatorios && !loading) {
+                            loading = true
                             loginVM.login(mainVM, isChecked)
                         }
                     }
@@ -144,6 +160,7 @@ fun LoginScreen(
                         fontWeight = FontWeight.Bold
                     )
                 },
+                enabled = !loading,
                 singleLine = true,
                 isError = uiLoginState.password == "",
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -152,21 +169,22 @@ fun LoginScreen(
                         Icons.Filled.Visibility
                     else Icons.Filled.VisibilityOff
                     val description = if (passwordVisible) "Hide password" else "Show password"
-                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    IconButton(onClick = { if (!loading) passwordVisible = !passwordVisible }) {
                         Icon(imageVector = image, description,tint = Color.White)
                     }
                 })
             Row(
                 modifier
                     .clickable(
-                        onClick = { isChecked = !isChecked }
+                        onClick = { if (!loading) isChecked = !isChecked }
                     )
                     .padding(16.dp)
-                    .align(Alignment.CenterHorizontally)
+                    .align(Alignment.CenterHorizontally),
             ) {
                 Checkbox(
                     checked = isChecked,
                     onCheckedChange = null,
+                    enabled = !loading,
                     modifier = modifier.background(Color.White)
                 )
                 Spacer(modifier.size(6.dp))
@@ -174,9 +192,10 @@ fun LoginScreen(
             }
             Button(
                 onClick = {
+                    loading = true
                     loginVM.login(mainVM, isChecked)
                 },
-                enabled = uiLoginState.datosObligatorios,
+                enabled = uiLoginState.datosObligatorios && !loading,
                 shape = RoundedCornerShape(5.dp),
                 modifier = modifier
                     .fillMaxWidth()
@@ -209,12 +228,16 @@ fun LoginScreen(
         }
 
         is LoginUiState.Success -> {
+            onShowSnackBar("Login correcto")
+            loading = false
             loginVM.resetInfoState()
             onNavUp()
             loginVM.resetLogin()
         }
 
         is LoginUiState.Error -> {
+            loading = false
+            onShowSnackBar((loginVM.uiInfoState as LoginUiState.Error).err)
             loginVM.resetInfoState()
         }
     }

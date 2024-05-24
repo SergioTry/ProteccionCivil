@@ -82,8 +82,11 @@ dependencies {
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
-    // Libreria del calendario
+    // Librería del calendario
     implementation("com.kizitonwose.calendar:compose:2.5.0")
+
+    // Librería de iconos de carga
+    implementation("com.github.MahboubehSeyedpour:jetpack-loading:1.1.0")
 
     //implementation(libs.androidx.constraintlayout)
 

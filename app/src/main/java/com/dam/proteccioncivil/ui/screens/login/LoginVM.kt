@@ -16,6 +16,7 @@ import com.dam.proteccioncivil.data.repository.LoginRepository
 import com.dam.proteccioncivil.ui.main.MainVM
 import com.google.gson.JsonParser
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import retrofit2.HttpException
@@ -51,10 +52,10 @@ class LoginVM(
                 LoginUiState.Success
             } else {
                 Log.e("Token: ", "token no recibido")
-                LoginUiState.Error("Vuelva a intentarlo")
+                LoginUiState.Error("Servidor no disponible")
             }
         } catch (e: IOException) {
-            LoginUiState.Error("e1")
+            LoginUiState.Error(e.message.toString())
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()
             val errorBodyString = errorBody?.string()
@@ -90,10 +91,10 @@ class LoginVM(
                     LoginUiState.Success
                 } else {
                     Log.e("Token: ", "token no recibido")
-                    LoginUiState.Error("Vuelva a intentarlo")
+                    LoginUiState.Error("Servidor no disponible")
                 }
             } catch (e: IOException) {
-                LoginUiState.Error("e1 "+e.message)
+                LoginUiState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
