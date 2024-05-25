@@ -29,7 +29,6 @@ fun SplashScreen(
 ) {
     LaunchedEffect(key1 = true) {
         mainVM.getPreferences(loginVM, showLogin)
-        //delay(mainVM.uiPrefState.defaultTimeSplash.toInt() * 1000L)
     }
     Surface(
         color = Color.White,

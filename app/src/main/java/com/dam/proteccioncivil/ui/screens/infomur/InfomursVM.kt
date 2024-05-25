@@ -15,10 +15,13 @@ import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Infomur
 import com.dam.proteccioncivil.data.model.ObjectToStringMap
 import com.dam.proteccioncivil.data.model.Usuario
+import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.InfomursRepository
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
 import com.google.gson.JsonParser
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -79,22 +82,31 @@ class InfomursVM(
         viewModelScope.launch {
             infomursUiState = InfomursUiState.Loading
             infomursUiState = try {
-                users.addAll(usuarioRepository.getUsuarios())
-                val infomurs = infomursRepository.getInfomurs()
-                InfomursUiState.Success(infomurs)
+                var infomurs: List<Infomur>?
+                withTimeout(timeoutMillis) {
+                    users.addAll(usuarioRepository.getUsuarios())
+                    infomurs = infomursRepository.getInfomurs()
+                }
+                if (infomurs != null) {
+                    InfomursUiState.Success(infomurs!!)
+                } else {
+                    InfomursUiState.Error("Error, no se ha recibido respuesta del servidor")
+                }
             } catch (e: IOException) {
-                InfomursUiState.Error("e1")
+                InfomursUiState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("infomursVM (getAll) ", errorBodyString)
+                    Log.e("InfomursVM (getAll) ", errorBodyString)
                     InfomursUiState.Error(error)
                 } else {
                     InfomursUiState.Error("Error")
                 }
+            } catch (ex: TimeoutCancellationException) {
+                InfomursUiState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -103,23 +115,27 @@ class InfomursVM(
         viewModelScope.launch {
             infomursMessageState = InfomursMessageState.Loading
             infomursMessageState = try {
-                infomursRepository.deleteInfomur(infomursMtoState.codInfomur.toInt())
+                withTimeout(timeoutMillis) {
+                    infomursRepository.deleteInfomur(infomursMtoState.codInfomur.toInt())
+                }
                 InfomursMessageState.Success
             } catch (e: IOException) {
-                InfomursMessageState.Error("e1")
+                InfomursMessageState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    Log.e("InfomursVM (delete) ", errorBodyString)
                     InfomursMessageState.Error(error)
                 } else {
                     InfomursMessageState.Error("Error")
                 }
             } catch (e: KotlinNullPointerException) {
                 InfomursMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                InfomursMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -128,20 +144,22 @@ class InfomursVM(
         viewModelScope.launch {
             infomursMessageState = InfomursMessageState.Loading
             infomursMessageState = try {
-                infomursRepository.updateInfomur(
-                    infomursMtoState.codInfomur.toInt(),
-                    ObjectToStringMap.use(infomursMtoState.toInfomur())
-                )
+                withTimeout(timeoutMillis) {
+                    infomursRepository.updateInfomur(
+                        infomursMtoState.codInfomur.toInt(),
+                        ObjectToStringMap.use(infomursMtoState.toInfomur())
+                    )
+                }
                 InfomursMessageState.Success
             } catch (e: IOException) {
-                InfomursMessageState.Error("e1")
+                InfomursMessageState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    Log.e("InfomursVM (delete) ", errorBodyString)
                     InfomursMessageState.Error(error)
                 } else {
                     InfomursMessageState.Error("Error")
@@ -151,6 +169,8 @@ class InfomursVM(
                 //error aunque el comportamiento es el que queremos, de ahi que al tratarla se maneje
                 //como success
                 InfomursMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                InfomursMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -160,21 +180,25 @@ class InfomursVM(
             infomursMessageState = InfomursMessageState.Loading
             infomursMessageState = try {
                 val infomurMap = ObjectToStringMap.use(infomursMtoState.toInfomur())
-                infomursRepository.setInfomur(infomurMap)
+                withTimeout(timeoutMillis) {
+                    infomursRepository.setInfomur(infomurMap)
+                }
                 InfomursMessageState.Success
             } catch (e: IOException) {
-                InfomursMessageState.Error("e1")
+                InfomursMessageState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (alta) ", errorBodyString)
+                    Log.e("InfomursVM (alta) ", errorBodyString)
                     InfomursMessageState.Error(error)
                 } else {
                     InfomursMessageState.Error("Error")
                 }
+            } catch (ex: TimeoutCancellationException) {
+                InfomursMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }

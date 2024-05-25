@@ -70,7 +70,7 @@ fun PantallaMensajes() {
                 Image(
                     painter = painterResource(id = R.drawable.fondo),
                     contentDescription = "Escudo caravaca de la cruz",
-                   modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                 )
                 Column(
                     modifier = Modifier

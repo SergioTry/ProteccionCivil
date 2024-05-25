@@ -32,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,8 +51,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.main.MainVM
-import com.spr.jetpack_loading.components.indicators.BallClipRotateMultipleIndicator
 import com.dam.proteccioncivil.ui.theme.AppColors
+import com.spr.jetpack_loading.components.indicators.BallClipRotateMultipleIndicator
 
 @Composable
 fun LoginScreen(
@@ -61,7 +60,7 @@ fun LoginScreen(
     mainVM: MainVM,
     loginVM: LoginVM,
     onNavUp: () -> Unit,
-    onShowSnackBar: (String) -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit,
     savedToken: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -73,8 +72,29 @@ fun LoginScreen(
 
     var loading by remember { mutableStateOf(false) }
 
+    when (loginVM.uiInfoState) {
+        is LoginUiState.Loading -> {
+        }
+
+        is LoginUiState.Success -> {
+            onShowSnackBar("Login correcto", true)
+            loading = false
+            loginVM.resetInfoState()
+            onNavUp()
+            loginVM.resetLogin()
+        }
+
+        is LoginUiState.Error -> {
+            loading = false
+            onShowSnackBar((loginVM.uiInfoState as LoginUiState.Error).err, false)
+            loginVM.resetInfoState()
+        }
+    }
+
     Box(
-        modifier = modifier.fillMaxSize().background(AppColors.Blue)
+        modifier = modifier
+            .fillMaxSize()
+            .background(AppColors.Blue)
     ) {
         if (loading) {
             Box(
@@ -137,7 +157,9 @@ fun LoginScreen(
                 errorBorderColor = AppColors.errorCarmesi,
                 errorLabelColor = Color.Black
             ),
-                modifier = modifier.align(Alignment.CenterHorizontally).background(Color.Transparent),
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .background(Color.Transparent),
                 value = uiLoginState.password,
                 onValueChange = { loginVM.setPassword(it) },
                 keyboardOptions = KeyboardOptions(
@@ -170,7 +192,7 @@ fun LoginScreen(
                     else Icons.Filled.VisibilityOff
                     val description = if (passwordVisible) "Hide password" else "Show password"
                     IconButton(onClick = { if (!loading) passwordVisible = !passwordVisible }) {
-                        Icon(imageVector = image, description,tint = Color.White)
+                        Icon(imageVector = image, description, tint = Color.White)
                     }
                 })
             Row(
@@ -217,28 +239,12 @@ fun LoginScreen(
         ) {
             Text(
                 text = "Versión: $version",
-                modifier = modifier.padding(16.dp).align(Alignment.End),
+                modifier = modifier
+                    .padding(16.dp)
+                    .align(Alignment.End),
                 textAlign = androidx.compose.ui.text.style.TextAlign.End,
                 style = TextStyle(AppColors.White)
             )
-        }
-    }
-    when (loginVM.uiInfoState) {
-        is LoginUiState.Loading -> {
-        }
-
-        is LoginUiState.Success -> {
-            onShowSnackBar("Login correcto")
-            loading = false
-            loginVM.resetInfoState()
-            onNavUp()
-            loginVM.resetLogin()
-        }
-
-        is LoginUiState.Error -> {
-            loading = false
-            onShowSnackBar((loginVM.uiInfoState as LoginUiState.Error).err)
-            loginVM.resetInfoState()
         }
     }
 }

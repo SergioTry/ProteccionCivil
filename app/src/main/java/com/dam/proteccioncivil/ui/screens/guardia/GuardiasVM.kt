@@ -11,14 +11,20 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dam.proteccioncivil.MainApplication
+import com.dam.proteccioncivil.data.model.Anuncio
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Guardia
 import com.dam.proteccioncivil.data.model.ObjectToStringMap
+import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.data.repository.GuardiasRepository
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
+import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosUiState
+import com.dam.proteccioncivil.ui.screens.calendario.CalendarioUiState
 import com.google.gson.JsonParser
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -79,11 +85,20 @@ class GuardiasVM(
         viewModelScope.launch {
             guardiasUiState = GuardiasUiState.Loading
             guardiasUiState = try {
-                users.addAll(usuariosRepository.getUsuarios())
-                val guardias = guardiasRepository.getGuardias()
-                GuardiasUiState.Success(guardias)
+                var guardias: List<Guardia>?
+                var usuarios: List<Usuario>?
+                withTimeout(timeoutMillis) {
+                    usuarios = usuariosRepository.getUsuarios()
+                    guardias = guardiasRepository.getGuardias()
+                }
+                if (guardias != null && usuarios!= null) {
+                    users.addAll(usuarios!!)
+                    GuardiasUiState.Success(guardias!!)
+                } else {
+                    GuardiasUiState.Error("Error, no se ha recibido respuesta del servidor")
+                }
             } catch (e: IOException) {
-                GuardiasUiState.Error("e1")
+                GuardiasUiState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
@@ -95,6 +110,8 @@ class GuardiasVM(
                 } else {
                     GuardiasUiState.Error("Error")
                 }
+            } catch (ex: TimeoutCancellationException) {
+                GuardiasUiState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -120,6 +137,8 @@ class GuardiasVM(
                 }
             } catch (e: KotlinNullPointerException) {
                 GuardiasMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                GuardiasMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -134,14 +153,14 @@ class GuardiasVM(
                 )
                 GuardiasMessageState.Success
             } catch (e: IOException) {
-                GuardiasMessageState.Error("e1")
+                GuardiasMessageState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    Log.e("GuardiasVM (delete) ", errorBodyString)
                     GuardiasMessageState.Error(error)
                 } else {
                     GuardiasMessageState.Error("Error")
@@ -151,6 +170,8 @@ class GuardiasVM(
                 //error aunque el comportamiento es el que queremos, de ahi que al tratarla se maneje
                 //como success
                 GuardiasMessageState.Success
+            }catch (ex: TimeoutCancellationException) {
+                GuardiasMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -163,18 +184,20 @@ class GuardiasVM(
                 guardiasRepository.setGuardia(guardiaMap)
                 GuardiasMessageState.Success
             } catch (e: IOException) {
-                GuardiasMessageState.Error("e1")
+                GuardiasMessageState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (alta) ", errorBodyString)
+                    Log.e("GuardiasVM (alta) ", errorBodyString)
                     GuardiasMessageState.Error(error)
                 } else {
                     GuardiasMessageState.Error("Error")
                 }
+            } catch (ex: TimeoutCancellationException) {
+                GuardiasMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }

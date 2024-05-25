@@ -42,7 +42,7 @@ fun VehiculoMto(
     retryAction: Any,
     vehiculosVM: VehiculosVM,
     onNavDown: () -> Unit,
-    onShowSnackBar: (String) -> Job
+    onShowSnackBar: (String, Boolean) -> Job
 ) {
     val mensage: String
     val contexto = LocalContext.current
@@ -62,7 +62,7 @@ fun VehiculoMto(
             } else {
                 ContextCompat.getString(contexto, R.string.vehiculo_edit_success)
             }
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, true)
             vehiculosVM.getAll()
             onNavDown()
             vehiculosVM.resetInfoState()
@@ -75,7 +75,7 @@ fun VehiculoMto(
             } else {
                 ContextCompat.getString(contexto, R.string.vehiculo_edit_failure)
             }
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, false)
             vehiculosVM.resetInfoState()
         }
     }

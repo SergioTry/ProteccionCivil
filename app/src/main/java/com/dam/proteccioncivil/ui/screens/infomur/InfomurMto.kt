@@ -51,7 +51,7 @@ import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
 @Composable
 fun InfomurMto(
     infomursVM: InfomursVM,
-    onShowSnackBar: (String) -> Unit,
+    onShowSnackBar: (String,Boolean) -> Unit,
     refresh: () -> Unit,
     users: List<Usuario>,
     modifier: Modifier
@@ -73,7 +73,7 @@ fun InfomurMto(
             } else {
                 ContextCompat.getString(contexto, R.string.infomur_edit_success)
             }
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage,true)
             infomursVM.resetInfoState()
             infomursVM.resetInfomurMtoState()
             infomursVM.getAll()
@@ -86,7 +86,7 @@ fun InfomurMto(
             } else {
                 ContextCompat.getString(contexto, R.string.infomur_edit_failure)
             }
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage,false)
             infomursVM.resetInfoState()
         }
     }

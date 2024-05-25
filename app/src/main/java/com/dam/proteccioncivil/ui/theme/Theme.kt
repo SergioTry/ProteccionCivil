@@ -20,38 +20,32 @@ private val DarkColorScheme = darkColorScheme(
     primary = AppColors.OrangeColor,
     secondary = AppColors.Blue,
     tertiary = AppColors.White,
-    background = Color.Black
+    background = AppColors.Black
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = AppColors.OrangeColor,
     secondary = AppColors.Blue,
-    tertiary = Color.Black,
+    tertiary = AppColors.Black,
     background = AppColors.White
 )
 
 @Composable
 fun ProteccionCivilTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val colorScheme = if (!darkTheme) {
+        LightColorScheme
+    } else {
+        DarkColorScheme
     }
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            window.statusBarColor = colorScheme.background.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 

@@ -47,7 +47,7 @@ import java.time.LocalDate
 fun InfomurBus(
     infomurs: List<Infomur>,
     infomursVM: InfomursVM,
-    onShowSnackBar: (String) -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier,
     onNavUp: () -> Unit,
     refresh: () -> Unit
@@ -64,7 +64,7 @@ fun InfomurBus(
                 contexto,
                 R.string.infomurs_delete_success
             )
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, true)
             infomursVM.resetInfomurMtoState()
             infomursVM.resetInfoState()
             infomursVM.getAll()
@@ -76,7 +76,7 @@ fun InfomurBus(
                 contexto,
                 R.string.infomurs_delete_failure
             )
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, false)
             infomursVM.resetInfoState()
         }
     }

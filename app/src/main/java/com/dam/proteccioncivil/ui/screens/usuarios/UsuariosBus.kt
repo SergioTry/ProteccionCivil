@@ -50,7 +50,7 @@ import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
 fun UsuariosBus(
     usuarios: List<Usuario>,
     usuarioVM: UsuariosVM,
-    onShowSnackBar: (String) -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier,
     onNavUp: () -> Unit,
     refresh: () -> Unit
@@ -67,7 +67,7 @@ fun UsuariosBus(
                 contexto,
                 R.string.usuario_delete_success
             )
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, true)
             usuarioVM.resetUsuarioMtoState()
             usuarioVM.resetInfoState()
             usuarioVM.getAll()
@@ -79,7 +79,7 @@ fun UsuariosBus(
                 contexto,
                 R.string.usuario_delete_failure
             )
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, false)
             usuarioVM.resetInfoState()
         }
     }

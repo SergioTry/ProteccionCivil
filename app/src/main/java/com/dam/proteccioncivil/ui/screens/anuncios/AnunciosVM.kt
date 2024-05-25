@@ -14,10 +14,12 @@ import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.Anuncio
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.ObjectToStringMap
+import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.AnunciosRepository
 import com.google.gson.JsonParser
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -43,10 +45,17 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
         viewModelScope.launch {
             anunciosUiState = AnunciosUiState.Loading
             anunciosUiState = try {
-                val anuncios = anunciosRepository.getAnuncios()
-                AnunciosUiState.Success(anuncios)
+                var anuncios: List<Anuncio>?
+                withTimeout(timeoutMillis) {
+                    anuncios = anunciosRepository.getAnuncios()
+                }
+                if (anuncios != null) {
+                    AnunciosUiState.Success(anuncios!!)
+                } else {
+                    AnunciosUiState.Error("Error, no se ha recibido respuesta del servidor")
+                }
             } catch (e: IOException) {
-                AnunciosUiState.Error("e1")
+                AnunciosUiState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
@@ -58,6 +67,8 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
                 } else {
                     AnunciosUiState.Error("Error")
                 }
+            } catch (ex: TimeoutCancellationException) {
+                AnunciosUiState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -66,10 +77,12 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
         viewModelScope.launch {
             anunciosMessageState = AnunciosMessageState.Loading
             anunciosMessageState = try {
-                anunciosRepository.deleteAnuncio(anunciosMtoState.codAnuncio.toInt())
+                withTimeout(timeoutMillis) {
+                    anunciosRepository.deleteAnuncio(anunciosMtoState.codAnuncio.toInt())
+                }
                 AnunciosMessageState.Success
             } catch (e: IOException) {
-                AnunciosMessageState.Error("e1")
+                AnunciosMessageState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
@@ -83,6 +96,8 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
                 }
             } catch (e: KotlinNullPointerException) {
                 AnunciosMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                AnunciosMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -91,13 +106,15 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
         viewModelScope.launch {
             anunciosMessageState = AnunciosMessageState.Loading
             anunciosMessageState = try {
-                anunciosRepository.updateAnuncio(
-                    anunciosMtoState.codAnuncio.toInt(),
-                    ObjectToStringMap.use(anunciosMtoState.toAnuncio())
-                )
+                withTimeout(timeoutMillis) {
+                    anunciosRepository.updateAnuncio(
+                        anunciosMtoState.codAnuncio.toInt(),
+                        ObjectToStringMap.use(anunciosMtoState.toAnuncio())
+                    )
+                }
                 AnunciosMessageState.Success
             } catch (e: IOException) {
-                AnunciosMessageState.Error("e1")
+                AnunciosMessageState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
@@ -114,6 +131,8 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
                 //error aunque el comportamiento es el que queremos, de ahi que al tratarla se maneje
                 //como success
                 AnunciosMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                AnunciosMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -123,10 +142,12 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
             anunciosMessageState = AnunciosMessageState.Loading
             anunciosMessageState = try {
                 val anuncioMap = ObjectToStringMap.use(anunciosMtoState.toAnuncio())
-                anunciosRepository.setAnuncio(anuncioMap)
+                withTimeout(timeoutMillis) {
+                    anunciosRepository.setAnuncio(anuncioMap)
+                }
                 AnunciosMessageState.Success
             } catch (e: IOException) {
-                AnunciosMessageState.Error("e1")
+                AnunciosMessageState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
@@ -138,6 +159,8 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
                 } else {
                     AnunciosMessageState.Error("Error")
                 }
+            } catch (ex: TimeoutCancellationException) {
+                AnunciosMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }

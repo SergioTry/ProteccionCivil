@@ -51,7 +51,7 @@ import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
 @Composable
 fun GuardiaMto(
     guardiasVM: GuardiasVM,
-    onShowSnackBar: (String) -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit,
     refresh: () -> Unit,
     users: List<Usuario>,
     modifier: Modifier
@@ -73,7 +73,7 @@ fun GuardiaMto(
             } else {
                 ContextCompat.getString(contexto, R.string.guardia_edit_success)
             }
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, true)
             guardiasVM.resetInfoState()
             guardiasVM.resetGuardiaMtoState()
             guardiasVM.getAll()
@@ -86,7 +86,7 @@ fun GuardiaMto(
             } else {
                 ContextCompat.getString(contexto, R.string.guardia_edit_failure)
             }
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, false)
             guardiasVM.resetInfoState()
         }
     }

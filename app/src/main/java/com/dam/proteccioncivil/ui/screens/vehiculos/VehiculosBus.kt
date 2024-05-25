@@ -51,7 +51,7 @@ import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
 fun VehiculosBus(
     vehiculos: List<Vehiculo>,
     vehiculosVM: VehiculosVM,
-    onShowSnackBar: (String) -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier,
     onNavUp: () -> Unit,
     refresh: () -> Unit
@@ -68,7 +68,7 @@ fun VehiculosBus(
                 contexto,
                 R.string.vehiculo_delete_success
             )
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, true)
             vehiculosVM.resetVehiculoMtoState()
             vehiculosVM.resetInfoState()
             vehiculosVM.getAll()
@@ -80,7 +80,7 @@ fun VehiculosBus(
                 contexto,
                 R.string.vehiculo_delete_failure
             )
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, false)
             vehiculosVM.resetInfoState()
         }
     }

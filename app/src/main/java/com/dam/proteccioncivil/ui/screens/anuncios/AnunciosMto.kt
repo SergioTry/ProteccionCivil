@@ -35,7 +35,12 @@ import com.dam.proteccioncivil.ui.theme.AppColors
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackBar: (String) -> Unit, refresh: () -> Unit, modifier: Modifier) {
+fun AnunciosMto(
+    anunciosVM: AnunciosVM,
+    onShowSnackBar: (String, Boolean) -> Unit,
+    refresh: () -> Unit,
+    modifier: Modifier
+) {
 
     val mensage: String
     val contexto = LocalContext.current
@@ -51,7 +56,7 @@ fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackBar: (String) -> Unit, refres
             } else {
                 ContextCompat.getString(contexto, R.string.anuncio_edit_success)
             }
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage,true)
             anunciosVM.resetInfoState()
             anunciosVM.resetAnuncioMtoState()
             anunciosVM.getAll()
@@ -64,7 +69,7 @@ fun AnunciosMto(anunciosVM: AnunciosVM, onShowSnackBar: (String) -> Unit, refres
             } else {
                 ContextCompat.getString(contexto, R.string.anuncio_edit_failure)
             }
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage,false)
             anunciosVM.resetInfoState()
         }
     }

@@ -5,48 +5,25 @@ import android.app.Activity
 import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.WorkOutline
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -82,7 +59,6 @@ import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
 import com.dam.proteccioncivil.ui.screens.vehiculos.VehiculoMto
 import com.dam.proteccioncivil.ui.screens.vehiculos.VehiculosScreen
 import com.dam.proteccioncivil.ui.screens.vehiculos.VehiculosVM
-import com.dam.proteccioncivil.ui.theme.AppColors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -118,11 +94,12 @@ fun MainApp(
 ) {
     val configuration = LocalConfiguration.current
     val activity = (LocalContext.current as? Activity)
+    val context = LocalContext.current
     val navController: NavHostController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen =
         AppScreens.valueOf(backStackEntry?.destination?.route ?: AppScreens.Home.name)
-    val snackbarHostState = remember() { SnackbarHostState() }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val scope = rememberCoroutineScope()
 
@@ -149,7 +126,7 @@ fun MainApp(
 
     val menuOptions = mapOf(
         Icons.Default.Home to stringResource(R.string.screen_name_home),
-        Icons.Default.WorkOutline to stringResource(R.string.screen_name_preventidos),
+        Icons.Default.WorkOutline to stringResource(R.string.screen_name_servicios),
         Icons.Default.Apps to stringResource(R.string.screen_name_resources),
         Icons.AutoMirrored.Filled.Chat to stringResource(R.string.screen_name_chat),
     )
@@ -191,7 +168,12 @@ fun MainApp(
                     )
                 }
             },
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            snackbarHost = {
+                CustomSnackBar(
+                    snackbarHostState = snackbarHostState,
+                    context = context
+                )
+            },
         ) {
             NavHostRoutes(
                 navController,
@@ -215,7 +197,9 @@ fun MainApp(
                 usuariosVM.changePassword()
             },
             onShowSnackBar = {
-                scope.launch { snackbarHostState.showSnackbar(it) }
+                scope.launch {
+                    snackbarHostState.showSnackbar(it)
+                }
             },
             onPasswordChanged = {
                 usuariosVM.resetUsuarioMtoState()
@@ -266,7 +250,6 @@ fun MainApp(
             })
     }
 }
-
 
 /**
  * Anotación de la navegación
@@ -325,14 +308,20 @@ private fun NavHostRoutes(
                     )
                 },
                 savedToken = loginVM.uiLoginState.username.isNotEmpty() && loginVM.uiLoginState.password.isNotEmpty(),
-                onShowSnackBar = {
+                onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
-                        snackbarHostState.showSnackbar(
-                            it,
-                            "Hola",
-                            true,
-                            SnackbarDuration.Short
-                        )
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
                     }
                 }
             )
@@ -353,15 +342,48 @@ private fun NavHostRoutes(
                 retryAction = { guardiasVM::getAll },
                 onNavUp = { navController.navigate(AppScreens.GuardiasMto.name) },
                 refresh = { navController.navigate(AppScreens.Guardias.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+                onShowSnackBar = { mensaje, isSuccess ->
+                    scope.launch {
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                }
+            )
         }
 
         composable(route = AppScreens.GuardiasMto.name) {
-            GuardiaMto(guardiasVM = guardiasVM,
+            GuardiaMto(
+                guardiasVM = guardiasVM,
                 refresh = { navController.navigate(AppScreens.Guardias.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } },
+                onShowSnackBar = { mensaje, isSuccess ->
+                    scope.launch {
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                },
                 users = guardiasVM.users,
-                modifier = Modifier)
+                modifier = Modifier
+            )
         }
 
         composable(route = AppScreens.Infomurs.name) {
@@ -371,13 +393,44 @@ private fun NavHostRoutes(
                 retryAction = { infomursVM::getAll },
                 onNavUp = { navController.navigate(AppScreens.InfomursMto.name) },
                 refresh = { navController.navigate(AppScreens.Infomurs.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+                onShowSnackBar = { mensaje, isSuccess ->
+                    scope.launch {
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                })
         }
 
         composable(route = AppScreens.InfomursMto.name) {
-            InfomurMto(infomursVM = infomursVM,
+            InfomurMto(
+                infomursVM = infomursVM,
                 refresh = { navController.navigate(AppScreens.Infomurs.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it)}},
+                onShowSnackBar = { mensaje, isSuccess ->
+                    scope.launch {
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                },
                 users = infomursVM.users,
                 modifier = Modifier
             )
@@ -390,14 +443,46 @@ private fun NavHostRoutes(
                 retryAction = { anunciosVM::getAll },
                 onNavUp = { navController.navigate(AppScreens.AnunciosMto.name) },
                 refresh = { navController.navigate(AppScreens.Anuncios.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+                onShowSnackBar = { mensaje, isSuccess ->
+                    scope.launch {
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                })
         }
 
         composable(route = AppScreens.AnunciosMto.name) {
-            AnunciosMto(anunciosVM = anunciosVM,
+            AnunciosMto(
+                anunciosVM = anunciosVM,
                 refresh = { navController.navigate(AppScreens.Anuncios.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } },
-                modifier = Modifier)
+                onShowSnackBar = { mensaje, isSuccess ->
+                    scope.launch {
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                },
+                modifier = Modifier
+            )
         }
 
         composable(route = AppScreens.Usuarios.name) {
@@ -407,13 +492,43 @@ private fun NavHostRoutes(
                 retryAction = { usuariosVM::getAll },
                 onNavUp = { navController.navigate(AppScreens.UsuariosMto.name) },
                 refresh = { navController.navigate(AppScreens.Usuarios.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+                onShowSnackBar = { mensaje, isSuccess ->
+                    scope.launch {
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                })
         }
 
         composable(route = AppScreens.UsuariosMto.name) {
             UsuariosMto(usuariosVM = usuariosVM,
                 onNavDown = { navController.navigate(AppScreens.Usuarios.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+                onShowSnackBar = { mensaje, isSuccess ->
+                    scope.launch {
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                })
         }
 
         composable(route = AppScreens.Vehiculos.name) {
@@ -423,14 +538,44 @@ private fun NavHostRoutes(
                 retryAction = { vehiculosVM::getAll },
                 onNavUp = { navController.navigate(AppScreens.VehiculosMto.name) },
                 refresh = { navController.navigate(AppScreens.Vehiculos.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+                onShowSnackBar = { mensaje, isSuccess ->
+                    scope.launch {
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                })
         }
 
         composable(route = AppScreens.VehiculosMto.name) {
             VehiculoMto(vehiculosVM = vehiculosVM,
                 retryAction = { vehiculosVM::getAll },
                 onNavDown = { navController.navigate(AppScreens.Vehiculos.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+                onShowSnackBar = { mensaje, isSuccess ->
+                    scope.launch {
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                })
         }
 
         composable(route = AppScreens.Calendar.name) {
@@ -449,94 +594,8 @@ private fun NavHostRoutes(
     }
 }
 
-@Composable
-fun MainBottomBar(
-    menuOptions: Map<ImageVector, String>,
-    navController: NavHostController,
-    calendarioVM: CalendarioVM,
-    mainVM: MainVM
-) {
-    val primaryColor = MaterialTheme.colorScheme.primary
-    NavigationBar(containerColor = primaryColor) {
-        for ((clave, valor) in menuOptions) {
-            if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-                NavigationBarItem(
-                    icon = {
-                        Icon(
-                            clave, contentDescription = null,
-                            tint = Color.White
-                        )
-                    },
-                    label = {
-                        Text(
-                            text = valor,
-                            style = TextStyle(
-                                color = Color.White
-                            )
-                        )
-                    },
-                    selected = false,
-                    onClick = {
-                        selectOption(
-                            clave = clave,
-                            navController = navController,
-                            mainVM = mainVM,
-                            calendarioVM = calendarioVM
-                        )
-                    },
-                    enabled = true
-                )
-            } else {
-                if (clave.name == Icons.Default.Apps.name) {
-                    if (Token.conductor == 1) {
-                        NavigationBarItem(
-                            icon = {
-                                Icon(
-                                    Icons.Default.DirectionsCar, contentDescription = null,
-                                    tint = Color.White
-                                )
-                            },
-                            label = { Text(stringResource(R.string.screen_name_vehicles)) },
-                            selected = false,
-                            onClick = {
-                                selectOption(
-                                    clave = Icons.Default.DirectionsCar,
-                                    navController = navController,
-                                    mainVM = mainVM,
-                                    calendarioVM = calendarioVM
-                                )
-                            },
-                            enabled = true
-                        )
-                    }
-                } else {
-                    NavigationBarItem(
-                        icon = {
-                            Icon(
-                                clave, contentDescription = null,
-                                tint = Color.White
-                            )
-                        },
-                        label = { Text(valor) },
-                        selected = false,
-                        onClick = {
-                            selectOption(
-                                clave = clave,
-                                navController = navController,
-                                mainVM = mainVM,
-                                calendarioVM = calendarioVM
-                            )
-                        },
-                        enabled = true
-                    )
-                }
-            }
-        }
-    }
-}
 
-
-private fun selectOption(
+fun selectOption(
     clave: ImageVector,
     navController: NavHostController,
     calendarioVM: CalendarioVM,
@@ -589,107 +648,4 @@ private fun backButtonNavigation(
 
         else -> navController.navigateUp()
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MainTopAppBar(
-    navController: NavHostController,
-    currentScreen: AppScreens,
-    canNavigateBack: Boolean,
-    showLoginScreen: () -> Unit,
-    showPrefScreen: () -> Unit,
-    calendarioVM: CalendarioVM,
-    showAnoScreen: () -> Unit,
-    showDlgSalir: () -> Unit,
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    var showMenu by rememberSaveable { mutableStateOf(false) }
-
-    CenterAlignedTopAppBar(
-        colors =
-        if (currentScreen.title != R.string.screen_name_splash) {
-            TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = AppColors.OrangeColor,
-                titleContentColor = AppColors.White
-            )
-        } else {
-            TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = AppColors.White,
-                titleContentColor = Color.Black
-            )
-        },
-        title = {
-            if (currentScreen.title != R.string.screen_name_splash) {
-                Text(text = stringResource(currentScreen.title))
-            }
-        },
-        modifier = modifier,
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(
-                    onClick =
-                    navigateUp
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
-            } else {
-                IconButton(
-                    onClick = {
-                        calendarioVM.getAll()
-                        navController.navigate(AppScreens.Calendar.name)
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.CalendarMonth,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
-            }
-        },
-        actions = {
-            if (currentScreen.name == AppScreens.Home.name) {
-                Row() {
-                    IconButton(onClick = { showAnoScreen() }) {
-                        Icon(
-                            imageVector = Icons.Default.Notifications, contentDescription = null,
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(onClick = { showMenu = !showMenu }) {
-                        Icon(
-                            imageVector = Icons.Filled.MoreVert, contentDescription = null,
-                            tint = Color.White
-                        )
-                    }
-                    DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-
-                        DropdownMenuItem(text = { Text(text = stringResource(R.string.screen_name_login)) },
-                            onClick = {
-                                showLoginScreen()
-                                showMenu = false
-                            })
-
-                        DropdownMenuItem(text = { Text(text = stringResource(R.string.screen_name_preferences)) },
-                            onClick = {
-                                showPrefScreen()
-                                showMenu = false
-                            })
-
-                        DropdownMenuItem(text = { Text(text = stringResource(R.string.menu_salir)) },
-                            onClick = {
-                                showDlgSalir()
-                                showMenu = false
-                            })
-                    }
-                }
-            }
-        }
-    )
 }

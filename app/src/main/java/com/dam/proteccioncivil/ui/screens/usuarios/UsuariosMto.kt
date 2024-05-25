@@ -54,7 +54,7 @@ import com.dam.proteccioncivil.ui.screens.preferencias.LabelledSwitch
 fun UsuariosMto(
     onNavDown: () -> Unit,
     usuariosVM: UsuariosVM,
-    onShowSnackBar: (String) -> Unit
+    onShowSnackBar: (String, Boolean) -> Unit,
 ) {
 
     val mensage: String
@@ -77,7 +77,7 @@ fun UsuariosMto(
             } else {
                 ContextCompat.getString(contexto, R.string.usuario_edit_success)
             }
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, true)
             usuariosVM.getAll()
             onNavDown()
             usuariosVM.resetInfoState()
@@ -90,7 +90,7 @@ fun UsuariosMto(
             } else {
                 ContextCompat.getString(contexto, R.string.usuario_edit_failure)
             }
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, false)
             usuariosVM.resetInfoState()
         }
     }

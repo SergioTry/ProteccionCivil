@@ -14,9 +14,12 @@ import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.ObjectToStringMap
 import com.dam.proteccioncivil.data.model.ShortToBoolean
 import com.dam.proteccioncivil.data.model.Vehiculo
+import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.VehiculosRepositorys
 import com.google.gson.JsonParser
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -32,19 +35,20 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepositorys) : CRUD<
 
     var vehiculosBusState by mutableStateOf(VehiculosBusState())
 
-    fun setShowDlgBorrar(showDlgBorrar: Boolean){
+    fun setShowDlgBorrar(showDlgBorrar: Boolean) {
         vehiculosBusState = vehiculosBusState.copy(
             showDlgConfirmation = showDlgBorrar,
             showDlgDate = vehiculosBusState.showDlgDate
         )
     }
 
-    fun setShowDlgDate(showDlgDate: Boolean){
+    fun setShowDlgDate(showDlgDate: Boolean) {
         vehiculosBusState = vehiculosBusState.copy(
             showDlgConfirmation = vehiculosBusState.showDlgConfirmation,
             showDlgDate = showDlgDate
         )
     }
+
     fun resetInfoState() {
         vehiculosMessageState = VehiculoMessageState.Loading
     }
@@ -53,21 +57,30 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepositorys) : CRUD<
         viewModelScope.launch {
             vehiculosUiState = VehiculosUiState.Loading
             vehiculosUiState = try {
-                val vehiculos = vehiculosRepository.getVehiculos()
-                VehiculosUiState.Success(vehiculos)
+                var vehiculos: List<Vehiculo>?
+                withTimeout(timeoutMillis) {
+                    vehiculos = vehiculosRepository.getVehiculos()
+                }
+                if (vehiculos != null) {
+                    VehiculosUiState.Success(vehiculos!!)
+                } else {
+                    VehiculosUiState.Error("Error, no se ha recibido respuesta del servidor")
+                }
             } catch (e: IOException) {
-                VehiculosUiState.Error("e1")
+                VehiculosUiState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("infomursVM (getAll) ", errorBodyString)
+                    Log.e("VehiculosVM (getAll) ", errorBodyString)
                     VehiculosUiState.Error(error)
                 } else {
                     VehiculosUiState.Error("Error")
                 }
+            } catch (ex: TimeoutCancellationException) {
+                VehiculosUiState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -76,7 +89,9 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepositorys) : CRUD<
         viewModelScope.launch {
             vehiculosMessageState = VehiculoMessageState.Loading
             vehiculosMessageState = try {
-                vehiculosRepository.deleteVehiculo(vehiculosMtoState.codVehiculo.toInt())
+                withTimeout(timeoutMillis) {
+                    vehiculosRepository.deleteVehiculo(vehiculosMtoState.codVehiculo.toInt())
+                }
                 VehiculoMessageState.Success
             } catch (e: IOException) {
                 VehiculoMessageState.Error("e1")
@@ -86,13 +101,15 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepositorys) : CRUD<
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    Log.e("VehiculosVM (delete) ", errorBodyString)
                     VehiculoMessageState.Error(error)
                 } else {
                     VehiculoMessageState.Error("Error")
                 }
             } catch (e: KotlinNullPointerException) {
                 VehiculoMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                VehiculoMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -101,10 +118,12 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepositorys) : CRUD<
         viewModelScope.launch {
             vehiculosMessageState = VehiculoMessageState.Loading
             vehiculosMessageState = try {
-                vehiculosRepository.updateVehiculo(
-                    vehiculosMtoState.codVehiculo.toInt(),
-                    ObjectToStringMap.use(vehiculosMtoState.toVehiculo())
-                )
+                withTimeout(timeoutMillis) {
+                    vehiculosRepository.updateVehiculo(
+                        vehiculosMtoState.codVehiculo.toInt(),
+                        ObjectToStringMap.use(vehiculosMtoState.toVehiculo())
+                    )
+                }
                 VehiculoMessageState.Success
             } catch (e: IOException) {
                 VehiculoMessageState.Error("e1")
@@ -114,7 +133,7 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepositorys) : CRUD<
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    Log.e("VehiculosVM (update) ", errorBodyString)
                     VehiculoMessageState.Error(error)
                 } else {
                     VehiculoMessageState.Error("Error")
@@ -124,6 +143,8 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepositorys) : CRUD<
                 //error aunque el comportamiento es el que queremos, de ahi que al tratarla se maneje
                 //como success
                 VehiculoMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                VehiculoMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -133,7 +154,9 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepositorys) : CRUD<
             vehiculosMessageState = VehiculoMessageState.Loading
             vehiculosMessageState = try {
                 val vehiculoMap = ObjectToStringMap.use(vehiculosMtoState.toVehiculo())
-                vehiculosRepository.setVehiculo(vehiculoMap)
+                withTimeout(timeoutMillis) {
+                    vehiculosRepository.setVehiculo(vehiculoMap)
+                }
                 VehiculoMessageState.Success
             } catch (e: IOException) {
                 VehiculoMessageState.Error("e1")
@@ -143,11 +166,13 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepositorys) : CRUD<
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (alta) ", errorBodyString)
+                    Log.e("VehiculosVM (alta) ", errorBodyString)
                     VehiculoMessageState.Error(error)
                 } else {
                     VehiculoMessageState.Error("Error")
                 }
+            } catch (ex: TimeoutCancellationException) {
+                VehiculoMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }

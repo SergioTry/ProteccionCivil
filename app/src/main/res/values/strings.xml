@@ -82,4 +82,5 @@
     <string name="vehiculo_edit_failure">Vehiculo editado con exito</string>
     <string name="vehiculo_delete_success">Vehiculo eliminado con exito</string>
     <string name="vehiculo_delete_failure">Error al eliminar el vehiculo</string>
+    <string name="screen_name_servicios">Servicios</string>
 </resources>

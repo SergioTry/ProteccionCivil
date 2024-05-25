@@ -18,6 +18,7 @@ import com.google.gson.JsonParser
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import retrofit2.HttpException
 import java.io.IOException
@@ -43,7 +44,7 @@ class LoginVM(
                 "Password" to uiLoginState.password
             )
             var tokenRecibido: String = ""
-            withTimeoutOrNull(timeoutMillis) {
+            withTimeout(timeoutMillis) {
                 tokenRecibido = loginRepository.login(credentials)
             }
             if (!tokenRecibido.equals("")) {
@@ -52,7 +53,7 @@ class LoginVM(
                 LoginUiState.Success
             } else {
                 Log.e("Token: ", "token no recibido")
-                LoginUiState.Error("Servidor no disponible")
+                LoginUiState.Error("Error, respuesta no esperada del servidor")
             }
         } catch (e: IOException) {
             LoginUiState.Error(e.message.toString())
@@ -82,7 +83,7 @@ class LoginVM(
                     "Password" to uiLoginState.password
                 )
                 var tokenRecibido: String = ""
-                withTimeoutOrNull(timeoutMillis) {
+                withTimeout(timeoutMillis) {
                     tokenRecibido = loginRepository.login(credentials)
                 }
 
@@ -92,7 +93,7 @@ class LoginVM(
                     LoginUiState.Success
                 } else {
                     Log.e("Token: ", "token no recibido")
-                    LoginUiState.Error("Servidor no disponible")
+                    LoginUiState.Error("Error, respuesta no esperada del servidor")
                 }
             } catch (e: IOException) {
                 LoginUiState.Error(e.message.toString())

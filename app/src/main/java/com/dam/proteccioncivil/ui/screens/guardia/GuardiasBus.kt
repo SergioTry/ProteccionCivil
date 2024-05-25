@@ -49,7 +49,7 @@ import java.time.LocalDate
 fun GuardiasBus(
     guardias: List<Guardia>,
     guardiasVM: GuardiasVM,
-    onShowSnackBar: (String) -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier,
     onNavUp: () -> Unit,
     refresh: () -> Unit
@@ -67,7 +67,7 @@ fun GuardiasBus(
                 contexto,
                 R.string.guardia_delete_success
             )
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, true)
             guardiasVM.resetGuardiaMtoState()
             guardiasVM.resetInfoState()
             guardiasVM.getAll()
@@ -79,7 +79,7 @@ fun GuardiasBus(
                 contexto,
                 R.string.guardia_delete_failure
             )
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage, false)
             guardiasVM.resetInfoState()
         }
     }

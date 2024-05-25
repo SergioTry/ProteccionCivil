@@ -50,7 +50,7 @@ import com.dam.proteccioncivil.ui.theme.AppColors
 fun AnunciosBus(
     anuncios: List<Anuncio>,
     anunciosVM: AnunciosVM,
-    onShowSnackBar: (String) -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     onNavUp: () -> Unit,
     refresh: () -> Unit
@@ -64,7 +64,7 @@ fun AnunciosBus(
 
         is AnunciosMessageState.Success -> {
             mensage = ContextCompat.getString(contexto, R.string.anuncios_delete_success)
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage,true)
             anunciosVM.resetAnuncioMtoState()
             anunciosVM.resetInfoState()
             anunciosVM.getAll()
@@ -73,7 +73,7 @@ fun AnunciosBus(
 
         is AnunciosMessageState.Error -> {
             mensage = ContextCompat.getString(contexto, R.string.anuncios_delete_failure)
-            onShowSnackBar(mensage)
+            onShowSnackBar(mensage,false)
             anunciosVM.resetInfoState()
         }
     }

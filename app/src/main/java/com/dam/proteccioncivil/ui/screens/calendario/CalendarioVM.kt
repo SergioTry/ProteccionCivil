@@ -1,11 +1,10 @@
 package com.dam.proteccioncivil.ui.screens.calendario
 
-import androidx.compose.ui.graphics.Color
-import android.provider.CalendarContract
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -17,11 +16,15 @@ import com.dam.proteccioncivil.data.model.Infomur
 import com.dam.proteccioncivil.data.model.Preventivo
 import com.dam.proteccioncivil.data.model.Servicio
 import com.dam.proteccioncivil.data.model.Token
+import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.GuardiasRepository
 import com.dam.proteccioncivil.data.repository.InfomursRepository
 import com.dam.proteccioncivil.data.repository.PreventivosRepository
+import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosUiState
 import com.google.gson.JsonParser
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
 import java.time.LocalDate
@@ -36,30 +39,44 @@ class CalendarioVM(
     var calendarioUiState: CalendarioUiState by mutableStateOf(CalendarioUiState.Loading)
         private set
 
-
     fun getAll() {
         viewModelScope.launch {
             calendarioUiState = CalendarioUiState.Loading
             calendarioUiState = try {
-                val guardias = guardiasRepository.getGuardiasUsuario(Token.codUsuario!!)
-                val infomurs = infomursRepository.getInfomursUsuario(Token.codUsuario!!)
-                val preventivos = preventivoRepository.getPreventivosUsuario(Token.codUsuario!!)
-                val servicios =
-                    createServicios(guardias = guardias, infomurs = infomurs, preventivos =  preventivos).groupBy { it.fecha }
-                CalendarioUiState.Success(servicios = servicios)
+                var guardias: List<Guardia>?
+                var infomurs: List<Infomur>?
+                var preventivos: List<Preventivo>?
+                withTimeout(timeoutMillis) {
+                    guardias = guardiasRepository.getGuardiasUsuario(Token.codUsuario!!)
+                    infomurs = infomursRepository.getInfomursUsuario(Token.codUsuario!!)
+                    preventivos = preventivoRepository.getPreventivosUsuario(Token.codUsuario!!)
+                }
+                if (guardias != null && infomurs != null && preventivos != null) {
+                    val servicios =
+                        createServicios(
+                            guardias = guardias!!,
+                            infomurs = infomurs!!,
+                            preventivos = preventivos!!
+                        ).groupBy { it.fecha }
+                    CalendarioUiState.Success(servicios = servicios)
+                } else {
+                    CalendarioUiState.Error("Error, no se ha recibido respuesta del servidor")
+                }
             } catch (e: IOException) {
-                CalendarioUiState.Error("e1")
+                CalendarioUiState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (get) ", errorBodyString)
+                    Log.e("CalendarioVM (get) ", errorBodyString)
                     CalendarioUiState.Error(error)
                 } else {
                     CalendarioUiState.Error("Error")
                 }
+            } catch (ex: TimeoutCancellationException) {
+                CalendarioUiState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -73,7 +90,7 @@ class CalendarioVM(
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
 
         guardias.forEach { guardia ->
-            val fecha = LocalDate.parse(guardia.fechaGuardia,formatter)
+            val fecha = LocalDate.parse(guardia.fechaGuardia, formatter)
             val servicio = serviciosMap[fecha] ?: Servicio(fecha, null, null, null)
             serviciosMap[fecha] = servicio.copy(guardia = guardia)
         }
@@ -89,20 +106,21 @@ class CalendarioVM(
                 preventivo.fechaDia7
             )
             fechas.forEach { fechaStr ->
-                val fecha = LocalDate.parse(fechaStr,formatter)
+                val fecha = LocalDate.parse(fechaStr, formatter)
                 val servicio = serviciosMap[fecha] ?: Servicio(fecha, null, null, null)
                 serviciosMap[fecha] = servicio.copy(preventivo = preventivo)
             }
         }
 
         infomurs.forEach { infomur ->
-            val fecha = LocalDate.parse(infomur.fechaInfomur,formatter)
+            val fecha = LocalDate.parse(infomur.fechaInfomur, formatter)
             val servicio = serviciosMap[fecha] ?: Servicio(fecha, null, null, null)
             serviciosMap[fecha] = servicio.copy(infomur = infomur)
         }
 
         return serviciosMap.values.toList()
     }
+
     fun getServicioColors(servicio: Servicio?): List<Color> {
         if (servicio == null) {
             return emptyList()

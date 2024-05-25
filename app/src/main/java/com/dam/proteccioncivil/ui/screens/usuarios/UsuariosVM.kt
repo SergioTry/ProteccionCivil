@@ -20,7 +20,7 @@ import com.dam.proteccioncivil.data.repository.UsuariosRepository
 import com.google.gson.JsonParser
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -58,21 +58,30 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
         viewModelScope.launch {
             usuariosUiState = UsuariosUiState.Loading
             usuariosUiState = try {
-                val usuarios = usuariosRepository.getUsuarios()
-                UsuariosUiState.Success(usuarios)
+                var usuarios: List<Usuario>?
+                withTimeout(timeoutMillis) {
+                    usuarios = usuariosRepository.getUsuarios()
+                }
+                if (usuarios != null) {
+                    UsuariosUiState.Success(usuarios!!)
+                } else {
+                    UsuariosUiState.Error("Error, no se ha recibido respuesta del servidor")
+                }
             } catch (e: IOException) {
-                UsuariosUiState.Error("e1")
+                UsuariosUiState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("infomursVM (getAll) ", errorBodyString)
+                    Log.e("UsuariosVM (getAll) ", errorBodyString)
                     UsuariosUiState.Error(error)
                 } else {
                     UsuariosUiState.Error("Error")
                 }
+            } catch (ex: TimeoutCancellationException) {
+                UsuariosUiState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -81,23 +90,27 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
         viewModelScope.launch {
             usuariosMessageState = UsuariosMessageState.Loading
             usuariosMessageState = try {
-                usuariosRepository.deleteUsuario(usuariosMtoState.codUsuario.toInt())
+                withTimeout(timeoutMillis) {
+                    usuariosRepository.deleteUsuario(usuariosMtoState.codUsuario.toInt())
+                }
                 UsuariosMessageState.Success
             } catch (e: IOException) {
-                UsuariosMessageState.Error("e1")
+                UsuariosMessageState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    Log.e("UsuariosVM (delete) ", errorBodyString)
                     UsuariosMessageState.Error(error)
                 } else {
                     UsuariosMessageState.Error("Error")
                 }
             } catch (e: KotlinNullPointerException) {
                 UsuariosMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                UsuariosMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -106,20 +119,22 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
         viewModelScope.launch {
             usuariosMessageState = UsuariosMessageState.Loading
             usuariosMessageState = try {
-                usuariosRepository.updateUsuario(
-                    usuariosMtoState.codUsuario.toInt(),
-                    ObjectToStringMap.use(usuariosMtoState.toUsuario())
-                )
+                withTimeout(timeoutMillis) {
+                    usuariosRepository.updateUsuario(
+                        usuariosMtoState.codUsuario.toInt(),
+                        ObjectToStringMap.use(usuariosMtoState.toUsuario())
+                    )
+                }
                 UsuariosMessageState.Success
             } catch (e: IOException) {
-                UsuariosMessageState.Error("e1")
+                UsuariosMessageState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    Log.e("UsuariosVM (delete) ", errorBodyString)
                     UsuariosMessageState.Error(error)
                 } else {
                     UsuariosMessageState.Error("Error")
@@ -129,6 +144,8 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
                 //error aunque el comportamiento es el que queremos, de ahi que al tratarla se maneje
                 //como success
                 UsuariosMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                UsuariosMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
@@ -138,38 +155,64 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             usuariosMessageState = UsuariosMessageState.Loading
             usuariosMessageState = try {
                 val usuarioMap = ObjectToStringMap.use(usuariosMtoState.toUsuario())
-                usuariosRepository.setUsuario(usuarioMap)
+                withTimeout(timeoutMillis) {
+                    usuariosRepository.setUsuario(usuarioMap)
+                }
                 UsuariosMessageState.Success
             } catch (e: IOException) {
-                UsuariosMessageState.Error("e1")
+                UsuariosMessageState.Error(e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()
                 val errorBodyString = errorBody?.string()
                 if (errorBodyString != null) {
                     val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
                     val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("AnunciosVM (alta) ", errorBodyString)
+                    Log.e("UsuariosVM (alta) ", errorBodyString)
                     UsuariosMessageState.Error(error)
                 } else {
                     UsuariosMessageState.Error("Error")
                 }
+            } catch (ex: TimeoutCancellationException) {
+                UsuariosMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
     }
 
-//    fun setNewPassword(password: String) {
-//        usuarioNewState = usuarioNewState.copy(
-//            password = password,
-//            contraseñasCorrectass = usuarioNewState.confirmPassword.equals(password)
-//        )
-//    }
-//
-//    fun setConfirmPassword(password: String) {
-//        usuarioNewState = usuarioNewState.copy(
-//            confirmPassword = password,
-//            contraseñasCorrectass = usuarioNewState.password.equals(password)
-//        )
-//    }
+    fun changePassword() {
+        viewModelScope.launch {
+            usuariosMessageState =
+                UsuariosMessageState.Loading
+            usuariosMessageState = try {
+                withTimeout(timeoutMillis) {
+                    usuariosRepository.updateUsuario(
+                        Token.codUsuario!!,
+                        mapOf("Password" to usuariosMtoState.password)
+                    )
+                }
+                UsuariosMessageState.Success
+            } catch (e: IOException) {
+                UsuariosMessageState.Error(e.message.toString())
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()
+                val errorBodyString = errorBody?.string()
+                if (errorBodyString != null) {
+                    val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
+                    val error = jsonObject["body"]?.asString ?: ""
+                    Log.e("UsuariosVM (changePassword) ", errorBodyString)
+                    UsuariosMessageState.Error(error)
+                } else {
+                    UsuariosMessageState.Error("Error")
+                }
+            } catch (e: KotlinNullPointerException) {
+                //Esta excepcion se lanza cuando recibimos el 204, ya que este al no tener body provoca
+                //error aunque el comportamiento es el que queremos, de ahi que al tratarla se maneje
+                //como success
+                UsuariosMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                UsuariosMessageState.Error("Error, no se ha recibido respuesta del servidor", true)
+            }
+        }
+    }
 
     fun resetUsuarioMtoState() {
         usuariosMtoState = usuariosMtoState.copy(
@@ -459,48 +502,6 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
                     usuariosMtoState.correoElectronico != "" &&
                     usuariosMtoState.rango != "")
         )
-    }
-
-    fun changePassword() {
-        viewModelScope.launch {
-            usuariosMessageState =
-                UsuariosMessageState.Loading
-            usuariosMessageState = try {
-                val result = withTimeoutOrNull(timeoutMillis) {
-                    usuariosRepository.updateUsuario(
-                        Token.codUsuario!!,
-                        mapOf("Password" to usuariosMtoState.password)
-                    )
-                }
-                if (result == null) {
-                    // Si el tiempo de espera se excede, result será null
-                    UsuariosMessageState.Error("Error, no se ha recibido respuesta del servidor", true)
-                } else {
-                    // Si result no es null, la operación se completó dentro del tiempo de espera
-                    UsuariosMessageState.Success
-                }
-            } catch (e: IOException) {
-                UsuariosMessageState.Error("e1")
-            } catch (e: HttpException) {
-                val errorBody = e.response()?.errorBody()
-                val errorBodyString = errorBody?.string()
-                if (errorBodyString != null) {
-                    val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
-                    val error = jsonObject["body"]?.asString ?: ""
-                    Log.e("UsuariosVM (updatePass) ", errorBodyString)
-                    UsuariosMessageState.Error(error)
-                } else {
-                    UsuariosMessageState.Error("Error")
-                }
-            } catch (e: KotlinNullPointerException) {
-                //Esta excepcion se lanza cuando recibimos el 204, ya que este al no tener body provoca
-                //error aunque el comportamiento es el que queremos, de ahi que al tratarla se maneje
-                //como success
-                UsuariosMessageState.Success
-            } catch (ex: TimeoutCancellationException) {
-                UsuariosMessageState.Error("Error, no se ha recibido respuesta del servidor", true)
-            }
-        }
     }
 
     companion object {

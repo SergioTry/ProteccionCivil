@@ -14,7 +14,7 @@ fun AnunciosScreen(
     retryAction: () -> Unit,
     onNavUp: () -> Unit,
     refresh: () -> Unit,
-    onShowSnackBar: (String) -> Unit,
+    onShowSnackBar: (String,Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (anunciosUiState) {
