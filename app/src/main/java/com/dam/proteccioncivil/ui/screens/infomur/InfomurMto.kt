@@ -53,7 +53,8 @@ fun InfomurMto(
     infomursVM: InfomursVM,
     onShowSnackBar: (String) -> Unit,
     refresh: () -> Unit,
-    users: List<Usuario>
+    users: List<Usuario>,
+    modifier: Modifier
 ) {
 
     val mensage: String
@@ -91,40 +92,39 @@ fun InfomurMto(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = "Escudo caravaca de la cruz",
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
         )
         Card(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .height(380.dp)
                 .padding(8.dp),
             shape = RoundedCornerShape(8.dp)
         ) {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(12.dp)) {
+            Row(modifier = modifier.fillMaxWidth()) {
+                Column(modifier = modifier.padding(12.dp)) {
                     Row {
                         Box(
-                            modifier = Modifier.weight(1f)
+                            modifier = modifier.weight(1f)
                         ) {
                             OutlinedTextField(
                                 label = { Text(text = "Fecha Infomur") },
                                 value = FormatDate.use(infomursVM.infomursMtoState.fechaInfomur),
                                 onValueChange = {},
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = modifier.fillMaxWidth()
                             )
                             IconButton(
                                 onClick = {
-                                    infomursVM.showDlgDate = true
-                                    refresh()
+                                    infomursVM.setShowDlgDate(true)
                                 },
-                                modifier = Modifier.align(Alignment.CenterEnd)
+                                modifier = modifier.align(Alignment.CenterEnd)
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.DateRange,
@@ -133,16 +133,16 @@ fun InfomurMto(
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.size(8.dp))
+                    Spacer(modifier = modifier.size(8.dp))
                     OutlinedTextField(
                         value = infomursVM.infomursMtoState.descripcion,
                         onValueChange = { infomursVM.setDescripcion(it) },
                         label = { Text(text = "Descripcion") },
-                        modifier = Modifier
+                        modifier = modifier
                             .fillMaxWidth()
                             .height(80.dp)
                     )
-                    Spacer(modifier = Modifier.size(16.dp))
+                    Spacer(modifier = modifier.size(16.dp))
                     ExposedDropdownMenuBox(
                         expanded = expandedUser1,
                         onExpandedChange = { expandedUser1 = !expandedUser1 },
@@ -160,7 +160,7 @@ fun InfomurMto(
                                 }
                             },
                             singleLine = true,
-                            modifier = Modifier
+                            modifier = modifier
                                 .fillMaxWidth()
                                 .menuAnchor()
                         )
@@ -181,7 +181,7 @@ fun InfomurMto(
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.size(4.dp))
+                    Spacer(modifier = modifier.size(4.dp))
                     ExposedDropdownMenuBox(
                         expanded = expandedUser2,
                         onExpandedChange = { expandedUser2 = !expandedUser2 },
@@ -199,7 +199,7 @@ fun InfomurMto(
                                 }
                             },
                             singleLine = true,
-                            modifier = Modifier
+                            modifier = modifier
                                 .fillMaxWidth()
                                 .menuAnchor()
                         )
@@ -224,7 +224,7 @@ fun InfomurMto(
             }
         }
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(16.dp)
                 .align(Alignment.BottomEnd),
@@ -239,7 +239,7 @@ fun InfomurMto(
             ) {
                 Text(text = "Cancelar")
             }
-            Spacer(modifier = Modifier.width(100.dp))
+            Spacer(modifier = modifier.width(100.dp))
             Button(
                 onClick = {
                     if (infomursVM.infomursMtoState.codInfomur.equals("0")) {
@@ -258,12 +258,15 @@ fun InfomurMto(
                     }
                 )
             }
-            if (infomursVM.showDlgDate) {
+            if (infomursVM.infomursBusState.showDlgDate) {
                 DlgSeleccionFecha(
-                    modifier = Modifier,
                     onClick = {
-                        infomursVM.showDlgDate = false
+                        infomursVM.setShowDlgDate(false)
                         infomursVM.setFechaInfomur(FormatDate.use(it))
+                    },
+                    modifier = modifier,
+                    onDismiss = {
+                        infomursVM.setShowDlgDate(false)
                     }
                 )
             }

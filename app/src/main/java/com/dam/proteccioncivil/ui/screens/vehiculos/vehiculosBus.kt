@@ -34,15 +34,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.ShortToBoolean
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Vehiculo
-import java.time.format.DateTimeFormatter
+import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -54,6 +56,35 @@ fun VehiculosBus(
     onNavUp: () -> Unit,
     refresh: () -> Unit
 ) {
+    val mensage: String
+    val contexto = LocalContext.current
+
+    when (vehiculosVM.vehiculosMessageState) {
+        is VehiculoMessageState.Loading -> {
+        }
+
+        is VehiculoMessageState.Success -> {
+            mensage = ContextCompat.getString(
+                contexto,
+                R.string.vehiculo_delete_success
+            )
+            onShowSnackBar(mensage)
+            vehiculosVM.resetVehiculoMtoState()
+            vehiculosVM.resetInfoState()
+            vehiculosVM.getAll()
+            refresh()
+        }
+
+        is VehiculoMessageState.Error -> {
+            mensage = ContextCompat.getString(
+                contexto,
+                R.string.vehiculo_delete_failure
+            )
+            onShowSnackBar(mensage)
+            vehiculosVM.resetInfoState()
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -102,13 +133,13 @@ fun VehiculosBus(
                             vehiculo = it,
                             onNavUp = { onNavUp() },
                             vehiculosVM = vehiculosVM,
-                            modifier = modifier,
-                            refresh = { refresh() })
+                            modifier = modifier
+                        )
                     }
                 }
             )
         }
-        if (true) {
+        if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -118,13 +149,28 @@ fun VehiculosBus(
                 horizontalArrangement = Arrangement.End
             ) {
                 FloatingActionButton(
-                    onClick = {},
+                    onClick = {
+                        vehiculosVM.resetVehiculoMtoState()
+                        onNavUp()
+                    },
                     contentColor = Color.White,
                     elevation = FloatingActionButtonDefaults.elevation(8.dp)
                 ) {
                     Icon(imageVector = Icons.Filled.Add, contentDescription = "Añadir")
                 }
             }
+        }
+        if (vehiculosVM.vehiculosBusState.showDlgConfirmation) {
+            DlgConfirmacion(
+                mensaje = R.string.guardia_delete_confirmation,
+                onCancelarClick = {
+                    vehiculosVM.setShowDlgBorrar(false)
+                },
+                onAceptarClick = {
+                    vehiculosVM.setShowDlgBorrar(false)
+                    vehiculosVM.deleteBy()
+                }
+            )
         }
     }
 }
@@ -133,75 +179,80 @@ fun VehiculosBus(
 fun vehiculoCard(
     vehiculo: Vehiculo,
     onNavUp: () -> Unit,
-    refresh: () -> Unit,
     vehiculosVM: VehiculosVM,
     modifier: Modifier
 ) {
-    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(16.dp)
             .fillMaxWidth()
             .height(180.dp),
         shape = RoundedCornerShape(8.dp)
     ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Row(modifier = modifier.fillMaxWidth()) {
             Column {
                 Text(
                     text = vehiculo.matricula,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
+                    modifier = modifier
                         .align(Alignment.Start)
                         .padding(16.dp)
                 )
                 Image(
                     painter = painterResource(id = R.drawable.img),
                     contentDescription = null,
-                    modifier = Modifier
+                    modifier = modifier
                         .padding(6.dp)
                         .align(Alignment.Start)
                 )
             }
-            Spacer(modifier = Modifier.width(28.dp))
+            Spacer(modifier = modifier.width(28.dp))
             Column {
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = modifier.height(8.dp))
                 Text(
                     text = vehiculo.km.toString(),
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = modifier.padding(start = 8.dp)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = modifier.height(8.dp))
                 Text(
                     text = if (ShortToBoolean.use(vehiculo.disponible)) "Disponible" else "No Disponible",
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = modifier.padding(start = 8.dp)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = modifier.height(8.dp))
                 Text(
                     text = vehiculo.marca + " " + vehiculo.modelo,
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = modifier.padding(start = 8.dp)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = modifier.height(8.dp))
                 if (Token.rango == "Admin" || Token.rango == "JefeServicio" || ShortToBoolean.use(
                         Token.conductor?.toShort()
                     )
                 ) {
                     Button(
                         onClick = { /*TODO*/ },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                        modifier = modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text("Asignar")
                     }
                 }
             }
-            Spacer(modifier = Modifier.width(36.dp))
             if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-                Column {
-                    Spacer(modifier = Modifier.height(28.dp))
-                    IconButton(onClick = { /*TODO*/ }) {
+                Row {
+                    Spacer(modifier = modifier.height(28.dp))
+                    IconButton(onClick = {
+                        vehiculosVM.resetVehiculoMtoState()
+                        vehiculosVM.cloneVehiculoMtoState(vehiculo)
+                        vehiculosVM.setShowDlgBorrar(true)
+                    }) {
                         Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
                     }
-                    Spacer(modifier = Modifier.height(28.dp))
-                    IconButton(onClick = { /*TODO*/ }) {
+                    Spacer(modifier = modifier.height(28.dp))
+                    IconButton(onClick = {
+                        vehiculosVM.resetVehiculoMtoState()
+                        vehiculosVM.cloneVehiculoMtoState(vehiculo)
+                        onNavUp()
+                    }) {
                         Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
                     }
                 }

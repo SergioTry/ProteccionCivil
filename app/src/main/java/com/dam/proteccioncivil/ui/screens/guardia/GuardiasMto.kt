@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
@@ -41,7 +42,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.Usuario
+import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -49,7 +52,9 @@ import com.dam.proteccioncivil.data.model.Usuario
 fun GuardiaMto(
     guardiasVM: GuardiasVM,
     onShowSnackBar: (String) -> Unit,
-    refresh: () -> Unit
+    refresh: () -> Unit,
+    users: List<Usuario>,
+    modifier: Modifier
 ) {
 
     val mensage: String
@@ -57,7 +62,6 @@ fun GuardiaMto(
     val activity = (LocalContext.current as? Activity)
     var expandedUser1 by remember { mutableStateOf(false) }
     var expandedUser2 by remember { mutableStateOf(false) }
-    val users: List<Usuario> = listOf()
 
     when (guardiasVM.guardiasMessageState) {
         is GuardiasMessageState.Loading -> {
@@ -88,58 +92,53 @@ fun GuardiaMto(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = "Escudo caravaca de la cruz",
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
         )
         Card(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(8.dp),
             shape = RoundedCornerShape(8.dp)
         ) {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(12.dp)) {
-//                    Row {
-//                        Text(
-//                            text = "Guardia ",
-//                            fontWeight = FontWeight.Bold,
-//                            fontSize = 16.sp,
-//                            modifier = Modifier
-//                                .padding(start = 8.dp, top = 18.dp, end = 8.dp)
-//                        )
-//                        Box(
-//                            modifier = Modifier.weight(1f)
-//                        ) {
-//                            OutlinedTextField(
-//                                value = LocalDate.now().format(formatter),
-//                                onValueChange = { },
-//                                modifier = Modifier.fillMaxWidth()
-//                            )
-//                            IconButton(
-//                                onClick = {
-//                                },
-//                                modifier = Modifier.align(Alignment.CenterEnd)
-//                            ) {
-//                                Icon(
-//                                    imageVector = Icons.Filled.DateRange,
-//                                    contentDescription = "Calendar Month Icon"
-//                                )
-//                            }
-//                        }
-//                    }
-                    Spacer(modifier = Modifier.size(16.dp))
+            Row(modifier = modifier.fillMaxWidth()) {
+                Column(modifier = modifier.padding(12.dp)) {
+                    Row {
+                        Box(
+                            modifier = modifier.weight(1f)
+                        ) {
+                            OutlinedTextField(
+                                label = { Text(text = "Fecha Infomur") },
+                                value = FormatDate.use(guardiasVM.guardiasMtoState.fechaGuardia),
+                                onValueChange = {},
+                                modifier = modifier.fillMaxWidth()
+                            )
+                            IconButton(
+                                onClick = {
+                                    guardiasVM.setShowDlgDate(true)
+                                },
+                                modifier = modifier.align(Alignment.CenterEnd)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.DateRange,
+                                    contentDescription = "Calendar Month Icon"
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = modifier.size(16.dp))
                     OutlinedTextField(
                         value = guardiasVM.guardiasMtoState.descripcion,
                         label = { Text("Descripción") },
                         onValueChange = {
                             guardiasVM.setDescripcion(it)
-                        }, modifier = Modifier
+                        }, modifier = modifier
                             .fillMaxWidth()
                             .height(80.dp)
                     )
@@ -148,7 +147,7 @@ fun GuardiaMto(
                         onExpandedChange = { expandedUser1 = !expandedUser1 },
                     ) {
                         OutlinedTextField(
-                            value = guardiasVM.guardiasMtoState.codUsuario1.toString(),
+                            value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario1 }?.nombre ?: "",
                             onValueChange = { },
                             label = { Text("Usuario1") },
                             readOnly = true,
@@ -160,7 +159,7 @@ fun GuardiaMto(
                                 }
                             },
                             singleLine = true,
-                            modifier = Modifier
+                            modifier = modifier
                                 .fillMaxWidth()
                                 .menuAnchor()
                         )
@@ -179,12 +178,6 @@ fun GuardiaMto(
                                         expandedUser1 = false
                                     })
                             }
-                            DropdownMenuItem(
-                                text = { Text("Ande vas tonto") },
-                                onClick = {
-                                    guardiasVM.setUsuarios("6", "7")
-                                    expandedUser1 = false
-                                })
                         }
                     }
                     ExposedDropdownMenuBox(
@@ -192,7 +185,7 @@ fun GuardiaMto(
                         onExpandedChange = { expandedUser2 = !expandedUser2 },
                     ) {
                         OutlinedTextField(
-                            value = guardiasVM.guardiasMtoState.codUsuario2.toString(),
+                            value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario2 }?.nombre ?: "",
                             onValueChange = {},
                             label = { Text("Usuario2") },
                             readOnly = true,
@@ -204,7 +197,7 @@ fun GuardiaMto(
                                 }
                             },
                             singleLine = true,
-                            modifier = Modifier
+                            modifier = modifier
                                 .fillMaxWidth()
                                 .menuAnchor()
                         )
@@ -223,19 +216,13 @@ fun GuardiaMto(
                                         expandedUser2 = false
                                     })
                             }
-                            DropdownMenuItem(
-                                text = { Text("Ande vas tonto") },
-                                onClick = {
-                                    guardiasVM.setUsuarios("6", "7")
-                                    expandedUser2 = false
-                                })
                         }
                     }
                 }
             }
         }
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(16.dp)
                 .align(Alignment.BottomEnd),
@@ -250,7 +237,7 @@ fun GuardiaMto(
             ) {
                 Text(text = "Cancelar")
             }
-            Spacer(modifier = Modifier.width(100.dp))
+            Spacer(modifier = modifier.width(100.dp))
             Button(
                 onClick = {
                     if (guardiasVM.guardiasMtoState.codGuardia.equals("0")) {
@@ -269,6 +256,18 @@ fun GuardiaMto(
                     }
                 )
             }
+        }
+        if (guardiasVM.guardiasBusState.showDlgDate) {
+            DlgSeleccionFecha(
+                onClick = {
+                    guardiasVM.setShowDlgDate(false)
+                    guardiasVM.setFechaGuardia(FormatDate.use(it))
+                },
+                modifier = modifier,
+                onDismiss = {
+                    guardiasVM.setShowDlgDate(false)
+                }
+            )
         }
     }
 }

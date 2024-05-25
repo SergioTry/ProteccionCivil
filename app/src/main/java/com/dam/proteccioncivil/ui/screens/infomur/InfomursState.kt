@@ -11,6 +11,10 @@ data class InfomursMtoState(
     val datosObligatorios: Boolean = false
 )
 
+data class InfomursBusState(
+    val showDlgDate: Boolean = false,
+    val showDlgConfirmation: Boolean = false)
+
 fun InfomursMtoState.toInfomur(): Infomur = Infomur(
     codInfomur = if (codInfomur.isEmpty()) 0 else codInfomur.toInt(),
     fechaInfomur = fechaInfomur,

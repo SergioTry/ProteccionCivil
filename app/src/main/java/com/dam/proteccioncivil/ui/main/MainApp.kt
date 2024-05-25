@@ -359,7 +359,9 @@ private fun NavHostRoutes(
         composable(route = AppScreens.GuardiasMto.name) {
             GuardiaMto(guardiasVM = guardiasVM,
                 refresh = { navController.navigate(AppScreens.Guardias.name) },
-                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
+                onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } },
+                users = guardiasVM.users,
+                modifier = Modifier)
         }
 
         composable(route = AppScreens.Infomurs.name) {
@@ -376,7 +378,8 @@ private fun NavHostRoutes(
             InfomurMto(infomursVM = infomursVM,
                 refresh = { navController.navigate(AppScreens.Infomurs.name) },
                 onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it)}},
-                users = infomursVM.users
+                users = infomursVM.users,
+                modifier = Modifier
             )
         }
 
@@ -409,8 +412,7 @@ private fun NavHostRoutes(
 
         composable(route = AppScreens.UsuariosMto.name) {
             UsuariosMto(usuariosVM = usuariosVM,
-                refreshNav = { navController.navigate(AppScreens.Usuarios.name) },
-                refresh = { navController.navigate(AppScreens.UsuariosMto.name) },
+                onNavDown = { navController.navigate(AppScreens.Usuarios.name) },
                 onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
         }
 
@@ -427,8 +429,7 @@ private fun NavHostRoutes(
         composable(route = AppScreens.VehiculosMto.name) {
             VehiculoMto(vehiculosVM = vehiculosVM,
                 retryAction = { vehiculosVM::getAll },
-                onNavUp = { navController.navigate(AppScreens.VehiculosMto.name) },
-                refresh = { navController.navigate(AppScreens.Vehiculos.name) },
+                onNavDown = { navController.navigate(AppScreens.Vehiculos.name) },
                 onShowSnackBar = { scope.launch { snackbarHostState.showSnackbar(it) } })
         }
 

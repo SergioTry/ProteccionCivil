@@ -21,18 +21,24 @@ data class VehiculoMtoState(
     val modelo: String = "",
     val km: String = "0",
     val disponible: Boolean = false,
-    val fechaMantenimiento: String = "",
-    val descripcion: String = "",
+    val fechaMantenimiento: String? = null,
+    val descripcion: String? = null,
+    val codPreventivo: Int? = null,
     val datosObligatorios: Boolean = false
 )
+
+data class VehiculosBusState(
+    val showDlgDate: Boolean = false,
+    val showDlgConfirmation: Boolean = false)
 
 fun VehiculoMtoState.toVehiculo(): Vehiculo = Vehiculo(
     codVehiculo = if (codVehiculo.isEmpty()) 0 else codVehiculo.toInt(),
     matricula = matricula,
     marca = marca,
     modelo = modelo,
-    km = if (km.isEmpty()) 0 else km.toLong(),
+    km = if (km.isEmpty()) 0.toFloat() else km.toFloat(),
     disponible = if (disponible) 1.toShort() else 0.toShort(),
     fechaMantenimiento = if (fechaMantenimiento.isNullOrEmpty()) "" else fechaMantenimiento,
-    descripcion = descripcion
+    descripcionMantenimiento = descripcion,
+    codPreveintvo = codPreventivo
 )

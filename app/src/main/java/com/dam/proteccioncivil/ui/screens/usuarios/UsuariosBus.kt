@@ -44,7 +44,6 @@ import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
-import java.time.format.DateTimeFormatter
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -168,8 +167,7 @@ fun UsuariosBus(
                             usuario = it,
                             onNavUp = { onNavUp() },
                             usuariosVM = usuarioVM,
-                            modifier = modifier,
-                            refresh = { refresh() })
+                            modifier = modifier)
                     }
                 }
             )
@@ -195,15 +193,14 @@ fun UsuariosBus(
                 }
             }
         }
-        if (usuarioVM.showDlgConfirmation) {
+        if (usuarioVM.usuariosBusState.showDlgConfirmation) {
             DlgConfirmacion(
                 mensaje = R.string.guardia_delete_confirmation,
                 onCancelarClick = {
-                    usuarioVM.showDlgConfirmation = false
-                    refresh()
+                    usuarioVM.setShowDlgBorrar(false)
                 },
                 onAceptarClick = {
-                    usuarioVM.showDlgConfirmation = false
+                    usuarioVM.setShowDlgBorrar(false)
                     usuarioVM.deleteBy()
                 }
             )
@@ -216,42 +213,39 @@ fun usuarioCard(
     usuario: Usuario,
     onNavUp: () -> Unit,
     usuariosVM: UsuariosVM,
-    modifier: Modifier,
-    refresh: () -> Unit
+    modifier: Modifier
 ) {
-    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(16.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp)
     ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Row(modifier = modifier.fillMaxWidth()) {
             Image(
                 painter = painterResource(id = R.drawable.img),
                 contentDescription = null,
-                modifier = Modifier
+                modifier = modifier
                     .padding(6.dp)
                     .size(80.dp)
             )
-            Spacer(modifier = Modifier.width(28.dp))
+            Spacer(modifier = modifier.width(28.dp))
             Column {
-                Spacer(modifier = Modifier.height(18.dp))
+                Spacer(modifier = modifier.height(18.dp))
                 Text(text = usuario.username)
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = modifier.height(8.dp))
                 Text(
                     text = usuario.nombre//+ " " + usuario.apellidos)
                 )
             }
-            Spacer(modifier = Modifier.width(90.dp))
+            Spacer(modifier = modifier.width(90.dp))
             if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 Row {
-                    Spacer(modifier = Modifier.height(28.dp))
+                    Spacer(modifier = modifier.height(28.dp))
                     IconButton(onClick = {
                         usuariosVM.resetUsuarioMtoState()
                         usuariosVM.cloneUsuarioMtoState(usuario)
-                        usuariosVM.showDlgConfirmation = true
-                        refresh()
+                        usuariosVM.setShowDlgBorrar(true)
                     }) {
                         Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
                     }

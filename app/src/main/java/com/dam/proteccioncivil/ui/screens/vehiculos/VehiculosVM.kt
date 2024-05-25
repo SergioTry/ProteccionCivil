@@ -15,7 +15,6 @@ import com.dam.proteccioncivil.data.model.ObjectToStringMap
 import com.dam.proteccioncivil.data.model.ShortToBoolean
 import com.dam.proteccioncivil.data.model.Vehiculo
 import com.dam.proteccioncivil.data.repository.VehiculosRepositorys
-import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
 import com.google.gson.JsonParser
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -31,10 +30,21 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepositorys) : CRUD<
     var vehiculosMtoState by mutableStateOf(VehiculoMtoState())
         private set
 
-    var showDlgConfirmation = false
+    var vehiculosBusState by mutableStateOf(VehiculosBusState())
 
-    var showDlgDate = false
+    fun setShowDlgBorrar(showDlgBorrar: Boolean){
+        vehiculosBusState = vehiculosBusState.copy(
+            showDlgConfirmation = showDlgBorrar,
+            showDlgDate = vehiculosBusState.showDlgDate
+        )
+    }
 
+    fun setShowDlgDate(showDlgDate: Boolean){
+        vehiculosBusState = vehiculosBusState.copy(
+            showDlgConfirmation = vehiculosBusState.showDlgConfirmation,
+            showDlgDate = showDlgDate
+        )
+    }
     fun resetInfoState() {
         vehiculosMessageState = VehiculoMessageState.Loading
     }
@@ -150,8 +160,9 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepositorys) : CRUD<
             "",
             "0",
             false,
-            "",
-            "",
+            null,
+            null,
+            null,
             false
         )
     }
@@ -165,7 +176,7 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepositorys) : CRUD<
             vehiculo.km.toString(),
             ShortToBoolean.use(vehiculo.disponible),
             vehiculo.fechaMantenimiento,
-            vehiculo.descripcion,
+            vehiculo.descripcionMantenimiento,
             datosObligatorios = true
         )
     }

@@ -34,12 +34,24 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
     var usuariosMtoState by mutableStateOf(UsuariosMtoState())
         private set
 
-    var showDlgConfirmation = false
-
-    var showDlgDate = false
+    var usuariosBusState by mutableStateOf(UsuariosBusState())
 
     fun resetInfoState() {
         usuariosMessageState = UsuariosMessageState.Loading
+    }
+
+    fun setShowDlgBorrar(showDlgBorrar: Boolean){
+        usuariosBusState = usuariosBusState.copy(
+            showDlgConfirmation = showDlgBorrar,
+            showDlgDate = usuariosBusState.showDlgDate
+        )
+    }
+
+    fun setShowDlgDate(showDlgDate: Boolean){
+        usuariosBusState = usuariosBusState.copy(
+            showDlgConfirmation = usuariosBusState.showDlgConfirmation,
+            showDlgDate = showDlgDate
+        )
     }
 
     override fun getAll() {

@@ -1,7 +1,10 @@
 package com.dam.proteccioncivil.data.model
 
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 //Tiempo máximo de espera
 val timeoutMillis: Long = 3500
@@ -44,9 +47,13 @@ class FormatDate {
         fun use(fecha: String? = null): String {
             val fechaFormateada = if (fecha != null) {
                 val fechaParseada = try {
-                    LocalDate.parse(fecha)
-                } catch (e: Exception) {
-                    LocalDate.now()
+                    ZonedDateTime.parse(fecha).toLocalDate()
+                } catch (e: DateTimeParseException) {
+                    try {
+                        LocalDateTime.parse(fecha).toLocalDate()
+                    } catch (e: DateTimeParseException) {
+                        LocalDate.now()
+                    }
                 }
                 val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 fechaParseada.format(formato)

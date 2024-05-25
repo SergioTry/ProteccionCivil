@@ -1,6 +1,7 @@
 package com.dam.proteccioncivil.ui.screens.usuarios
 
 import com.dam.proteccioncivil.data.model.Usuario
+
 sealed interface UsuariosUiState {
     data class Success(val usuarios: List<Usuario>) : UsuariosUiState
     data class Error(val err: String) : UsuariosUiState
@@ -12,6 +13,10 @@ sealed interface UsuariosMessageState {
     data class Error(val err: String, val backToLogin: Boolean = false) : UsuariosMessageState
     data object Loading : UsuariosMessageState
 }
+
+data class UsuariosBusState(
+    val showDlgDate: Boolean = false,
+    val showDlgConfirmation: Boolean = false)
 
 data class UsuariosMtoState(
     val codUsuario: String = "0",

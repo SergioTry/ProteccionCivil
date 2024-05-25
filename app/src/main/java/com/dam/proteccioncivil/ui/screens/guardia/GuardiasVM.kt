@@ -1,5 +1,6 @@
 package com.dam.proteccioncivil.ui.screens.guardia
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,7 +14,9 @@ import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Guardia
 import com.dam.proteccioncivil.data.model.ObjectToStringMap
+import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.data.repository.GuardiasRepository
+import com.dam.proteccioncivil.data.repository.UsuariosRepository
 import com.google.gson.JsonParser
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -31,7 +34,15 @@ sealed interface GuardiasMessageState {
     data object Loading : GuardiasMessageState
 }
 
-class GuardiasVM(private val guardiasRepository: GuardiasRepository) : CRUD<Guardia>, ViewModel() {
+data class UsuariosGuardiaListState(
+    val userList: MutableList<Usuario> = mutableListOf()
+)
+
+@SuppressLint("MutableCollectionMutableState")
+class GuardiasVM(
+    private val guardiasRepository: GuardiasRepository,
+    private val usuariosRepository: UsuariosRepository
+) : CRUD<Guardia>, ViewModel() {
 
     var guardiasUiState: GuardiasUiState by mutableStateOf(GuardiasUiState.Loading)
         private set
@@ -42,7 +53,23 @@ class GuardiasVM(private val guardiasRepository: GuardiasRepository) : CRUD<Guar
     var guardiasMtoState by mutableStateOf(GuardiasMtoState())
         private set
 
-    var showDlgConfirmation = false
+    var guardiasBusState by mutableStateOf(GuardiasBusState())
+
+    var users by mutableStateOf(UsuariosGuardiaListState().userList)
+
+    fun setShowDlgBorrar(showDlgBorrar: Boolean) {
+        guardiasBusState = guardiasBusState.copy(
+            showDlgConfirmation = showDlgBorrar,
+            showDlgDate = guardiasBusState.showDlgDate
+        )
+    }
+
+    fun setShowDlgDate(showDlgDate: Boolean) {
+        guardiasBusState = guardiasBusState.copy(
+            showDlgConfirmation = guardiasBusState.showDlgConfirmation,
+            showDlgDate = showDlgDate
+        )
+    }
 
     fun resetInfoState() {
         guardiasMessageState = GuardiasMessageState.Loading
@@ -52,6 +79,7 @@ class GuardiasVM(private val guardiasRepository: GuardiasRepository) : CRUD<Guar
         viewModelScope.launch {
             guardiasUiState = GuardiasUiState.Loading
             guardiasUiState = try {
+                users.addAll(usuariosRepository.getUsuarios())
                 val guardias = guardiasRepository.getGuardias()
                 GuardiasUiState.Success(guardias)
             } catch (e: IOException) {
@@ -225,7 +253,8 @@ class GuardiasVM(private val guardiasRepository: GuardiasRepository) : CRUD<Guar
                 val application =
                     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MainApplication)
                 val guardiasRepository = application.container.guardiasRepository
-                GuardiasVM(guardiasRepository = guardiasRepository)
+                val usuariosRepository = application.container.usuariosRepository
+                GuardiasVM(guardiasRepository = guardiasRepository,usuariosRepository=usuariosRepository)
             }
         }
     }

@@ -52,10 +52,9 @@ import com.dam.proteccioncivil.ui.screens.preferencias.LabelledSwitch
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun UsuariosMto(
-    refresh: () -> Unit,
+    onNavDown: () -> Unit,
     usuariosVM: UsuariosVM,
-    onShowSnackBar: (String) -> Unit,
-    refreshNav: () -> Unit
+    onShowSnackBar: (String) -> Unit
 ) {
 
     val mensage: String
@@ -79,10 +78,10 @@ fun UsuariosMto(
                 ContextCompat.getString(contexto, R.string.usuario_edit_success)
             }
             onShowSnackBar(mensage)
+            usuariosVM.getAll()
+            onNavDown()
             usuariosVM.resetInfoState()
             usuariosVM.resetUsuarioMtoState()
-            usuariosVM.getAll()
-            refreshNav()
         }
 
         is UsuariosMessageState.Error -> {
@@ -273,8 +272,7 @@ fun UsuariosMto(
                             )
                             IconButton(
                                 onClick = {
-                                    usuariosVM.showDlgDate = true
-                                    refresh()
+                                    usuariosVM.setShowDlgDate(true)
                                 },
                                 modifier = Modifier.align(Alignment.CenterEnd)
                             ) {
@@ -332,12 +330,15 @@ fun UsuariosMto(
                         )
                     }
                 }
-                if (usuariosVM.showDlgDate) {
+                if (usuariosVM.usuariosBusState.showDlgDate) {
                     DlgSeleccionFecha(
-                        modifier = Modifier,
                         onClick = {
-                            usuariosVM.showDlgDate = false
+                            usuariosVM.setShowDlgDate(false)
                             usuariosVM.setFechaNacimiento(it)
+                        },
+                        modifier = Modifier,
+                        onDismiss = {
+                            usuariosVM.setShowDlgDate(false)
                         }
                     )
                 }

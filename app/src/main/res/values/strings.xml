@@ -76,4 +76,10 @@
     <string name="usuario_edit_failure">Error al editar el usuario</string>
     <string name="but_aceptar">Aceptar</string>
     <string name="but_cancelar">Cancelar</string>
+    <string name="vehiculo_create_success">Vehiculo creado con exito</string>
+    <string name="vehiculo_edit_success">Vehiculo editado con exito</string>
+    <string name="vehiculo_create_failure">Error al crear el vehiculo</string>
+    <string name="vehiculo_edit_failure">Vehiculo editado con exito</string>
+    <string name="vehiculo_delete_success">Vehiculo eliminado con exito</string>
+    <string name="vehiculo_delete_failure">Error al eliminar el vehiculo</string>
 </resources>

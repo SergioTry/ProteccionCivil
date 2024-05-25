@@ -102,8 +102,7 @@ fun GuardiasBus(
                         guardia = it,
                         onNavUp = { onNavUp() },
                         guardiasVM = guardiasVM,
-                        modifier = modifier,
-                        refresh = { refresh() })
+                        modifier = modifier)
                 }
             }
         )
@@ -130,15 +129,14 @@ fun GuardiasBus(
                 }
             }
         }
-        if (guardiasVM.showDlgConfirmation) {
+        if (guardiasVM.guardiasBusState.showDlgConfirmation) {
             DlgConfirmacion(
                 mensaje = R.string.guardia_delete_confirmation,
                 onCancelarClick = {
-                    guardiasVM.showDlgConfirmation = false
-                    refresh()
+                    guardiasVM.setShowDlgBorrar(false)
                 },
                 onAceptarClick = {
-                    guardiasVM.showDlgConfirmation = false
+                    guardiasVM.setShowDlgBorrar(false)
                     guardiasVM.deleteBy()
                 }
             )
@@ -151,8 +149,7 @@ fun GuardiaCard(
     guardia: Guardia,
     guardiasVM: GuardiasVM,
     onNavUp: () -> Unit,
-    modifier: Modifier,
-    refresh: () -> Unit
+    modifier: Modifier
 ) {
     Card(
         modifier = modifier
@@ -179,12 +176,12 @@ fun GuardiaCard(
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 Text(
-                    text = guardia.codUsuario1.toString(),
+                    text = guardiasVM.users.find { it.codUsuario.toString() == guardia.codUsuario1.toString() }?.nombre ?: "",
                     modifier = modifier
                         .padding(start = 8.dp)
                 )
                 Text(
-                    text = guardia.codUsuario2.toString(),
+                    text = guardiasVM.users.find { it.codUsuario.toString() == guardia.codUsuario2.toString() }?.nombre ?: "",
                     modifier = modifier
                         .padding(start = 8.dp)
                 )
@@ -194,8 +191,7 @@ fun GuardiaCard(
                     IconButton(onClick = {
                         guardiasVM.resetGuardiaMtoState()
                         guardiasVM.cloneGuardiaMtoState(guardia)
-                        guardiasVM.showDlgConfirmation = true
-                        refresh()
+                        guardiasVM.setShowDlgBorrar(true)
                     }) {
                         Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
                     }

@@ -20,7 +20,8 @@ import java.time.ZoneId
 @Composable
 fun DlgSeleccionFecha(
     onClick: (String) -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    onDismiss: () -> Unit
 ) {
     val datePickerState = rememberDatePickerState(selectableDates = object : SelectableDates {
         override fun isSelectableDate(utcTimeMillis: Long): Boolean {
@@ -33,7 +34,7 @@ fun DlgSeleccionFecha(
     } ?: ""
 
     DatePickerDialog(
-        onDismissRequest = { onClick("") },
+        onDismissRequest = { onDismiss() },
         confirmButton = {
             TextButton(onClick = {
                 onClick(FormatDate.use(selectedDate.toString()))

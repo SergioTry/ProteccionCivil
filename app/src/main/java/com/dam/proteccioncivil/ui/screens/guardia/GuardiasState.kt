@@ -11,6 +11,10 @@ data class GuardiasMtoState(
     val datosObligatorios: Boolean = false
 )
 
+data class GuardiasBusState(
+    val showDlgDate: Boolean = false,
+    val showDlgConfirmation: Boolean = false)
+
 fun GuardiasMtoState.toGuardia(): Guardia = Guardia(
     codGuardia = if (codGuardia.isEmpty()) 0 else codGuardia.toInt(),
     fechaGuardia = fechaGuardia,

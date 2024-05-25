@@ -99,8 +99,7 @@ fun InfomurBus(
                         infomur = it,
                         onNavUp = { onNavUp() },
                         infomursVM = infomursVM,
-                        modifier = modifier,
-                        refresh = { refresh() })
+                        modifier = modifier)
                 }
             }
         )
@@ -116,7 +115,6 @@ fun InfomurBus(
                 FloatingActionButton(
                     onClick = {
                         infomursVM.resetInfomurMtoState()
-                        //TODO delete esto es solo para probar
                         infomursVM.setFechaInfomur(LocalDate.now().toString())
                         onNavUp()
                     },
@@ -127,15 +125,14 @@ fun InfomurBus(
                 }
             }
         }
-        if (infomursVM.showDlgConfirmation) {
+        if (infomursVM.infomursBusState.showDlgConfirmation) {
             DlgConfirmacion(
                 mensaje = R.string.infomurs_delete_confirmation,
                 onCancelarClick = {
-                    infomursVM.showDlgConfirmation = false
-                    refresh()
+                    infomursVM.setShowDlgBorrar(false)
                 },
                 onAceptarClick = {
-                    infomursVM.showDlgConfirmation = false
+                    infomursVM.setShowDlgBorrar(false)
                     infomursVM.deleteBy()
                 }
             )
@@ -148,8 +145,7 @@ fun InfomurCard(
     infomur: Infomur,
     onNavUp: () -> Unit,
     modifier: Modifier,
-    infomursVM: InfomursVM,
-    refresh: () -> Unit
+    infomursVM: InfomursVM
 ) {
     Card(
         modifier = modifier
@@ -176,12 +172,12 @@ fun InfomurCard(
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 Text(
-                    text = infomur.codUsuario1.toString(),
+                    text = infomursVM.users.find { it.codUsuario.toString() == infomur.codUsuario1.toString() }?.nombre ?: "",
                     modifier = modifier
                         .padding(start = 8.dp)
                 )
                 Text(
-                    text = infomur.codUsuario2.toString(),
+                    text = infomursVM.users.find { it.codUsuario.toString() == infomur.codUsuario1.toString() }?.nombre ?: "",
                     modifier = modifier
                         .padding(start = 8.dp)
                 )
@@ -191,8 +187,7 @@ fun InfomurCard(
                     IconButton(onClick = {
                         infomursVM.resetInfomurMtoState()
                         infomursVM.cloneInfomurMtoState(infomur)
-                        infomursVM.showDlgConfirmation = true
-                        refresh()
+                        infomursVM.setShowDlgBorrar(true)
                     }) {
                         Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
                     }

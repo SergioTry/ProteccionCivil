@@ -53,9 +53,21 @@ class InfomursVM(
     var infomursMtoState by mutableStateOf(InfomursMtoState())
         private set
 
-    var showDlgConfirmation = false
+    var infomursBusState by mutableStateOf(InfomursBusState())
 
-    var showDlgDate = false
+    fun setShowDlgBorrar(showDlgBorrar: Boolean){
+        infomursBusState = infomursBusState.copy(
+            showDlgConfirmation = showDlgBorrar,
+            showDlgDate = infomursBusState.showDlgDate
+        )
+    }
+
+    fun setShowDlgDate(showDlgDate: Boolean){
+        infomursBusState = infomursBusState.copy(
+            showDlgConfirmation = infomursBusState.showDlgConfirmation,
+            showDlgDate = showDlgDate
+        )
+    }
 
     var users by mutableStateOf(UsuariosInfomurListState().userList)
 

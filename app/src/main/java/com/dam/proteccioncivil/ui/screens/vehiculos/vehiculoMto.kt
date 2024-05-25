@@ -1,6 +1,7 @@
 package com.dam.proteccioncivil.ui.screens.vehiculos
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,27 +22,63 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
+import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
 import kotlinx.coroutines.Job
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun VehiculoMto(
     retryAction: Any,
-    vehiculosVM: Any,
-    onNavUp: () -> Unit,
-    refresh: () -> Unit,
+    vehiculosVM: VehiculosVM,
+    onNavDown: () -> Unit,
     onShowSnackBar: (String) -> Job
 ) {
+    val mensage: String
+    val contexto = LocalContext.current
+    val activity = (LocalContext.current as? Activity)
+
+    if (vehiculosVM.vehiculosMtoState.codVehiculo.equals("0")) {
+        vehiculosVM.setFechaMantenimiento(FormatDate.use())
+    }
+
+    when (vehiculosVM.vehiculosMessageState) {
+        is VehiculoMessageState.Loading -> {
+        }
+
+        is VehiculoMessageState.Success -> {
+            mensage = if (vehiculosVM.vehiculosMtoState.codVehiculo.equals("0")) {
+                ContextCompat.getString(contexto, R.string.vehiculo_create_success)
+            } else {
+                ContextCompat.getString(contexto, R.string.vehiculo_edit_success)
+            }
+            onShowSnackBar(mensage)
+            vehiculosVM.getAll()
+            onNavDown()
+            vehiculosVM.resetInfoState()
+            vehiculosVM.resetVehiculoMtoState()
+        }
+
+        is VehiculoMessageState.Error -> {
+            mensage = if (vehiculosVM.vehiculosMtoState.codVehiculo.equals("0")) {
+                ContextCompat.getString(contexto, R.string.vehiculo_create_failure)
+            } else {
+                ContextCompat.getString(contexto, R.string.vehiculo_edit_failure)
+            }
+            onShowSnackBar(mensage)
+            vehiculosVM.resetInfoState()
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -59,67 +96,49 @@ fun VehiculoMto(
         ) {
             Column {
                 Column(modifier = Modifier.padding(12.dp)) {
-                    Text(text = "Identificador")
                     OutlinedTextField(
-                        value = "", onValueChange = {}, modifier = Modifier
+                        label = { Text(text = "Identificador") },
+                        value = vehiculosVM.vehiculosMtoState.codVehiculo,
+                        readOnly = true,
+                        onValueChange = {},
+                        modifier = Modifier
                             .fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.size(16.dp))
-                    Text(text = "Matricula")
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        label = { Text(text = "Matricula") },
+                        value = vehiculosVM.vehiculosMtoState.matricula,
+                        onValueChange = { vehiculosVM.setMatricula(it) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.size(16.dp))
-                    Text(text = "Marca")
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        label = { Text(text = "Marca") },
+                        value = vehiculosVM.vehiculosMtoState.marca,
+                        onValueChange = { vehiculosVM.setMarca(it) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.size(16.dp))
-                    Text(text = "Modelo")
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        label = { Text(text = "Modelo") },
+                        value = vehiculosVM.vehiculosMtoState.modelo,
+                        onValueChange = { vehiculosVM.setModelo(it) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.size(16.dp))
-                    Row {
-                        Text(text = "Kms", modifier = Modifier.align(Alignment.CenterVertically))
-                        Spacer(modifier = Modifier.width(160.dp))
-                        Text(
-                            text = "Segunda Mano",
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Switch(
-                            checked = false,
-                            onCheckedChange = {},
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        )
-                    }
-                    OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.size(16.dp))
-                    Text(
-                        text = "Fecha ITV"
-                    )
                     Row {
                         Box(
                             modifier = Modifier.weight(1f)
                         ) {
                             OutlinedTextField(
-                                value = FormatDate.use(),
-                                onValueChange = { },
+                                label = { Text(text = "Fecha proximo mantenimiento") },
+                                value = FormatDate.use(vehiculosVM.vehiculosMtoState.fechaMantenimiento),
+                                onValueChange = {},
                                 modifier = Modifier.fillMaxWidth()
                             )
                             IconButton(
                                 onClick = {
+                                    vehiculosVM.setShowDlgDate(true)
                                 },
                                 modifier = Modifier.align(Alignment.CenterEnd)
                             ) {
@@ -131,30 +150,13 @@ fun VehiculoMto(
                         }
                     }
                     Spacer(modifier = Modifier.size(16.dp))
-                    Text(
-                        text = "Fecha Proxima Revision"
+                    OutlinedTextField(
+                        label = { Text(text = "Descripción proximo mantenimiento") },
+                        value = vehiculosVM.vehiculosMtoState.descripcion.let { vehiculosVM.vehiculosMtoState.descripcion }
+                            ?: "",
+                        onValueChange = { vehiculosVM.setDescripcion(it) },
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    Row {
-                        Box(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            OutlinedTextField(
-                                value = FormatDate.use(),
-                                onValueChange = { },
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                            IconButton(
-                                onClick = {
-                                },
-                                modifier = Modifier.align(Alignment.CenterEnd)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.DateRange,
-                                    contentDescription = "Calendar Month Icon"
-                                )
-                            }
-                        }
-                    }
                 }
                 Row(
                     modifier = Modifier
@@ -164,18 +166,45 @@ fun VehiculoMto(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Button(
-                        onClick = { }
+                        onClick = {
+                            vehiculosVM.resetVehiculoMtoState()
+                            activity?.onBackPressed()
+                        }
                     ) {
                         Text(text = "Cancelar")
                     }
                     Spacer(modifier = Modifier.width(100.dp))
                     Button(
-                        onClick = {}
+                        onClick = {
+                            if (vehiculosVM.vehiculosMtoState.codVehiculo.equals("0")) {
+                                vehiculosVM.setNew()
+                            } else {
+                                vehiculosVM.update()
+                            }
+                        }
                     ) {
-                        Text(text = "Añadir")
+                        Text(
+                            text = if (vehiculosVM.vehiculosMtoState.codVehiculo.equals("0")) {
+                                "Añadir"
+                            } else {
+                                "Editar"
+                            }
+                        )
                     }
                 }
             }
+        }
+        if (vehiculosVM.vehiculosBusState.showDlgDate) {
+            DlgSeleccionFecha(
+                modifier = Modifier,
+                onClick = {
+                    vehiculosVM.setShowDlgDate(false)
+                    vehiculosVM.setFechaMantenimiento(it)
+                },
+                onDismiss = {
+                    vehiculosVM.setShowDlgDate(false)
+                }
+            )
         }
     }
 }
