@@ -226,11 +226,12 @@ fun usuarioCard(
     ) {
         Row(modifier = modifier.fillMaxWidth()) {
             Image(
-                painter = painterResource(id = R.drawable.pcc_icono),
+                painter = painterResource(id = R.drawable.homer),
                 contentDescription = null,
                 modifier = modifier
-                    .padding(6.dp)
                     .size(80.dp)
+                    .padding(6.dp)
+                    .background(Color.Magenta, shape = RoundedCornerShape(50))
             )
             Spacer(modifier = modifier.width(28.dp))
             Column {

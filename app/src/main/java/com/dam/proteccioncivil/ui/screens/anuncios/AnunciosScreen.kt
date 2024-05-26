@@ -14,7 +14,7 @@ fun AnunciosScreen(
     retryAction: () -> Unit,
     onNavUp: () -> Unit,
     refresh: () -> Unit,
-    onShowSnackBar: (String,Boolean) -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (anunciosUiState) {
@@ -29,8 +29,9 @@ fun AnunciosScreen(
                 refresh
             )
         }
+
         is AnunciosUiState.Error -> ErrorScreen(
-            retryAction,
+            retryAction = { retryAction() },
             anunciosUiState.err,
             modifier = modifier.fillMaxSize()
         )

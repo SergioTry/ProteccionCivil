@@ -43,6 +43,7 @@ import java.time.YearMonth
 
 private val inActiveTextColorLight: Color @Composable get() = Color.LightGray
 private val inActiveTextColorDark: Color @Composable get() = Color.Gray
+val CalendarTitleColor: Color @Composable get() = Color(161, 102, 42)
 
 @Composable
 fun SimpleCalendarTitle(
@@ -55,7 +56,7 @@ fun SimpleCalendarTitle(
         modifier = modifier
             .height(40.dp)
             .background(
-                color = Color(161, 102, 42),
+                color = CalendarTitleColor,
                 shape = RoundedCornerShape(10.dp)
             ),
         verticalAlignment = Alignment.CenterVertically,

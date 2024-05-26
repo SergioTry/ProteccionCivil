@@ -182,7 +182,6 @@ fun MainBottomBar(
                             clave = clave,
                             navController = navController,
                             mainVM = mainVM,
-                            calendarioVM = calendarioVM
                         )
                     },
                     enabled = true
@@ -204,7 +203,6 @@ fun MainBottomBar(
                                     clave = Icons.Default.DirectionsCar,
                                     navController = navController,
                                     mainVM = mainVM,
-                                    calendarioVM = calendarioVM
                                 )
                             },
                             enabled = true
@@ -225,7 +223,6 @@ fun MainBottomBar(
                                 clave = clave,
                                 navController = navController,
                                 mainVM = mainVM,
-                                calendarioVM = calendarioVM
                             )
                         },
                         enabled = true

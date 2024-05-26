@@ -1,4 +1,4 @@
-Proyecto de ejemplo de app completa:
+royecto de ejemplo de app completa:
 https://github.com/android/nowinandroid.git
 
 Proyecto con ejemplos de uso del calendario:

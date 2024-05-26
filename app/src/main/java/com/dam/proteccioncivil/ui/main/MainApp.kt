@@ -11,7 +11,6 @@ import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Work
-import androidx.compose.material.icons.filled.WorkOutline
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -305,7 +304,6 @@ private fun NavHostRoutes(
                         clave = Icons.Default.Home,
                         navController = navController,
                         mainVM = mainVM,
-                        calendarioVM = calendarioVM
                     )
                 },
                 savedToken = loginVM.uiLoginState.username.isNotEmpty() && loginVM.uiLoginState.password.isNotEmpty(),
@@ -340,7 +338,7 @@ private fun NavHostRoutes(
             GuardiasScreen(
                 guardiasUiState = guardiasVM.guardiasUiState,
                 guardiasVM = guardiasVM,
-                retryAction = { guardiasVM::getAll },
+                retryAction = { guardiasVM.getAll() },
                 onNavUp = { navController.navigate(AppScreens.GuardiasMto.name) },
                 refresh = { navController.navigate(AppScreens.Guardias.name) },
                 onShowSnackBar = { mensaje, isSuccess ->
@@ -391,7 +389,7 @@ private fun NavHostRoutes(
             InfomursScreen(
                 infomursUiState = infomursVM.infomursUiState,
                 infomursVM = infomursVM,
-                retryAction = { infomursVM::getAll },
+                retryAction = { infomursVM.getAll() },
                 onNavUp = { navController.navigate(AppScreens.InfomursMto.name) },
                 refresh = { navController.navigate(AppScreens.Infomurs.name) },
                 onShowSnackBar = { mensaje, isSuccess ->
@@ -441,7 +439,9 @@ private fun NavHostRoutes(
             AnunciosScreen(
                 anunciosUiState = anunciosVM.anunciosUiState,
                 anunciosVM = anunciosVM,
-                retryAction = { anunciosVM::getAll },
+                retryAction = {
+                    anunciosVM.getAll()
+                },
                 onNavUp = { navController.navigate(AppScreens.AnunciosMto.name) },
                 refresh = { navController.navigate(AppScreens.Anuncios.name) },
                 onShowSnackBar = { mensaje, isSuccess ->
@@ -490,7 +490,7 @@ private fun NavHostRoutes(
             UsuariosScreen(
                 usuariosUiState = usuariosVM.usuariosUiState,
                 usuariosVM = usuariosVM,
-                retryAction = { usuariosVM::getAll },
+                retryAction = { usuariosVM.getAll() },
                 onNavUp = { navController.navigate(AppScreens.UsuariosMto.name) },
                 refresh = { navController.navigate(AppScreens.Usuarios.name) },
                 onShowSnackBar = { mensaje, isSuccess ->
@@ -536,7 +536,7 @@ private fun NavHostRoutes(
             VehiculosScreen(
                 vehiculosUiState = vehiculosVM.vehiculosUiState,
                 vehiculosVM = vehiculosVM,
-                retryAction = { vehiculosVM::getAll },
+                retryAction = { vehiculosVM.getAll() },
                 onNavUp = { navController.navigate(AppScreens.VehiculosMto.name) },
                 refresh = { navController.navigate(AppScreens.Vehiculos.name) },
                 onShowSnackBar = { mensaje, isSuccess ->
@@ -559,7 +559,6 @@ private fun NavHostRoutes(
 
         composable(route = AppScreens.VehiculosMto.name) {
             VehiculoMto(vehiculosVM = vehiculosVM,
-                retryAction = { vehiculosVM::getAll },
                 onNavDown = { navController.navigate(AppScreens.Vehiculos.name) },
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
@@ -583,7 +582,7 @@ private fun NavHostRoutes(
             CalendarioScreen(
                 calendarioUiState = calendarioVM.calendarioUiState,
                 calendarioVM = calendarioVM,
-                retryAction = {},
+                retryAction = { calendarioVM.getAll() },
                 refresh = {},
                 onShowSnackBar = {}
             )
@@ -599,13 +598,11 @@ private fun NavHostRoutes(
 fun selectOption(
     clave: ImageVector,
     navController: NavHostController,
-    calendarioVM: CalendarioVM,
     mainVM: MainVM
 ) {
     navController.popBackStack(AppScreens.Home.name, false)
     when (clave.name) {
         Icons.Default.Home.name -> {
-
             navController.navigate(
                 AppScreens.Home.name
             )
@@ -620,7 +617,6 @@ fun selectOption(
         )
 
         else -> {
-
             when (Token.rango) {
                 "Voluntario" -> {
                     if (Token.conductor == 1) {

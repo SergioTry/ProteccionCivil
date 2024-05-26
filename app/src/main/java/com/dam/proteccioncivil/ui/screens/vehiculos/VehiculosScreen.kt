@@ -13,7 +13,7 @@ fun VehiculosScreen(
     retryAction: () -> Unit,
     onNavUp: () -> Unit,
     refresh: () -> Unit,
-    onShowSnackBar: (String,Boolean) -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (vehiculosUiState) {

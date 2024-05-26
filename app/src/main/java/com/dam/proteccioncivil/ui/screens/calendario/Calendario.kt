@@ -1,4 +1,3 @@
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
@@ -43,6 +41,7 @@ import com.dam.proteccioncivil.data.model.Guardia
 import com.dam.proteccioncivil.data.model.Infomur
 import com.dam.proteccioncivil.data.model.Preventivo
 import com.dam.proteccioncivil.data.model.Servicio
+import com.dam.proteccioncivil.ui.screens.calendario.CalendarTitleColor
 import com.dam.proteccioncivil.ui.screens.calendario.CalendarioVM
 import com.dam.proteccioncivil.ui.screens.calendario.Day
 import com.dam.proteccioncivil.ui.screens.calendario.MonthHeader
@@ -182,10 +181,10 @@ private fun LazyItemScope.ServiceInformation(servicio: Servicio) {
         servicio.infomur?.let {
             InfomurCalendarCard(it)
         }
-    }
 
-    servicio.preventivo?.let {
-        PreventivoCalendarCard(it)
+        servicio.preventivo?.let {
+            PreventivoCalendarCard(it)
+        }
     }
 
 }
@@ -206,25 +205,33 @@ fun PreventivoCalendarCard(preventivo: Preventivo, modifier: Modifier = Modifier
     ) {
         Box(
             modifier = Modifier
-                .padding(8.dp)
-                .weight(0.35f)
+                .padding(start = 12.dp, top = 8.dp, bottom = 8.dp)
+                .weight(0.2f)
                 .fillMaxHeight(),
             contentAlignment = Alignment.Center,
         ) {
             Image(
-                painter = painterResource(R.drawable.fondo),
-                contentDescription = "Imagen asociada a preventivo",
+                contentScale = ContentScale.FillHeight,
+                painter = painterResource(if (preventivo.riesgo.toInt() == 0) R.drawable.preventivos else R.drawable.siren_transparent_png),
+                contentDescription = if (preventivo.riesgo.toInt() == 0) "Imagen asociada a preventivo" else "Imagen asociada a preventivo de riesgo",
                 modifier = Modifier
-                    .size(50.dp)
-                    .background(Color.White)
+                    .background(
+                        color = Color.White,
+                        shape = RoundedCornerShape(50)
+                    )
             )
         }
         Column(
-            modifier = Modifier.weight(0.65f),
+            modifier = Modifier.weight(0.8f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = preventivo.titulo, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            Text(text = preventivo.titulo, fontSize = 16.sp)
+            Text(
+                text = preventivo.titulo,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = Color.Black
+            )
+            Text(text = preventivo.descripcion, fontSize = 16.sp, color = Color.Black)
         }
     }
 }
@@ -233,7 +240,7 @@ fun PreventivoCalendarCard(preventivo: Preventivo, modifier: Modifier = Modifier
 fun InfomurCalendarCard(infomur: Infomur, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
-            .background(color = Color.Blue,shape = RoundedCornerShape(8.dp))
+            .background(color = Color.Blue, shape = RoundedCornerShape(8.dp))
             .fillMaxWidth()
             .height(75.dp)
             .border(3.dp, Color.Black, shape = RoundedCornerShape(8.dp)),
@@ -242,24 +249,29 @@ fun InfomurCalendarCard(infomur: Infomur, modifier: Modifier = Modifier) {
     ) {
         Box(
             modifier = Modifier
-                .padding(8.dp)
-                .weight(0.35f)
+                .padding(start = 12.dp, top = 8.dp, bottom = 8.dp)
+                .weight(0.2f)
                 .fillMaxHeight(),
             contentAlignment = Alignment.Center,
         ) {
             Image(
-                painter = painterResource(R.drawable.fondo),
+                contentScale = ContentScale.FillHeight,
+                painter = painterResource(R.drawable.infomur),
                 contentDescription = "Imagen asociada a infomur",
                 modifier = Modifier
-                    .size(50.dp)
-                    .background(Color.White)
+                    .background(Color.Cyan, shape = RoundedCornerShape(50))
             )
         }
         Column(
-            modifier = Modifier.weight(0.65f),
+            modifier = Modifier.weight(0.8f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = infomur.descripcion, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(
+                text = infomur.descripcion,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = Color.Black
+            )
         }
     }
 }
@@ -268,7 +280,7 @@ fun InfomurCalendarCard(infomur: Infomur, modifier: Modifier = Modifier) {
 fun GuardiaCalendarCard(guardia: Guardia, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
-            .background(color = Color(255, 165, 0),shape = RoundedCornerShape(8.dp))
+            .background(color = Color(255, 165, 0), shape = RoundedCornerShape(8.dp))
             .fillMaxWidth()
             .height(75.dp)
             .border(3.dp, Color.Black, shape = RoundedCornerShape(8.dp)),
@@ -277,24 +289,29 @@ fun GuardiaCalendarCard(guardia: Guardia, modifier: Modifier = Modifier) {
     ) {
         Box(
             modifier = Modifier
-                .padding(8.dp)
-                .weight(0.35f)
+                .padding(start = 12.dp, top = 8.dp, bottom = 8.dp)
+                .weight(0.2f)
                 .fillMaxHeight(),
-            contentAlignment = Alignment.Center,
+            contentAlignment = Alignment.CenterEnd,
         ) {
             Image(
-                painter = painterResource(R.drawable.fondo),
+                contentScale = ContentScale.FillHeight,
+                painter = painterResource(R.drawable.guardias),
                 contentDescription = "Imagen asociada a guardia",
                 modifier = Modifier
-                    .size(50.dp)
-                    .background(Color.White)
+                    .background(CalendarTitleColor, shape = RoundedCornerShape(50))
             )
         }
         Column(
-            modifier = Modifier.weight(0.65f),
+            modifier = Modifier.weight(0.8f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = guardia.descripcion, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(
+                text = guardia.descripcion,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = Color.Black
+            )
         }
     }
 }

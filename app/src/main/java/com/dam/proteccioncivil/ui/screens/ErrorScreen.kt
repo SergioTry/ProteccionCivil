@@ -37,7 +37,9 @@ fun ErrorScreen(retryAction: () -> Unit, err: String, modifier: Modifier = Modif
             modifier = Modifier.padding(16.dp),
             color = MaterialTheme.colorScheme.tertiary
         )
-        Button(onClick = retryAction) {
+        Button(onClick = {
+            retryAction()
+        }) {
             Text(stringResource(R.string.retry), color = MaterialTheme.colorScheme.tertiary)
         }
     }
