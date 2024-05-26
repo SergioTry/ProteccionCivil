@@ -156,7 +156,7 @@ class PreventivosVM(
             preventivosUiState = try {
                 var preventivos: List<Preventivo>?
                 withTimeout(timeoutMillis * 2) {
-                    preventivos = preventivoRepository.getPreventivosUsuario(Token.codUsuario!!)
+                    preventivos = preventivoRepository.getPreventivos()
                     if (preventivos!!.isNotEmpty()) {
                         preventivos!!.forEach {
                             val usuarios: List<Usuario>?
