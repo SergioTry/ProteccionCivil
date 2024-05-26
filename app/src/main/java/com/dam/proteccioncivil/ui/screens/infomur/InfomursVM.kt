@@ -25,21 +25,7 @@ import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
 
-sealed interface InfomursUiState {
-    data class Success(val infomurs: List<Infomur>) : InfomursUiState
-    data class Error(val err: String) : InfomursUiState
-    object Loading : InfomursUiState
-}
 
-sealed interface InfomursMessageState {
-    data object Success : InfomursMessageState
-    data class Error(val err: String) : InfomursMessageState
-    data object Loading : InfomursMessageState
-}
-
-data class UsuariosInfomurListState(
-    val userList: MutableList<Usuario> = mutableListOf()
-)
 
 @SuppressLint("MutableCollectionMutableState")
 class InfomursVM(

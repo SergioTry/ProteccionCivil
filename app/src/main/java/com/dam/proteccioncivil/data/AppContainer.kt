@@ -23,7 +23,7 @@ import com.dam.proteccioncivil.data.repository.NetworkUsuariosRepository
 import com.dam.proteccioncivil.data.repository.NetworkVehiculosRepository
 import com.dam.proteccioncivil.data.repository.PreventivosRepository
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
-import com.dam.proteccioncivil.data.repository.VehiculosRepositorys
+import com.dam.proteccioncivil.data.repository.VehiculosRepository
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -31,7 +31,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 
 interface AppContainer {
-    val vehiculosRepository: VehiculosRepositorys
+    val vehiculosRepository: VehiculosRepository
     val mainRepository: MainRepository
     val loginRepository: LoginRepository
     val anunciosRepository: AnunciosRepository
@@ -88,7 +88,7 @@ class DefaultAppContainer(
         NetworkAnunciosRepository(retrofitAnunciosService)
     }
 
-    override val vehiculosRepository: VehiculosRepositorys by lazy {
+    override val vehiculosRepository: VehiculosRepository by lazy {
         NetworkVehiculosRepository(retrofitVehiculosService)
     }
 

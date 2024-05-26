@@ -28,18 +28,6 @@ import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
 
-sealed interface GuardiasUiState {
-    data class Success(val guardias: List<Guardia>) : GuardiasUiState
-    data class Error(val err: String) : GuardiasUiState
-    object Loading : GuardiasUiState
-}
-
-sealed interface GuardiasMessageState {
-    data object Success : GuardiasMessageState
-    data class Error(val err: String) : GuardiasMessageState
-    data object Loading : GuardiasMessageState
-}
-
 data class UsuariosGuardiaListState(
     val userList: MutableList<Usuario> = mutableListOf()
 )

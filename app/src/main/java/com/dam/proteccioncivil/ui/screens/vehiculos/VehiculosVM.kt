@@ -15,7 +15,7 @@ import com.dam.proteccioncivil.data.model.ObjectToStringMap
 import com.dam.proteccioncivil.data.model.ShortToBoolean
 import com.dam.proteccioncivil.data.model.Vehiculo
 import com.dam.proteccioncivil.data.model.timeoutMillis
-import com.dam.proteccioncivil.data.repository.VehiculosRepositorys
+import com.dam.proteccioncivil.data.repository.VehiculosRepository
 import com.google.gson.JsonParser
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
@@ -23,7 +23,7 @@ import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
 
-class VehiculosVM(private val vehiculosRepository: VehiculosRepositorys) : CRUD<Vehiculo>,
+class VehiculosVM(private val vehiculosRepository: VehiculosRepository) : CRUD<Vehiculo>,
     ViewModel() {
     var vehiculosUiState: VehiculosUiState by mutableStateOf(VehiculosUiState.Loading)
         private set

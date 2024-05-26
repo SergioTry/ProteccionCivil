@@ -16,7 +16,7 @@ data class Preventivo(
     @SerialName("FechaDia5") val fechaDia5: String?,
     @SerialName("FechaDia6") val fechaDia6: String?,
     @SerialName("FechaDia7") val fechaDia7: String?,
-    val usuarios: List<Usuario>? = null,
-    val vehiculos: List<Vehiculo>? = null,
+    var usuarios: List<Usuario>? = null,
+    var vehiculos: List<Vehiculo>? = null,
 )
 

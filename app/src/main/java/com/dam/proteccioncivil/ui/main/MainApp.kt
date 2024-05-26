@@ -52,6 +52,8 @@ import com.dam.proteccioncivil.ui.screens.infomur.InfomursVM
 import com.dam.proteccioncivil.ui.screens.login.LoginScreen
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
 import com.dam.proteccioncivil.ui.screens.preferencias.PrefScreen
+import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosScreen
+import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosVM
 import com.dam.proteccioncivil.ui.screens.splash.SplashScreen
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosMto
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosScreen
@@ -81,6 +83,7 @@ enum class AppScreens(@StringRes val title: Int) {
     Infomurs(title = R.string.screen_name_infomurs),
     InfomursMto(title = R.string.screen_name_infomurs_mto),
     Chat(title = R.string.screen_name_chat),
+    Preventivos(title = R.string.screen_name_preventidos),
     PreventivosMto(title = R.string.screen_name_preventidos_mto),
     Recursos(title = R.string.screen_name_resources)
 }
@@ -123,6 +126,9 @@ fun MainApp(
 
     val vehiculosVM: VehiculosVM =
         viewModel(factory = VehiculosVM.Factory)
+
+    val preventivosVM: PreventivosVM =
+        viewModel(factory = PreventivosVM.Factory)
 
     val menuOptions = mapOf(
         Icons.Default.Home to stringResource(R.string.screen_name_home),
@@ -186,6 +192,7 @@ fun MainApp(
                 infomursVM,
                 calendarioVM,
                 vehiculosVM,
+                preventivosVM,
                 mainVM,
                 loginVM
             )
@@ -237,7 +244,11 @@ fun MainApp(
     if (mainVM.uiMainState.showDlgServicios) {
         DlgServicios(
             onCancelarClick = { mainVM.setShowDlgServicios(false) },
-            onPreventivosClick = { mainVM.setShowDlgServicios(false) },
+            onPreventivosClick = {
+                mainVM.setShowDlgServicios(false)
+                preventivosVM.getAll()
+                navController.navigate(AppScreens.Preventivos.name)
+            },
             onGuardiasClick = {
                 mainVM.setShowDlgServicios(false)
                 guardiasVM.getAll()
@@ -274,6 +285,7 @@ private fun NavHostRoutes(
     infomursVM: InfomursVM,
     calendarioVM: CalendarioVM,
     vehiculosVM: VehiculosVM,
+    preventivosVM: PreventivosVM,
     mainVM: MainVM,
     loginVM: LoginVM
 ) {
@@ -586,6 +598,35 @@ private fun NavHostRoutes(
                 refresh = {},
                 onShowSnackBar = {}
             )
+        }
+
+        composable(route = AppScreens.Preventivos.name) {
+            PreventivosScreen(
+                preventivosUiState = preventivosVM.preventivosUiState,
+                preventivosVM = preventivosVM,
+                retryAction = { usuariosVM.getAll() },
+                onNavUp = { navController.navigate(AppScreens.UsuariosMto.name) },
+                refresh = { navController.navigate(AppScreens.Usuarios.name) },
+                onShowSnackBar = { mensaje, isSuccess ->
+                    scope.launch {
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                })
+        }
+
+        composable(route = AppScreens.PreventivosMto.name) {
+            //TODO
         }
 
         composable(route = AppScreens.Chat.name) {

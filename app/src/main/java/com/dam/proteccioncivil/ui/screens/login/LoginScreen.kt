@@ -132,7 +132,11 @@ fun LoginScreen(
                     unfocusedLabelColor = Color.Black,
                     unfocusedBorderColor = Color.Black,
                     errorBorderColor = AppColors.errorCarmesi,
-                    errorLabelColor = Color.Black
+                    errorLabelColor = Color.Black,
+                    unfocusedContainerColor = Color.Green,
+                    focusedContainerColor = Color.Green,
+                    focusedTextColor = Color.Blue,
+                    unfocusedTextColor = Color.Blue
                 ),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 keyboardActions = KeyboardActions(
@@ -151,7 +155,7 @@ fun LoginScreen(
                 isError = uiLoginState.username == "",
                 modifier = modifier
                     .align(Alignment.CenterHorizontally)
-                    .background(Color.Transparent)
+                    //.background(Color.Transparent)
             )
             OutlinedTextField(colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color.Blue,

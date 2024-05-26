@@ -40,14 +40,14 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
         usuariosMessageState = UsuariosMessageState.Loading
     }
 
-    fun setShowDlgBorrar(showDlgBorrar: Boolean){
+    fun setShowDlgBorrar(showDlgBorrar: Boolean) {
         usuariosBusState = usuariosBusState.copy(
             showDlgConfirmation = showDlgBorrar,
             showDlgDate = usuariosBusState.showDlgDate
         )
     }
 
-    fun setShowDlgDate(showDlgDate: Boolean){
+    fun setShowDlgDate(showDlgDate: Boolean) {
         usuariosBusState = usuariosBusState.copy(
             showDlgConfirmation = usuariosBusState.showDlgConfirmation,
             showDlgDate = showDlgDate

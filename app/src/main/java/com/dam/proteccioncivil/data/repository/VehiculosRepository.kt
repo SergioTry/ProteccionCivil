@@ -6,9 +6,10 @@ import com.dam.proteccioncivil.data.network.VehiculosApiService
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
 
-interface VehiculosRepositorys {
+interface VehiculosRepository {
     suspend fun updateVehiculo(codVehiculo: Int, vehiculoData: Map<String, String>)
     suspend fun getVehiculos(): List<Vehiculo>
+    suspend fun getVehiculosPreventivo(codPreventivo: Int): List<Vehiculo>
     suspend fun deleteVehiculo(id: Int)
     suspend fun setVehiculo(vehiculoData: Map<String, String>)
 }
@@ -16,13 +17,19 @@ interface VehiculosRepositorys {
 
 class NetworkVehiculosRepository(
     private val vehiculosApiService: VehiculosApiService
-) : VehiculosRepositorys {
+) : VehiculosRepository {
     override suspend fun updateVehiculo(codVehiculo: Int, vehiculoData: Map<String, String>) {
         vehiculosApiService.updateVehiculo("Bearer ${Token.token}", codVehiculo, vehiculoData)
     }
 
     override suspend fun getVehiculos(): List<Vehiculo> {
         val apiResponse = vehiculosApiService.getVehiculos("Bearer ${Token.token}")
+        return Json.decodeFromJsonElement<List<Vehiculo>>(apiResponse.body)
+    }
+
+    override suspend fun getVehiculosPreventivo(codPreventivo: Int): List<Vehiculo> {
+        val apiResponse =
+            vehiculosApiService.getVehiculosPreventivo("Bearer ${Token.token}", codPreventivo)
         return Json.decodeFromJsonElement<List<Vehiculo>>(apiResponse.body)
     }
 

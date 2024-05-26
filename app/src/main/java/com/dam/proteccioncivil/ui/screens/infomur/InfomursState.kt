@@ -1,6 +1,7 @@
 package com.dam.proteccioncivil.ui.screens.infomur
 
 import com.dam.proteccioncivil.data.model.Infomur
+import com.dam.proteccioncivil.data.model.Usuario
 
 data class InfomursMtoState(
     val fechaInfomur: String = "",
@@ -21,4 +22,20 @@ fun InfomursMtoState.toInfomur(): Infomur = Infomur(
     descripcion = descripcion,
     codUsuario1 = if (codUsuario1.isEmpty()) 0 else codUsuario1.toInt(),
     codUsuario2 = if (codUsuario2.isEmpty()) 0 else codUsuario2.toInt()
+)
+
+sealed interface InfomursUiState {
+    data class Success(val infomurs: List<Infomur>) : InfomursUiState
+    data class Error(val err: String) : InfomursUiState
+    object Loading : InfomursUiState
+}
+
+sealed interface InfomursMessageState {
+    data object Success : InfomursMessageState
+    data class Error(val err: String) : InfomursMessageState
+    data object Loading : InfomursMessageState
+}
+
+data class UsuariosInfomurListState(
+    val userList: MutableList<Usuario> = mutableListOf()
 )

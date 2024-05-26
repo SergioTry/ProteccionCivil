@@ -23,3 +23,14 @@ fun GuardiasMtoState.toGuardia(): Guardia = Guardia(
     codUsuario2 = if (codUsuario2.isNullOrEmpty() || codUsuario1 == "null") 0 else codUsuario2.toInt()
 )
 
+sealed interface GuardiasUiState {
+    data class Success(val guardias: List<Guardia>) : GuardiasUiState
+    data class Error(val err: String) : GuardiasUiState
+    object Loading : GuardiasUiState
+}
+
+sealed interface GuardiasMessageState {
+    data object Success : GuardiasMessageState
+    data class Error(val err: String) : GuardiasMessageState
+    data object Loading : GuardiasMessageState
+}

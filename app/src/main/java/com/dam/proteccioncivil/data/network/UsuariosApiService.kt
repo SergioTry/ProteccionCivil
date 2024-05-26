@@ -1,5 +1,6 @@
 package com.dam.proteccioncivil.data.network
 
+import com.dam.proteccioncivil.data.model.Preventivo
 import com.dam.proteccioncivil.data.repository.ApiResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -12,6 +13,12 @@ import retrofit2.http.Path
 interface UsuariosApiService {
     @GET("usuarios")
     suspend fun getUsuarios(@Header("Authorization") authToken: String): ApiResponse
+
+    @GET("preventivos/{codPreventivo}/usuarios")
+    suspend fun getUsuariosPreventivo(
+        @Header("Authorization") authToken: String,
+        @Path("codPreventivo") codPreventivo: Int
+    ): ApiResponse
 
     @POST("usuarios")
     suspend fun altaUsuario(

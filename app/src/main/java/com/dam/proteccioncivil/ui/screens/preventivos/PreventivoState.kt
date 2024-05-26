@@ -2,10 +2,6 @@ package com.dam.proteccioncivil.ui.screens.preventivos
 
 //import com.dam.proteccioncivil.data.model.Dia
 import com.dam.proteccioncivil.data.model.Preventivo
-import com.dam.proteccioncivil.data.model.Usuario
-import com.dam.proteccioncivil.data.model.Vehiculo
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 
 data class PrevState(
@@ -54,8 +50,14 @@ data class PrevBusState(
 //    codPreventivo = codPreventivo
 //)
 
-sealed interface PrevsInfoState {
-    data object Loading : PrevsInfoState
-    data object Success : PrevsInfoState
-    data object Error : PrevsInfoState
+sealed interface PreventivosUiState {
+    data class Success(val preventivos: List<Preventivo>) : PreventivosUiState
+    data class Error(val err: String) : PreventivosUiState
+    object Loading : PreventivosUiState
+}
+
+sealed interface PreventivosMessageState {
+    data object Success : PreventivosMessageState
+    data class Error(val err: String) : PreventivosMessageState
+    data object Loading : PreventivosMessageState
 }

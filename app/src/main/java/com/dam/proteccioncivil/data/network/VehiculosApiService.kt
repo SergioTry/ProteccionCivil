@@ -13,6 +13,12 @@ interface VehiculosApiService {
     @GET("vehiculos")
     suspend fun getVehiculos(@Header("Authorization") authToken: String): ApiResponse
 
+    @GET("preventivos/{codPreventivo}/vehiculos")
+    suspend fun getVehiculosPreventivo(
+        @Header("Authorization") authToken: String,
+        @Path("codPreventivo") codPreventivo: Int
+    ): ApiResponse
+
     @POST("vehiculos")
     suspend fun altaVehiculo(
         @Header("Authorization") authToken: String,
