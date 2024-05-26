@@ -16,10 +16,8 @@ import com.dam.proteccioncivil.data.repository.LoginRepository
 import com.dam.proteccioncivil.ui.main.MainVM
 import com.google.gson.JsonParser
 import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
-import kotlinx.coroutines.withTimeoutOrNull
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -137,14 +135,14 @@ class LoginVM(
     fun setUsername(username: String) {
         uiLoginState = uiLoginState.copy(
             username = username,
-            datosObligatorios = (uiLoginState.password.isNotBlank() && uiLoginState.password.isNotEmpty())
+            datosObligatorios = (uiLoginState.password.isNotBlank() && uiLoginState.password.isNotEmpty() && username.isNotBlank() && username.isNotEmpty())
         )
     }
 
     fun setPassword(password: String) {
         uiLoginState = uiLoginState.copy(
             password = password,
-            datosObligatorios = (uiLoginState.username.isNotBlank() && uiLoginState.username.isNotEmpty())
+            datosObligatorios = (uiLoginState.username.isNotBlank() && uiLoginState.username.isNotEmpty() && password.isNotBlank() && password.isNotEmpty())
         )
     }
 

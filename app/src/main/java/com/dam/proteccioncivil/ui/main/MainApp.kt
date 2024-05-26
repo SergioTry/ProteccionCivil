@@ -352,7 +352,10 @@ private fun NavHostRoutes(
                 guardiasVM = guardiasVM,
                 retryAction = { guardiasVM.getAll() },
                 onNavUp = { navController.navigate(AppScreens.GuardiasMto.name) },
-                refresh = { navController.navigate(AppScreens.Guardias.name) },
+                refresh = {
+                    navController.popBackStack()
+                    navController.navigate(AppScreens.Guardias.name)
+                },
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
                         if (isSuccess) {
@@ -375,7 +378,10 @@ private fun NavHostRoutes(
         composable(route = AppScreens.GuardiasMto.name) {
             GuardiaMto(
                 guardiasVM = guardiasVM,
-                refresh = { navController.navigate(AppScreens.Guardias.name) },
+                refresh = {
+                    navController.popBackStack()
+                    navController.navigate(AppScreens.Guardias.name)
+                },
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
                         if (isSuccess) {
@@ -403,7 +409,10 @@ private fun NavHostRoutes(
                 infomursVM = infomursVM,
                 retryAction = { infomursVM.getAll() },
                 onNavUp = { navController.navigate(AppScreens.InfomursMto.name) },
-                refresh = { navController.navigate(AppScreens.Infomurs.name) },
+                refresh = {
+                    navController.popBackStack()
+                    navController.navigate(AppScreens.Infomurs.name)
+                },
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
                         if (isSuccess) {
@@ -425,7 +434,10 @@ private fun NavHostRoutes(
         composable(route = AppScreens.InfomursMto.name) {
             InfomurMto(
                 infomursVM = infomursVM,
-                refresh = { navController.navigate(AppScreens.Infomurs.name) },
+                refresh = {
+                    navController.popBackStack()
+                    navController.navigate(AppScreens.Infomurs.name)
+                },
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
                         if (isSuccess) {
@@ -455,7 +467,10 @@ private fun NavHostRoutes(
                     anunciosVM.getAll()
                 },
                 onNavUp = { navController.navigate(AppScreens.AnunciosMto.name) },
-                refresh = { navController.navigate(AppScreens.Anuncios.name) },
+                refresh = {
+                    navController.popBackStack()
+                    navController.navigate(AppScreens.Anuncios.name)
+                },
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
                         if (isSuccess) {
@@ -477,7 +492,10 @@ private fun NavHostRoutes(
         composable(route = AppScreens.AnunciosMto.name) {
             AnunciosMto(
                 anunciosVM = anunciosVM,
-                refresh = { navController.navigate(AppScreens.Anuncios.name) },
+                refresh = {
+                    navController.popBackStack()
+                    navController.navigate(AppScreens.Anuncios.name)
+                },
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
                         if (isSuccess) {
@@ -504,7 +522,10 @@ private fun NavHostRoutes(
                 usuariosVM = usuariosVM,
                 retryAction = { usuariosVM.getAll() },
                 onNavUp = { navController.navigate(AppScreens.UsuariosMto.name) },
-                refresh = { navController.navigate(AppScreens.Usuarios.name) },
+                refresh = {
+                    navController.popBackStack()
+                    navController.navigate(AppScreens.Usuarios.name)
+                },
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
                         if (isSuccess) {
@@ -550,7 +571,10 @@ private fun NavHostRoutes(
                 vehiculosVM = vehiculosVM,
                 retryAction = { vehiculosVM.getAll() },
                 onNavUp = { navController.navigate(AppScreens.VehiculosMto.name) },
-                refresh = { navController.navigate(AppScreens.Vehiculos.name) },
+                refresh = {
+                    navController.popBackStack()
+                    navController.navigate(AppScreens.Vehiculos.name)
+                },
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
                         if (isSuccess) {

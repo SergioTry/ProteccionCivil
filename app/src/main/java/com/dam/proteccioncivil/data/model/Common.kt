@@ -67,6 +67,19 @@ class FormatDate {
     }
 }
 
+class HasNonNullElement {
+    companion object {
+        fun use(list: List<Any?>): Boolean {
+            for (item in list) {
+                if (item != null) {
+                    return true
+                }
+            }
+            return false
+        }
+    }
+}
+
 class ShortToBoolean {
     companion object {
         fun use(short: Short? = null): Boolean {

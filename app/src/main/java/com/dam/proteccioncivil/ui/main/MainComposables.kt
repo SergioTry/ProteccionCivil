@@ -38,7 +38,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -53,7 +52,6 @@ import coil.request.ImageRequest
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.ui.screens.calendario.CalendarioVM
-import com.dam.proteccioncivil.ui.theme.AppColors
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,10 +72,10 @@ fun MainTopAppBar(
 
     CenterAlignedTopAppBar(
         colors =
-            TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.tertiary
-            ),
+        TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.tertiary
+        ),
         title = {
             if (currentScreen.title != R.string.screen_name_splash) {
                 Text(text = stringResource(currentScreen.title))
@@ -86,15 +84,18 @@ fun MainTopAppBar(
         modifier = modifier,
         navigationIcon = {
             if (canNavigateBack) {
-                IconButton(
-                    onClick =
-                    navigateUp
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.tertiary
-                    )
+                if (!Token.username.isNullOrBlank()) {
+                    IconButton(
+                        onClick =
+                        navigateUp
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
                 }
             } else {
                 IconButton(

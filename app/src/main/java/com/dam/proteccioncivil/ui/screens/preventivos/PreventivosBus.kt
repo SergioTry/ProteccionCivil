@@ -17,6 +17,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -25,6 +28,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -37,6 +41,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.FormatDate
+import com.dam.proteccioncivil.data.model.HasNonNullElement
 import com.dam.proteccioncivil.data.model.Preventivo
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -89,25 +95,16 @@ fun PreventivosBus(
                     }
                 }
             }
-//            LazyColumn(
-//                modifier = Modifier.fillMaxSize(),
-//                content = {
-//                    itemsIndexed(sampleMessages) { index, item ->
-//                        preventivoCard(
-//                            preventivo = Preventivo(
-//                                12,
-//                                "PC 0001 C",
-//                                0,
-//                                LocalDate.now(),
-//                                LocalDate.now(),
-//                                null,
-//                                null,
-//                                listOf(Dia(LocalDate.now(), true), Dia(LocalDate.now(), false))
-//                            )
-//                        )
-//                    }
-//                }
-//            )
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                content = {
+                    items(preventivos) {
+                        PreventivoCard(
+                            it
+                        )
+                    }
+                }
+            )
         }
         if (true) {
             Row(
@@ -131,7 +128,7 @@ fun PreventivosBus(
 }
 
 @Composable
-fun preventivoCard(preventivo: Preventivo) {
+fun PreventivoCard(preventivo: Preventivo) {
     Card(
         modifier = Modifier
             .padding(16.dp)
@@ -182,30 +179,50 @@ fun preventivoCard(preventivo: Preventivo) {
                 ) {
                     Text("Asignar")
                 }
-//                if (false) {
-//                    Row {
-//                        Spacer(modifier = Modifier.width(30.dp))
-//                        Text(
-//                            text = "Fecha del preventivo: " + preventivo.dias.get(0)
-//                        )
-//                    }
-//                } else {
-//                    Column(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(start = 32.dp),
-//                        horizontalAlignment = Alignment.Start
-//                    ) {
-//                        Text(
-//                            text = "Fechas del preventivo: "
-//                        )
-//                        LazyRow {
-//                            itemsIndexed(preventivo.dias) { index, item ->
-//                                horizontalDayList(item)
-//                            }
-//                        }
-//                    }
-//                }
+                if (!HasNonNullElement.use(
+                        listOf(
+                            preventivo.fechaDia2,
+                            preventivo.fechaDia3,
+                            preventivo.fechaDia4,
+                            preventivo.fechaDia5,
+                            preventivo.fechaDia6,
+                            preventivo.fechaDia7
+                        )
+                    )
+                ) {
+                    Row {
+                        Spacer(modifier = Modifier.width(30.dp))
+                        Text(
+                            text = "Fecha del preventivo: " + preventivo.fechaDia1
+                        )
+                    }
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 32.dp),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
+                            text = "Fechas del preventivo: "
+                        )
+                        LazyRow {
+                            items(
+                                listOf(
+                                    preventivo.fechaDia1,
+                                    preventivo.fechaDia2,
+                                    preventivo.fechaDia3,
+                                    preventivo.fechaDia4,
+                                    preventivo.fechaDia5,
+                                    preventivo.fechaDia6,
+                                    preventivo.fechaDia7
+                                )
+                            ) { it ->
+                                horizontalDayList(it)
+                            }
+                        }
+                    }
+                }
                 Spacer(modifier = Modifier.height(8.dp))
             }
             Spacer(modifier = Modifier.width(36.dp))
@@ -213,10 +230,12 @@ fun preventivoCard(preventivo: Preventivo) {
     }
 }
 
-//@Composable
-//fun horizontalDayList(date: Dia) {
-//    Column {
-//        Checkbox(checked = date.hayPreventivo, onCheckedChange = {})
-//        Text(text = date.dia.toString())
-//    }
-//}
+@Composable
+fun horizontalDayList(date: String?) {
+    if (date != null) {
+        Column {
+            Checkbox(checked = true, onCheckedChange = {})
+            Text(text = FormatDate.use(date))
+        }
+    }
+}
