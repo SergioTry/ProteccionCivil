@@ -91,8 +91,6 @@ dependencies {
     // Librería de iconos de carga
     implementation("com.github.MahboubehSeyedpour:jetpack-loading:1.1.0")
 
-    //implementation(libs.androidx.constraintlayout)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

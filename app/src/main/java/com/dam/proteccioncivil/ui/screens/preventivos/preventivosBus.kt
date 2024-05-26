@@ -148,9 +148,9 @@ fun preventivoCard(preventivo: Preventivo) {
                     painter = painterResource(
                         id =
                         if (preventivo.riesgo.toInt() == 0) {
-                            R.drawable.img
+                            R.drawable.pcc_icono
                         } else {
-                            R.drawable.img
+                            R.drawable.pcc_icono
                         }
                     ),
                     contentDescription = null,

@@ -1,11 +1,14 @@
 package com.dam.proteccioncivil.ui.screens.splash
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,7 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.main.MainVM
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
@@ -31,7 +36,7 @@ fun SplashScreen(
         mainVM.getPreferences(loginVM, showLogin)
     }
     Surface(
-        color = Color.White,
+        color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
@@ -40,7 +45,7 @@ fun SplashScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.img),
+                painter = painterResource(id = R.drawable.pcc_icono),
                 contentDescription = "SplashScreen image",
                 modifier = Modifier.size(200.dp)
             )
@@ -50,14 +55,17 @@ fun SplashScreen(
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
-        Column(
-            horizontalAlignment = Alignment.End,
-            verticalArrangement = Arrangement.Bottom
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
         ) {
             Text(
                 text = "Versión: $version",
-                modifier = Modifier.padding(16.dp),
-                textAlign = androidx.compose.ui.text.style.TextAlign.End
+                modifier = Modifier
+                    .padding(16.dp),
+                fontSize = 10.sp,
+                textAlign = TextAlign.End,
+                color = MaterialTheme.colorScheme.secondary,
             )
         }
     }

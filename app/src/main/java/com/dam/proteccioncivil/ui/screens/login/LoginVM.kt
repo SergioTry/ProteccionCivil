@@ -171,3 +171,12 @@ class LoginVM(
         }
     }
 }
+
+//fun encriptar(datos: String, pass: String): String {
+//    val secretKey = SecretKeySpec(pass.toByteArray(), "AES")
+//    val cipher = Cipher.getInstance("AES/CBC/PKCS7Padding")
+//    val iv = IvParameterSpec(ByteArray(cipher.blockSize))
+//    cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv)
+//    val datosEncriptadosBytes = cipher.doFinal(datos.toByteArray())
+//    return Base64.encodeToString(datosEncriptadosBytes, Base64.DEFAULT)
+//}

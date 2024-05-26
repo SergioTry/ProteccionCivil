@@ -8,6 +8,7 @@ data class Preventivo(
     @SerialName("CodPreventivo") val codPreventivo: Int,
     @SerialName("Titulo") val titulo: String,
     @SerialName("Riesgo") val riesgo: Short,
+    @SerialName("Descripcion") val descripcion: String,
     @SerialName("FechaDia1") val fechaDia1: String,
     @SerialName("FechaDia2") val fechaDia2: String?,
     @SerialName("FechaDia3") val fechaDia3: String?,

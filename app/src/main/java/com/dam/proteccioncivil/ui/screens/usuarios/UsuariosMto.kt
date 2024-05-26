@@ -28,6 +28,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -39,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -98,10 +100,11 @@ fun UsuariosMto(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.fondo),
+            contentScale = ContentScale.FillHeight,
+            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
             contentDescription = "Escudo caravaca de la cruz",
             modifier = Modifier.fillMaxSize(),
         )

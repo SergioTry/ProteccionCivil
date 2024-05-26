@@ -3,7 +3,6 @@ package com.dam.proteccioncivil.ui.main
 import android.content.Context
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +14,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
@@ -45,7 +43,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.ImageLoader
@@ -77,17 +74,10 @@ fun MainTopAppBar(
 
     CenterAlignedTopAppBar(
         colors =
-        if (currentScreen.title != R.string.screen_name_splash) {
             TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = AppColors.OrangeColor,
-                titleContentColor = AppColors.White
-            )
-        } else {
-            TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = AppColors.White,
-                titleContentColor = Color.Black
-            )
-        },
+                containerColor = MaterialTheme.colorScheme.primary,
+                titleContentColor = MaterialTheme.colorScheme.tertiary
+            ),
         title = {
             if (currentScreen.title != R.string.screen_name_splash) {
                 Text(text = stringResource(currentScreen.title))
@@ -103,7 +93,7 @@ fun MainTopAppBar(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = null,
-                        tint = Color.White
+                        tint = MaterialTheme.colorScheme.tertiary
                     )
                 }
             } else {
@@ -116,25 +106,25 @@ fun MainTopAppBar(
                     Icon(
                         imageVector = Icons.Filled.CalendarMonth,
                         contentDescription = null,
-                        tint = Color.White
+                        tint = MaterialTheme.colorScheme.tertiary
                     )
                 }
             }
         },
         actions = {
             if (currentScreen.name == AppScreens.Home.name) {
-                Row() {
+                Row {
                     IconButton(onClick = { showAnoScreen() }) {
                         Icon(
                             imageVector = Icons.Default.Notifications,
                             contentDescription = null,
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.tertiary
                         )
                     }
                     IconButton(onClick = { showMenu = !showMenu }) {
                         Icon(
                             imageVector = Icons.Filled.MoreVert, contentDescription = null,
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.tertiary
                         )
                     }
                     DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
@@ -170,23 +160,20 @@ fun MainBottomBar(
     calendarioVM: CalendarioVM,
     mainVM: MainVM
 ) {
-    val primaryColor = MaterialTheme.colorScheme.primary
-    NavigationBar(containerColor = primaryColor) {
+    NavigationBar(containerColor = MaterialTheme.colorScheme.primary) {
         for ((clave, valor) in menuOptions) {
             if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 NavigationBarItem(
                     icon = {
                         Icon(
                             clave, contentDescription = null,
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.tertiary
                         )
                     },
                     label = {
                         Text(
                             text = valor,
-                            style = TextStyle(
-                                color = Color.White
-                            )
+                            color = MaterialTheme.colorScheme.tertiary
                         )
                     },
                     selected = false,
@@ -207,7 +194,7 @@ fun MainBottomBar(
                             icon = {
                                 Icon(
                                     Icons.Default.DirectionsCar, contentDescription = null,
-                                    tint = Color.White
+                                    tint = MaterialTheme.colorScheme.tertiary
                                 )
                             },
                             label = { Text(stringResource(R.string.screen_name_vehicles)) },
@@ -228,7 +215,7 @@ fun MainBottomBar(
                         icon = {
                             Icon(
                                 clave, contentDescription = null,
-                                tint = Color.White
+                                tint = MaterialTheme.colorScheme.tertiary
                             )
                         },
                         label = { Text(valor) },
@@ -306,7 +293,8 @@ fun CustomSnackBar(
                     )
                 }
                 Text(
-                    modifier = Modifier.padding(start = 16.dp)
+                    modifier = Modifier
+                        .padding(start = 16.dp)
                         .weight(0.7f),
                     text = it.visuals.message,
                     color = MaterialTheme.colorScheme.tertiary
@@ -317,8 +305,11 @@ fun CustomSnackBar(
                     onClick = {
                         snackbarHostState.currentSnackbarData?.dismiss()
                     }) {
-                    Icon(imageVector = Icons.Filled.Close, contentDescription = "Close snackBar icon",
-                        tint = MaterialTheme.colorScheme.tertiary)
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "Close snackBar icon",
+                        tint = MaterialTheme.colorScheme.tertiary
+                    )
                 }
             }
 

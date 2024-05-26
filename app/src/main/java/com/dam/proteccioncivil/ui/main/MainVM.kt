@@ -1,5 +1,6 @@
 package com.dam.proteccioncivil.ui.main
 
+import android.util.Base64
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -37,25 +38,35 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
                 uiPrefState = uiPrefState.copy(
                     username = it.username,
                     password = it.password,
-                    defaultTimeSplash = it.defaultTimeSplash.toString()
+                    iv = it.iv
                 )
-                if (uiPrefState.username != "" && uiPrefState.password != "") {
+                if (uiPrefState.username != "" && uiPrefState.password != "" && uiPrefState.iv != "") {
+                    KeystoreHelper.generateKey()
+                    val key = KeystoreHelper.getKey()
                     loginVM.setUsername(uiPrefState.username)
-                    loginVM.setPassword(uiPrefState.password)
+                    loginVM.setPassword(
+                        KeystoreHelper.desencriptar(
+                            datosEncriptados = uiPrefState.password,
+                            secretKey = key,
+                            iv = Base64.decode(uiPrefState.iv, Base64.DEFAULT)
+                        )
+                    )
                     loginVM.loginAysnc(
                         mainVM = this@MainVM,
                         saveToken = true
                     )
                 }
-                when(loginVM.uiInfoState) {
+                when (loginVM.uiInfoState) {
                     is LoginUiState.Loading -> {
                         showLogin(true)
                     }
+
                     is LoginUiState.Success -> {
                         loginVM.resetInfoState()
                         loginVM.resetLogin()
                         showLogin(false)
                     }
+
                     is LoginUiState.Error -> {
                         showLogin(true)
                     }
@@ -66,7 +77,6 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
 
     fun savePreferences() {
         try {
-            uiPrefState.defaultTimeSplash.toInt()
             viewModelScope.launch {
                 uiInfoState = try {
                     mainRepository.savePreferences(uiPrefState.toPreferencias())
@@ -81,16 +91,23 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
     }
 
     fun setCredentials(credentials: Map<String, String>) {
+        KeystoreHelper.generateKey()
+        val key = KeystoreHelper.getKey()
+        // El método encriptar devuelve un Pair
+        val encryptedPassword = KeystoreHelper.encriptar(credentials["Password"]!!, key)
         uiPrefState = uiPrefState.copy(
             username = credentials["Username"]!!,
-            password = credentials["Password"]!!
+            password = encryptedPassword.first,
+            iv = Base64.encodeToString(encryptedPassword.second, Base64.DEFAULT)
         )
+
     }
 
     fun resetCredentials() {
         uiPrefState = uiPrefState.copy(
             username = "",
-            password = ""
+            password = "",
+            iv = ""
         )
     }
 

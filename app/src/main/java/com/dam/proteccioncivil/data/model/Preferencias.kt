@@ -3,5 +3,5 @@ package com.dam.proteccioncivil.data.model
 data class Preferencias(
     var username: String,
     var password: String,
-    val defaultTimeSplash: Int
+    val iv: String
 )

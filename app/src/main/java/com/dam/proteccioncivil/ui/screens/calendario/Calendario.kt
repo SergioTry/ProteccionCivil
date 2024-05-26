@@ -1,3 +1,4 @@
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -76,76 +79,87 @@ fun Calendario(
             if (date == null) emptyList() else servicios[date].orEmpty()
         }
     }
-    Column(
-        modifier = Modifier
+    Box(
+        modifier = modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
     ) {
-        val state = rememberCalendarState(
-            startMonth = startMonth,
-            endMonth = endMonth,
-            firstVisibleMonth = currentMonth,
-            firstDayOfWeek = daysOfWeek.first(),
-            outDateStyle = OutDateStyle.EndOfRow,
+        Image(
+            contentScale = ContentScale.FillHeight,
+            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
+            contentDescription = "Escudo de Caravaca De La Cruz",
+            modifier = modifier.fillMaxSize(),
         )
-        val coroutineScope = rememberCoroutineScope()
-        val visibleMonth = rememberFirstCompletelyVisibleMonth(state)
-
-        LaunchedEffect(visibleMonth) {
-            // Clear selection if we scroll to a new month.
-            selection = null
-        }
-        SimpleCalendarTitle(
+        Column(
             modifier = Modifier
-                .background(Color.White)
-                .padding(horizontal = 8.dp, vertical = 12.dp),
-            currentMonth = visibleMonth.yearMonth,
-            goToPrevious = {
-                coroutineScope.launch {
-                    state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.previousMonth)
-                }
-            },
-            goToNext = {
-                coroutineScope.launch {
-                    state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.nextMonth)
-                }
-            },
-        )
-        HorizontalCalendar(
-            modifier = Modifier
-                .wrapContentWidth()
-                .background(Color.LightGray),
-            state = state,
-            dayContent = { day ->
-                val colors = if (day.position == DayPosition.MonthDate) {
-                    calendarioVM.getServicioColors(servicios[day.date]?.firstOrNull())
-                } else {
-                    emptyList()
-                }
-
-                Day(
-                    day = day,
-                    isSelected = selection == day,
-                    colors = colors,
-                ) { clicked ->
-                    selection = clicked
-                }
-            },
-            monthHeader = {
-                MonthHeader(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    daysOfWeek = daysOfWeek,
-                )
-            },
-        )
-        HorizontalDivider(color = Color.Gray)
-        Spacer(modifier = Modifier.height(4.dp))
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 2.dp, end = 2.dp)
+                .fillMaxSize()
         ) {
-            items(items = servicesInSelectedDate.value) { servicio ->
-                ServiceInformation(servicio)
+            val state = rememberCalendarState(
+                startMonth = startMonth,
+                endMonth = endMonth,
+                firstVisibleMonth = currentMonth,
+                firstDayOfWeek = daysOfWeek.first(),
+                outDateStyle = OutDateStyle.EndOfRow,
+            )
+            val coroutineScope = rememberCoroutineScope()
+            val visibleMonth = rememberFirstCompletelyVisibleMonth(state)
+
+            LaunchedEffect(visibleMonth) {
+                // Clear selection if we scroll to a new month.
+                selection = null
+            }
+            SimpleCalendarTitle(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 12.dp),
+                currentMonth = visibleMonth.yearMonth,
+                goToPrevious = {
+                    coroutineScope.launch {
+                        state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.previousMonth)
+                    }
+                },
+                goToNext = {
+                    coroutineScope.launch {
+                        state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.nextMonth)
+                    }
+                },
+            )
+            HorizontalCalendar(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .background(MaterialTheme.colorScheme.secondary),
+                state = state,
+                dayContent = { day ->
+                    val colors = if (day.position == DayPosition.MonthDate) {
+                        calendarioVM.getServicioColors(servicios[day.date]?.firstOrNull())
+                    } else {
+                        emptyList()
+                    }
+
+                    Day(
+                        day = day,
+                        isSelected = selection == day,
+                        colors = colors,
+                    ) { clicked ->
+                        selection = clicked
+                    }
+                },
+                monthHeader = {
+                    MonthHeader(
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        daysOfWeek = daysOfWeek,
+                    )
+                },
+            )
+            HorizontalDivider(color = Color.Gray)
+            Spacer(modifier = Modifier.height(4.dp))
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 2.dp, end = 2.dp)
+            ) {
+                items(items = servicesInSelectedDate.value) { servicio ->
+                    ServiceInformation(servicio)
+                }
             }
         }
     }

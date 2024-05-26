@@ -25,6 +25,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -37,19 +38,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.ui.main.KeystoreHelper
 import com.dam.proteccioncivil.ui.main.MainVM
 import com.dam.proteccioncivil.ui.theme.AppColors
 import com.spr.jetpack_loading.components.indicators.BallClipRotateMultipleIndicator
@@ -94,7 +97,7 @@ fun LoginScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(AppColors.Blue)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         if (loading) {
             Box(
@@ -112,7 +115,8 @@ fun LoginScreen(
             }
         }
         Image(
-            painter = painterResource(id = R.drawable.fondo),
+            contentScale = ContentScale.FillHeight,
+            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
             contentDescription = "Escudo de Caravaca De La Cruz",
             modifier = modifier.fillMaxSize(),
         )
@@ -233,18 +237,19 @@ fun LoginScreen(
                 Icon(imageVector = Icons.Filled.Check, contentDescription = null)
             }
         }
-        Column(
-            horizontalAlignment = Alignment.End,
-            verticalArrangement = Arrangement.Bottom
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
         ) {
             Text(
                 text = "Versión: $version",
                 modifier = modifier
-                    .padding(16.dp)
-                    .align(Alignment.End),
+                    .padding(16.dp),
+                fontSize = 10.sp,
                 textAlign = androidx.compose.ui.text.style.TextAlign.End,
-                style = TextStyle(AppColors.White)
+                color = MaterialTheme.colorScheme.secondary,
             )
         }
+
     }
 }

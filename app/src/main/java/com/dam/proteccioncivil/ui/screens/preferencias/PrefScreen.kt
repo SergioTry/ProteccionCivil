@@ -13,6 +13,7 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
@@ -40,10 +42,11 @@ fun PrefScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(AppColors.Blue)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.fondo),
+            contentScale = ContentScale.FillHeight,
+            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
             contentDescription = null,
             modifier = Modifier.fillMaxSize()
         )
@@ -66,8 +69,11 @@ fun PrefScreen(
                     }
                 },
                 colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color.Blue,
+                    checkedThumbColor = MaterialTheme.colorScheme.primary,
                     uncheckedThumbColor = Color.Gray,
+                    checkedTrackColor = Color.Gray,
+                    uncheckedBorderColor = MaterialTheme.colorScheme.secondary,
+                    checkedBorderColor = MaterialTheme.colorScheme.secondary
                 )
             )
         }

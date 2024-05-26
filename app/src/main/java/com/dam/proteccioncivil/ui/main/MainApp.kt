@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Work
 import androidx.compose.material.icons.filled.WorkOutline
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -126,7 +127,7 @@ fun MainApp(
 
     val menuOptions = mapOf(
         Icons.Default.Home to stringResource(R.string.screen_name_home),
-        Icons.Default.WorkOutline to stringResource(R.string.screen_name_servicios),
+        Icons.Filled.Work to stringResource(R.string.screen_name_servicios),
         Icons.Default.Apps to stringResource(R.string.screen_name_resources),
         Icons.AutoMirrored.Filled.Chat to stringResource(R.string.screen_name_chat),
     )
@@ -610,7 +611,7 @@ fun selectOption(
             )
         }
 
-        Icons.Default.WorkOutline.name -> {
+        Icons.Filled.Work.name -> {
             mainVM.setShowDlgServicios(true)
         }
 

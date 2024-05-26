@@ -3,8 +3,8 @@ package com.dam.proteccioncivil.ui.screens.calendario
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -18,13 +18,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.testTag
@@ -41,13 +41,8 @@ import java.time.DayOfWeek
 import java.time.YearMonth
 
 
-private val selectedItemColor: Color @Composable get() = Color.Black
-private val inActiveTextColor: Color @Composable get() = Color.LightGray
-
-//private val itemBackgroundColor: Color @Composable get() = colorResource(R.color.example_5_item_view_bg_color)
-private val itemBackgroundColor: Color @Composable get() = Color.White
-
-//private val guardias = generarGuardias().groupBy { it.FechaGuardia.toLocalDate() }
+private val inActiveTextColorLight: Color @Composable get() = Color.LightGray
+private val inActiveTextColorDark: Color @Composable get() = Color.Gray
 
 @Composable
 fun SimpleCalendarTitle(
@@ -56,9 +51,13 @@ fun SimpleCalendarTitle(
     goToPrevious: () -> Unit,
     goToNext: () -> Unit,
 ) {
-
     Row(
-        modifier = modifier.height(40.dp),
+        modifier = modifier
+            .height(40.dp)
+            .background(
+                color = Color(161, 102, 42),
+                shape = RoundedCornerShape(10.dp)
+            ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         CalendarNavigationIcon(
@@ -70,11 +69,7 @@ fun SimpleCalendarTitle(
             modifier = Modifier
                 .weight(1f)
                 .height(40.dp)
-                .testTag("MonthTitle")
-                .background(
-                    color = Color(161, 102, 42),
-                    shape = RoundedCornerShape(10.dp)
-                ),
+                .testTag("MonthTitle"),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -82,7 +77,7 @@ fun SimpleCalendarTitle(
                 fontSize = 24.sp,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Medium,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.tertiary,
             )
         }
         CalendarNavigationIcon(
@@ -112,6 +107,7 @@ private fun CalendarNavigationIcon(
             .align(Alignment.Center),
         painter = icon,
         contentDescription = contentDescription,
+        tint = MaterialTheme.colorScheme.tertiary
     )
 }
 
@@ -127,15 +123,15 @@ fun Day(
         modifier = Modifier
             .aspectRatio(1f)
             .padding(1.dp)
-            .background(color = itemBackgroundColor)
+            .background(color = MaterialTheme.colorScheme.background)
             .clickable(
                 enabled = day.position == DayPosition.MonthDate,
                 onClick = { onClick(day) },
             ),
     ) {
         val textColor = when (day.position) {
-            DayPosition.MonthDate -> Color.Unspecified
-            DayPosition.InDate, DayPosition.OutDate -> inActiveTextColor
+            DayPosition.MonthDate -> MaterialTheme.colorScheme.tertiary
+            DayPosition.InDate, DayPosition.OutDate -> if (isSystemInDarkTheme()) inActiveTextColorDark else inActiveTextColorLight
         }
         if (isSelected)
             Image(
@@ -149,6 +145,7 @@ fun Day(
             text = day.date.dayOfMonth.toString(),
             color = textColor,
             fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
         )
         Row(
             modifier = Modifier
@@ -188,9 +185,9 @@ fun MonthHeader(
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 fontSize = 12.sp,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.tertiary,
                 text = dayOfWeek.displayText(uppercase = true),
-                fontWeight = FontWeight.Light,
+                fontWeight = FontWeight.Medium,
             )
         }
     }

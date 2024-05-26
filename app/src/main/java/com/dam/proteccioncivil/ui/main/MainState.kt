@@ -13,13 +13,13 @@ data class MainState(
 data class PrefState(
     val username: String = "",
     val password: String = "",
-    val defaultTimeSplash: String = "1"
+    val iv: String = ""
 )
 
 fun PrefState.toPreferencias(): Preferencias = Preferencias(
     username = username,
     password = password,
-    defaultTimeSplash = defaultTimeSplash.toInt()
+    iv = iv
 )
 
 sealed interface MainInfoState {

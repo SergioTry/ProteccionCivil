@@ -29,11 +29,13 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -88,10 +90,11 @@ fun VehiculosBus(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.fondo),
+            contentScale = ContentScale.FillHeight,
+            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
             contentDescription = "Escudo caravaca de la cruz",
             modifier = Modifier.fillMaxSize(),
         )
@@ -200,7 +203,7 @@ fun vehiculoCard(
                         .padding(16.dp)
                 )
                 Image(
-                    painter = painterResource(id = R.drawable.img),
+                    painter = painterResource(id = R.drawable.pcc_icono),
                     contentDescription = null,
                     modifier = modifier
                         .padding(6.dp)
