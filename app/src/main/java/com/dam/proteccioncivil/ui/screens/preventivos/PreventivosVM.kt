@@ -15,6 +15,7 @@ import com.dam.proteccioncivil.data.model.Preventivo
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.data.model.Vehiculo
+import com.dam.proteccioncivil.data.model.esMayorDeEdad
 import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.PreventivosRepository
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
@@ -156,13 +157,16 @@ class PreventivosVM(
             preventivosUiState = try {
                 var preventivos: List<Preventivo>?
                 withTimeout(timeoutMillis * 2) {
-                    preventivos = preventivoRepository.getPreventivos()
+                    preventivos = preventivoRepository.getPreventivos(
+                        riesgo = if (esMayorDeEdad(Token.fechaNacimiento!!))
+                            true
+                        else
+                            null
+                    )
                     if (preventivos!!.isNotEmpty()) {
                         preventivos!!.forEach {
-                            val usuarios: List<Usuario>?
-                            val vehiculos: List<Vehiculo>?
-                            usuarios = usuariosRepository.getUsuariosPreventivo(it.codPreventivo)
-                            vehiculos = vehiculosRepository.getVehiculosPreventivo(it.codPreventivo)
+                            val usuarios = usuariosRepository.getUsuariosPreventivo(it.codPreventivo)
+                            val vehiculos = vehiculosRepository.getVehiculosPreventivo(it.codPreventivo)
                             it.usuarios = usuarios
                             it.vehiculos = vehiculos
                         }

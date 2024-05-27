@@ -2,6 +2,7 @@ package com.dam.proteccioncivil.data.model
 
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.Period
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -92,3 +93,8 @@ class ShortToBoolean {
     }
 }
 
+fun esMayorDeEdad(fechaNacimiento: LocalDateTime): Boolean {
+    val ahora = LocalDateTime.now()
+    val edad = Period.between(fechaNacimiento.toLocalDate(), ahora.toLocalDate()).years
+    return edad >= 18
+}

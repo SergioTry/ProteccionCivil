@@ -44,8 +44,9 @@ interface AppContainer {
 class DefaultAppContainer(
     private val context: Context
 ) : AppContainer {
+    private val baseUrl = "http://34.175.36.97:49999/api/v1/"
     //private val baseUrl = "http://192.168.0.93:49999/api/v1/"
-    private val baseUrl = "http://192.168.68.50:49999/api/v1/"
+    //private val baseUrl = "http://192.168.68.50:49999/api/v1/"
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
