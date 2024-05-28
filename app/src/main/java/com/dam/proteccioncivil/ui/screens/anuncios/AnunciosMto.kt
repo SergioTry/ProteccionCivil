@@ -1,7 +1,6 @@
 package com.dam.proteccioncivil.ui.screens.anuncios
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,14 +16,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
+import com.dam.proteccioncivil.data.model.Loading
 import com.dam.proteccioncivil.ui.theme.AppColors
 
 
@@ -41,12 +44,20 @@ fun AnunciosMto(
     anunciosVM: AnunciosVM,
     onShowSnackBar: (String, Boolean) -> Unit,
     refresh: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    onCancel: () -> Unit
 ) {
 
     val mensage: String
     val contexto = LocalContext.current
-    val activity = (LocalContext.current as? Activity)
+
+    if (anunciosVM.anunciosMtoState.codAnuncio == "0") {
+        anunciosVM.setFechaPublicacion(FormatDate.use())
+    }
+
+    if (anunciosVM.anunciosBusState.loading) {
+        Loading()
+    }
 
     when (anunciosVM.anunciosMessageState) {
         is AnunciosMessageState.Loading -> {
@@ -58,10 +69,11 @@ fun AnunciosMto(
             } else {
                 ContextCompat.getString(contexto, R.string.anuncio_edit_success)
             }
-            onShowSnackBar(mensage,true)
+            onShowSnackBar(mensage, true)
             anunciosVM.resetInfoState()
             anunciosVM.resetAnuncioMtoState()
             anunciosVM.getAll()
+            anunciosVM.setLoading(false)
             refresh()
         }
 
@@ -71,7 +83,8 @@ fun AnunciosMto(
             } else {
                 ContextCompat.getString(contexto, R.string.anuncio_edit_failure)
             }
-            onShowSnackBar(mensage,false)
+            onShowSnackBar(mensage, false)
+            anunciosVM.setLoading(false)
             anunciosVM.resetInfoState()
         }
     }
@@ -102,7 +115,14 @@ fun AnunciosMto(
                         label = { Text(text = "Texto") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .fillMaxHeight()
+                            .fillMaxHeight(),
+                        isError = !anunciosVM.anunciosMtoState.datosObligatorios,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color.Blue,
+                            unfocusedBorderColor = Color.Black,
+                            focusedLabelColor = Color.Blue,
+                            unfocusedLabelColor = Color.Black
+                        )
                     )
                 }
             }
@@ -118,13 +138,17 @@ fun AnunciosMto(
             Button(
                 onClick = {
                     anunciosVM.resetAnuncioMtoState()
-                    activity?.onBackPressed()
-                }
+                    anunciosVM.setLoading(true)
+                    onCancel()
+                },
+                enabled = !anunciosVM.anunciosBusState.loading,
+                colors = ButtonDefaults.buttonColors(containerColor = AppColors.errorCarmesi)
             ) {
                 Text(text = "Cancelar")
             }
             Spacer(modifier = Modifier.width(100.dp))
             Button(
+                enabled = !anunciosVM.anunciosBusState.loading && anunciosVM.anunciosMtoState.datosObligatorios,
                 onClick = {
                     if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
                         anunciosVM.setFechaPublicacion(FormatDate.use())
@@ -132,7 +156,9 @@ fun AnunciosMto(
                     } else {
                         anunciosVM.update()
                     }
-                }
+                    anunciosVM.setLoading(true)
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue)
             ) {
                 Text(
                     text =
