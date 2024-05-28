@@ -74,7 +74,7 @@ fun MainTopAppBar(
         colors =
         TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            titleContentColor = MaterialTheme.colorScheme.tertiary
+            titleContentColor = MaterialTheme.colorScheme.background
         ),
         title = {
             if (currentScreen.title != R.string.screen_name_splash) {
@@ -93,7 +93,7 @@ fun MainTopAppBar(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
 
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.tertiary
+                            tint = MaterialTheme.colorScheme.background
                         )
                     }
                 }
@@ -107,7 +107,7 @@ fun MainTopAppBar(
                     Icon(
                         imageVector = Icons.Filled.CalendarMonth,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.tertiary
+                        tint = MaterialTheme.colorScheme.background
                     )
                 }
             }
@@ -119,13 +119,13 @@ fun MainTopAppBar(
                         Icon(
                             imageVector = Icons.Default.Notifications,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.tertiary
+                            tint = MaterialTheme.colorScheme.background
                         )
                     }
                     IconButton(onClick = { showMenu = !showMenu }) {
                         Icon(
                             imageVector = Icons.Filled.MoreVert, contentDescription = null,
-                            tint = MaterialTheme.colorScheme.tertiary
+                            tint = MaterialTheme.colorScheme.background
                         )
                     }
                     DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
@@ -168,13 +168,13 @@ fun MainBottomBar(
                     icon = {
                         Icon(
                             clave, contentDescription = null,
-                            tint = MaterialTheme.colorScheme.tertiary
+                            tint = MaterialTheme.colorScheme.background
                         )
                     },
                     label = {
                         Text(
                             text = valor,
-                            color = MaterialTheme.colorScheme.tertiary
+                            color = MaterialTheme.colorScheme.background
                         )
                     },
                     selected = false,
@@ -194,7 +194,7 @@ fun MainBottomBar(
                             icon = {
                                 Icon(
                                     Icons.Default.DirectionsCar, contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.tertiary
+                                    tint = MaterialTheme.colorScheme.background
                                 )
                             },
                             label = { Text(stringResource(R.string.screen_name_vehicles)) },
@@ -214,7 +214,7 @@ fun MainBottomBar(
                         icon = {
                             Icon(
                                 clave, contentDescription = null,
-                                tint = MaterialTheme.colorScheme.tertiary
+                                tint = MaterialTheme.colorScheme.background
                             )
                         },
                         label = { Text(valor) },

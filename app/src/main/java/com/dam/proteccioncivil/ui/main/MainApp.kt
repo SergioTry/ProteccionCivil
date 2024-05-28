@@ -512,7 +512,11 @@ private fun NavHostRoutes(
                         }
                     }
                 },
-                modifier = Modifier
+                modifier = Modifier,
+                onCancel = {
+                    navController.popBackStack()
+                    anunciosVM.setLoading(false)
+                }
             )
         }
 
@@ -545,6 +549,7 @@ private fun NavHostRoutes(
         }
 
         composable(route = AppScreens.UsuariosMto.name) {
+            val oldMtoState = remember { usuariosVM.usuariosMtoState.copy() }
             UsuariosMto(usuariosVM = usuariosVM,
                 onNavDown = { navController.navigate(AppScreens.Usuarios.name) },
                 onShowSnackBar = { mensaje, isSuccess ->

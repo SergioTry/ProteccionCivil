@@ -28,6 +28,7 @@ data class VehiculoMtoState(
 )
 
 data class VehiculosBusState(
+    val expanded: Boolean = false,
     val showDlgDate: Boolean = false,
     val showDlgConfirmation: Boolean = false)
 

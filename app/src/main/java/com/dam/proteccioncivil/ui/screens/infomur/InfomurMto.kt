@@ -20,7 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,15 +48,17 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
+import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
+import com.dam.proteccioncivil.ui.theme.AppColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun InfomurMto(
     infomursVM: InfomursVM,
-    onShowSnackBar: (String,Boolean) -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit,
     refresh: () -> Unit,
     users: List<Usuario>,
     modifier: Modifier
@@ -70,12 +75,12 @@ fun InfomurMto(
         }
 
         is InfomursMessageState.Success -> {
-            mensage = if (infomursVM.infomursMtoState.codInfomur.equals("0")) {
+            mensage = if (infomursVM.infomursMtoState.codInfomur == "0") {
                 ContextCompat.getString(contexto, R.string.infomur_create_success)
             } else {
                 ContextCompat.getString(contexto, R.string.infomur_edit_success)
             }
-            onShowSnackBar(mensage,true)
+            onShowSnackBar(mensage, true)
             infomursVM.resetInfoState()
             infomursVM.resetInfomurMtoState()
             infomursVM.getAll()
@@ -83,14 +88,18 @@ fun InfomurMto(
         }
 
         is InfomursMessageState.Error -> {
-            mensage = if (infomursVM.infomursMtoState.codInfomur.equals("0")) {
+            mensage = if (infomursVM.infomursMtoState.codInfomur == "0") {
                 ContextCompat.getString(contexto, R.string.infomur_create_failure)
             } else {
                 ContextCompat.getString(contexto, R.string.infomur_edit_failure)
             }
-            onShowSnackBar(mensage,false)
+            onShowSnackBar(mensage, false)
             infomursVM.resetInfoState()
         }
+    }
+
+    if (infomursVM.infomursMtoState.codInfomur == "0") {
+        infomursVM.setFechaInfomur(FormatDate.use())
     }
 
     Box(
@@ -109,7 +118,8 @@ fun InfomurMto(
                 .fillMaxWidth()
                 .height(380.dp)
                 .padding(8.dp),
-            shape = RoundedCornerShape(8.dp)
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(AppColors.posit)
         ) {
             Row(modifier = modifier.fillMaxWidth()) {
                 Column(modifier = modifier.padding(12.dp)) {
@@ -119,9 +129,16 @@ fun InfomurMto(
                         ) {
                             OutlinedTextField(
                                 label = { Text(text = "Fecha Infomur") },
-                                value = FormatDate.use(infomursVM.infomursMtoState.fechaInfomur),
+                                value = FormatVisibleDate.use(infomursVM.infomursMtoState.fechaInfomur),
+                                isError = infomursVM.infomursMtoState.fechaInfomur == "",
                                 onValueChange = {},
-                                modifier = modifier.fillMaxWidth()
+                                modifier = modifier.fillMaxWidth(),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color.Blue,
+                                    unfocusedBorderColor = Color.Black,
+                                    focusedLabelColor = Color.Blue,
+                                    unfocusedLabelColor = Color.Black
+                                )
                             )
                             IconButton(
                                 onClick = {
@@ -141,9 +158,16 @@ fun InfomurMto(
                         value = infomursVM.infomursMtoState.descripcion,
                         onValueChange = { infomursVM.setDescripcion(it) },
                         label = { Text(text = "Descripcion") },
+                        isError = infomursVM.infomursMtoState.descripcion == "",
                         modifier = modifier
                             .fillMaxWidth()
-                            .height(80.dp)
+                            .height(80.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color.Blue,
+                            unfocusedBorderColor = Color.Black,
+                            focusedLabelColor = Color.Blue,
+                            unfocusedLabelColor = Color.Black
+                        )
                     )
                     Spacer(modifier = modifier.size(16.dp))
                     ExposedDropdownMenuBox(
@@ -151,8 +175,10 @@ fun InfomurMto(
                         onExpandedChange = { expandedUser1 = !expandedUser1 },
                     ) {
                         OutlinedTextField(
-                            value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario1 }?.nombre ?: "",
+                            value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario1 }?.nombre
+                                ?: "",
                             onValueChange = { },
+                            isError = infomursVM.infomursMtoState.codUsuario1 == "0",
                             label = { Text("Usuario1") },
                             readOnly = true,
                             trailingIcon = {
@@ -165,7 +191,13 @@ fun InfomurMto(
                             singleLine = true,
                             modifier = modifier
                                 .fillMaxWidth()
-                                .menuAnchor()
+                                .menuAnchor(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color.Blue,
+                                unfocusedBorderColor = Color.Black,
+                                focusedLabelColor = Color.Blue,
+                                unfocusedLabelColor = Color.Black
+                            )
                         )
                         DropdownMenu(
                             expanded = expandedUser1,
@@ -190,8 +222,10 @@ fun InfomurMto(
                         onExpandedChange = { expandedUser2 = !expandedUser2 },
                     ) {
                         OutlinedTextField(
-                            value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario2 }?.nombre ?: "",
+                            value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario2 }?.nombre
+                                ?: "",
                             onValueChange = { },
+                            isError = infomursVM.infomursMtoState.codUsuario2 == "0",
                             label = { Text("Usuario2") },
                             readOnly = true,
                             trailingIcon = {
@@ -204,7 +238,13 @@ fun InfomurMto(
                             singleLine = true,
                             modifier = modifier
                                 .fillMaxWidth()
-                                .menuAnchor()
+                                .menuAnchor(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color.Blue,
+                                unfocusedBorderColor = Color.Black,
+                                focusedLabelColor = Color.Blue,
+                                unfocusedLabelColor = Color.Black
+                            )
                         )
                         DropdownMenu(
                             expanded = expandedUser2,
@@ -238,23 +278,26 @@ fun InfomurMto(
                 onClick = {
                     infomursVM.resetInfomurMtoState()
                     activity?.onBackPressed()
-                }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = AppColors.errorCarmesi)
             ) {
                 Text(text = "Cancelar")
             }
             Spacer(modifier = modifier.width(100.dp))
             Button(
                 onClick = {
-                    if (infomursVM.infomursMtoState.codInfomur.equals("0")) {
+                    if (infomursVM.infomursMtoState.codInfomur == "0") {
                         infomursVM.setNew()
                     } else {
                         infomursVM.update()
                     }
-                }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
+                enabled = infomursVM.infomursMtoState.datosObligatorios
             ) {
                 Text(
                     text =
-                    if (infomursVM.infomursMtoState.codInfomur.equals("0")) {
+                    if (infomursVM.infomursMtoState.codInfomur == "0") {
                         "Añadir"
                     } else {
                         "Editar"

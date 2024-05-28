@@ -13,8 +13,6 @@ import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Preventivo
 import com.dam.proteccioncivil.data.model.Token
-import com.dam.proteccioncivil.data.model.Usuario
-import com.dam.proteccioncivil.data.model.Vehiculo
 import com.dam.proteccioncivil.data.model.esMayorDeEdad
 import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.PreventivosRepository
@@ -42,6 +40,34 @@ class PreventivosVM(
 
     var preventivosMessageState: PreventivosMessageState by mutableStateOf(PreventivosMessageState.Loading)
         private set
+
+    var preventivoMtoState: PreventivoMtoState by mutableStateOf(PreventivoMtoState())
+
+    var preventivoBusState: PreventivoBusState by mutableStateOf(PreventivoBusState())
+
+    fun setExpanded(expanded: Boolean) {
+        preventivoBusState = preventivoBusState.copy(
+            expanded = expanded,
+            showDlgBorrar = preventivoBusState.showDlgBorrar,
+            showDlgDate = preventivoBusState.showDlgDate
+        )
+    }
+
+    fun setShowDlgBorrar(showDlgBorrar: Boolean) {
+        preventivoBusState = preventivoBusState.copy(
+            expanded = preventivoBusState.expanded,
+            showDlgBorrar = showDlgBorrar,
+            showDlgDate = preventivoBusState.showDlgDate
+        )
+    }
+
+    fun setShowDlgDate(showDlgDate: Boolean) {
+        preventivoBusState = preventivoBusState.copy(
+            expanded = preventivoBusState.expanded,
+            showDlgBorrar = preventivoBusState.showDlgBorrar,
+            showDlgDate = showDlgDate
+        )
+    }
 
     // var selectedOption by mutableStateOf("")
 
@@ -91,6 +117,8 @@ class PreventivosVM(
 
     fun resetPreventivoState() {
     }
+
+    fun clonePreventivoState(preventivo: Preventivo) {}
 
 //    fun altaPreventivo(preventivo: Preventivo) {
 //        viewModelScope.launch {

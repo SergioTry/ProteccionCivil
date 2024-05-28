@@ -20,7 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,8 +48,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
+import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
+import com.dam.proteccioncivil.ui.theme.AppColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -92,6 +97,9 @@ fun GuardiaMto(
             guardiasVM.resetInfoState()
         }
     }
+    if(guardiasVM.guardiasMtoState.codGuardia == "0"){
+        guardiasVM.setFechaGuardia(FormatDate.use())
+    }
 
     Box(
         modifier = modifier
@@ -108,7 +116,8 @@ fun GuardiaMto(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            shape = RoundedCornerShape(8.dp)
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(AppColors.posit)
         ) {
             Row(modifier = modifier.fillMaxWidth()) {
                 Column(modifier = modifier.padding(12.dp)) {
@@ -118,9 +127,16 @@ fun GuardiaMto(
                         ) {
                             OutlinedTextField(
                                 label = { Text(text = "Fecha Infomur") },
-                                value = FormatDate.use(guardiasVM.guardiasMtoState.fechaGuardia),
+                                value = FormatVisibleDate.use(guardiasVM.guardiasMtoState.fechaGuardia),
                                 onValueChange = {},
-                                modifier = modifier.fillMaxWidth()
+                                modifier = modifier.fillMaxWidth(),
+                                isError = guardiasVM.guardiasMtoState.fechaGuardia == "",
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color.Blue,
+                                    unfocusedBorderColor = Color.Black,
+                                    focusedLabelColor = Color.Blue,
+                                    unfocusedLabelColor = Color.Black
+                                )
                             )
                             IconButton(
                                 onClick = {
@@ -143,15 +159,24 @@ fun GuardiaMto(
                             guardiasVM.setDescripcion(it)
                         }, modifier = modifier
                             .fillMaxWidth()
-                            .height(80.dp)
+                            .height(80.dp),
+                        isError = guardiasVM.guardiasMtoState.descripcion == "",
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color.Blue,
+                            unfocusedBorderColor = Color.Black,
+                            focusedLabelColor = Color.Blue,
+                            unfocusedLabelColor = Color.Black
+                        )
                     )
                     ExposedDropdownMenuBox(
                         expanded = expandedUser1,
                         onExpandedChange = { expandedUser1 = !expandedUser1 },
                     ) {
                         OutlinedTextField(
-                            value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario1 }?.nombre ?: "",
+                            value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario1 }?.nombre
+                                ?: "",
                             onValueChange = { },
+                            isError = guardiasVM.guardiasMtoState.codUsuario1 == "0",
                             label = { Text("Usuario1") },
                             readOnly = true,
                             trailingIcon = {
@@ -164,7 +189,13 @@ fun GuardiaMto(
                             singleLine = true,
                             modifier = modifier
                                 .fillMaxWidth()
-                                .menuAnchor()
+                                .menuAnchor(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color.Blue,
+                                unfocusedBorderColor = Color.Black,
+                                focusedLabelColor = Color.Blue,
+                                unfocusedLabelColor = Color.Black
+                            )
                         )
                         DropdownMenu(
                             expanded = expandedUser1,
@@ -188,8 +219,10 @@ fun GuardiaMto(
                         onExpandedChange = { expandedUser2 = !expandedUser2 },
                     ) {
                         OutlinedTextField(
-                            value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario2 }?.nombre ?: "",
+                            value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario2 }?.nombre
+                                ?: "",
                             onValueChange = {},
+                            isError = guardiasVM.guardiasMtoState.codUsuario2 == "0",
                             label = { Text("Usuario2") },
                             readOnly = true,
                             trailingIcon = {
@@ -202,7 +235,13 @@ fun GuardiaMto(
                             singleLine = true,
                             modifier = modifier
                                 .fillMaxWidth()
-                                .menuAnchor()
+                                .menuAnchor(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color.Blue,
+                                unfocusedBorderColor = Color.Black,
+                                focusedLabelColor = Color.Blue,
+                                unfocusedLabelColor = Color.Black
+                            )
                         )
                         DropdownMenu(
                             expanded = expandedUser2,
@@ -242,17 +281,20 @@ fun GuardiaMto(
             }
             Spacer(modifier = modifier.width(100.dp))
             Button(
+                enabled = guardiasVM.guardiasMtoState.datosObligatorios,
                 onClick = {
-                    if (guardiasVM.guardiasMtoState.codGuardia.equals("0")) {
+                    if (guardiasVM.guardiasMtoState.codGuardia == "0") {
                         guardiasVM.setNew()
                     } else {
                         guardiasVM.update()
                     }
-                }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue)
+
             ) {
                 Text(
                     text =
-                    if (guardiasVM.guardiasMtoState.codGuardia.equals("0")) {
+                    if (guardiasVM.guardiasMtoState.codGuardia == "0") {
                         "Añadir"
                     } else {
                         "Editar"

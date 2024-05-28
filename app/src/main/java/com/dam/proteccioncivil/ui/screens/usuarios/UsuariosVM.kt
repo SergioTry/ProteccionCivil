@@ -40,8 +40,17 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
         usuariosMessageState = UsuariosMessageState.Loading
     }
 
+    fun setExpanded(expanded: Boolean) {
+        usuariosBusState = usuariosBusState.copy(
+            expanded = expanded,
+            showDlgConfirmation = usuariosBusState.showDlgConfirmation,
+            showDlgDate = usuariosBusState.showDlgDate
+        )
+    }
+
     fun setShowDlgBorrar(showDlgBorrar: Boolean) {
         usuariosBusState = usuariosBusState.copy(
+            expanded = usuariosBusState.expanded,
             showDlgConfirmation = showDlgBorrar,
             showDlgDate = usuariosBusState.showDlgDate
         )
@@ -49,6 +58,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
 
     fun setShowDlgDate(showDlgDate: Boolean) {
         usuariosBusState = usuariosBusState.copy(
+            expanded = usuariosBusState.expanded,
             showDlgConfirmation = usuariosBusState.showDlgConfirmation,
             showDlgDate = showDlgDate
         )

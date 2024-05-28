@@ -54,12 +54,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.Loading
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.ui.main.MainVM
 import com.dam.proteccioncivil.ui.theme.AppColors
-import com.spr.jetpack_loading.components.indicators.BallClipRotateMultipleIndicator
 
 @Composable
 fun LoginScreen(
@@ -110,19 +109,7 @@ fun LoginScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         if (loading) {
-            Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .zIndex(1f)
-                    .background(Color.Black.copy(alpha = 0.5f)),
-                contentAlignment = Alignment.Center
-            ) {
-                BallClipRotateMultipleIndicator(
-                    color = Color(255, 165, 0),
-                    canvasSize = 170F,
-                    penThickness = 8.dp
-                )
-            }
+            Loading()
         }
         Image(
             contentScale = ContentScale.FillHeight,
@@ -222,7 +209,7 @@ fun LoginScreen(
                         else Icons.Filled.VisibilityOff
                         val description = if (passwordVisible) "Hide password" else "Show password"
                         IconButton(onClick = { if (!loading) passwordVisible = !passwordVisible }) {
-                            Icon(imageVector = image, description, tint = Color.White)
+                            Icon(imageVector = image, description, tint = MaterialTheme.colorScheme.secondary)
                         }
                     })
                 Row(

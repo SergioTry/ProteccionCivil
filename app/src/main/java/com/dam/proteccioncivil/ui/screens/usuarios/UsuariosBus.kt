@@ -21,21 +21,28 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -46,6 +53,7 @@ import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
+import com.dam.proteccioncivil.ui.theme.AppColors
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -59,6 +67,8 @@ fun UsuariosBus(
 ) {
     val mensage: String
     val contexto = LocalContext.current
+    val options = listOf("Opción 1", "Opción 2", "Opción 3")
+    val focusRequester = remember { FocusRequester() }
 
     when (usuarioVM.usuariosMessageState) {
         is UsuariosMessageState.Loading -> {
@@ -98,66 +108,82 @@ fun UsuariosBus(
             modifier = Modifier.fillMaxSize(),
         )
         Column {
-            Row {
-                Box(
-                    modifier = Modifier
-                        .padding(1.dp)
-                        .border(BorderStroke(1.dp, Color.Black))
-                        .width(160.dp),
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(2.dp)
+                    .border(BorderStroke(1.dp, Color.Black))
+                    .height(75.dp)
+                    .background(Color.White)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Row(
                         modifier = Modifier
-                            .padding(16.dp)
-                            .height(50.dp)
-                    )
-                    {
-                        IconButton(
-                            onClick = { /*TODO*/ }, modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                        ) {
-                            Icon(imageVector = Icons.Filled.Warning, contentDescription = "")
-                        }
-                        Text(
-                            text = "Filtro Vol.",
-                            color = Color.Black,
+                            .weight(1f)
+                            .padding(8.dp)
+                            .background(Color.White),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedTextField(
+                            value = "", // Aquí puedes poner el valor del campo de texto
+                            onValueChange = { /* Aquí puedes manejar el cambio del valor */ },
+                            label = { Text("Usuario2") },
+                            readOnly = true,
+                            trailingIcon = {
+                                IconButton(
+                                    onClick = { usuarioVM.setExpanded(true) }
+                                ) {
+                                    Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+                                }
+                            },
+                            singleLine = true,
                             modifier = Modifier
-                                .align(Alignment.CenterVertically)
+                                .weight(1.5f)
+                                .padding(8.dp)
+                                .focusRequester(focusRequester)
                         )
-                        IconButton(
-                            onClick = { /*TODO*/ }, modifier = Modifier
-                                .align(Alignment.CenterVertically)
+                        DropdownMenu(
+                            expanded = usuarioVM.usuariosBusState.expanded,
+                            onDismissRequest = { usuarioVM.setExpanded(false) }
                         ) {
-                            Icon(
-                                imageVector = Icons.Filled.KeyboardArrowDown,
-                                contentDescription = ""
-                            )
+                            options.forEach { option ->
+                                DropdownMenuItem(
+                                    text = { Text(option) },
+                                    onClick = {
+                                        usuarioVM.setExpanded(false)
+                                    }
+                                )
+                            }
                         }
                     }
-                }
-                Box(
-                    modifier = Modifier
-                        .padding(1.dp)
-                        .border(BorderStroke(1.dp, Color.Black))
-                ) {
                     Row(
                         modifier = Modifier
-                            .padding(16.dp)
-                            .height(50.dp)
-                    )
-                    {
-                        Text(
-                            text = "Buscar voluntarios",
-                            color = Color.Black,
+                            .weight(2f)
+                            .padding(8.dp)
+                            .background(Color.White),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedTextField(
+                            value = "",
+                            onValueChange = { },
+                            label = { Text("Buscar") },
                             modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .padding(8.dp)
+                                .weight(1f),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color.White,
+                                errorBorderColor = Color.White,
+                                unfocusedBorderColor = Color.White
+                            )
                         )
                         IconButton(
-                            onClick = { /*TODO*/ }, modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .padding(8.dp)
+                            onClick = { /* TODO: Implement search action */ },
+                            modifier = Modifier.align(Alignment.CenterVertically)
                         ) {
-                            Icon(imageVector = Icons.Filled.Search, contentDescription = "")
+                            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
                         }
                     }
                 }
@@ -170,7 +196,8 @@ fun UsuariosBus(
                             usuario = it,
                             onNavUp = { onNavUp() },
                             usuariosVM = usuarioVM,
-                            modifier = modifier)
+                            modifier = modifier
+                        )
                     }
                 }
             )
@@ -190,9 +217,14 @@ fun UsuariosBus(
                         onNavUp()
                     },
                     contentColor = Color.White,
-                    elevation = FloatingActionButtonDefaults.elevation(8.dp)
+                    elevation = FloatingActionButtonDefaults.elevation(8.dp),
+                    containerColor = AppColors.Blue
                 ) {
-                    Icon(imageVector = Icons.Filled.Add, contentDescription = "Añadir")
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Añadir",
+                        tint = AppColors.White
+                    )
                 }
             }
         }
@@ -222,7 +254,8 @@ fun usuarioCard(
         modifier = modifier
             .padding(16.dp)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(AppColors.posit)
     ) {
         Row(modifier = modifier.fillMaxWidth()) {
             Image(
@@ -235,35 +268,50 @@ fun usuarioCard(
             )
             Spacer(modifier = modifier.width(28.dp))
             Column {
-                Spacer(modifier = modifier.height(18.dp))
-                Text(text = usuario.username)
-                Spacer(modifier = modifier.height(8.dp))
-                Text(
-                    text = usuario.nombre//+ " " + usuario.apellidos)
-                )
-            }
-            Spacer(modifier = modifier.width(90.dp))
-            if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-                Row {
-                    Spacer(modifier = modifier.height(28.dp))
-                    IconButton(onClick = {
-                        usuariosVM.resetUsuarioMtoState()
-                        usuariosVM.cloneUsuarioMtoState(usuario)
-                        usuariosVM.setShowDlgBorrar(true)
-                    }) {
-                        Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
-                    }
-                    Spacer(modifier = Modifier.height(28.dp))
-                    IconButton(onClick = {
-                        usuariosVM.resetUsuarioMtoState()
-                        usuariosVM.cloneUsuarioMtoState(usuario)
-                        usuariosVM.setPassword("")
-                        onNavUp()
-                    }) {
-                        Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
+                Row(
+                    modifier = modifier.align(Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Text(
+                        text = usuario.username,
+                        modifier = modifier.align(Alignment.CenterVertically)
+                    )
+                    if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
+                        Row(
+                            modifier = modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            IconButton(onClick = {
+                                usuariosVM.resetUsuarioMtoState()
+                                usuariosVM.cloneUsuarioMtoState(usuario)
+                                usuariosVM.setShowDlgBorrar(true)
+                            }) {
+                                Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
+                            }
+                            IconButton(onClick = {
+                                usuariosVM.resetUsuarioMtoState()
+                                usuariosVM.cloneUsuarioMtoState(usuario)
+                                usuariosVM.setPassword("")
+                                onNavUp()
+                            }) {
+                                Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
+                            }
+                        }
                     }
                 }
+                Text(
+                    text = usuario.nombre + " " + formatApellidos(usuario.apellidos)
+                )
             }
         }
+    }
+}
+
+fun formatApellidos(apellidos: String): String {
+    val position = apellidos.indexOfFirst { it.isUpperCase() && apellidos.indexOf(it) != 0 }
+    return if (position != -1) {
+        apellidos.substring(0, position) + " " + apellidos.substring(position)
+    } else {
+        apellidos
     }
 }

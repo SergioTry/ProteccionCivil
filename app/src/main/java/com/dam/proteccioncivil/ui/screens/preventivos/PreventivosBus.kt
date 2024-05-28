@@ -1,6 +1,6 @@
 package com.dam.proteccioncivil.ui.screens.preventivos
 
-//import com.dam.proteccioncivil.data.model.Dia
+
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,28 +22,46 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
-import com.dam.proteccioncivil.data.model.FormatDate
+import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.HasNonNullElement
 import com.dam.proteccioncivil.data.model.Preventivo
+import com.dam.proteccioncivil.data.model.Token
+import com.dam.proteccioncivil.ui.theme.AppColors
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PreventivosBus(
@@ -55,15 +72,47 @@ fun PreventivosBus(
     onNavUp: () -> Unit,
     refresh: () -> Unit
 ) {
+    val mensage: String
+    val contexto = LocalContext.current
+    val options = listOf("Opción 1", "Opción 2", "Opción 3")
+    val focusRequester = remember { FocusRequester() }
+
+    when (preventivosVM.preventivosMessageState) {
+        is PreventivosMessageState.Loading -> {
+        }
+
+        is PreventivosMessageState.Success -> {
+            mensage = ContextCompat.getString(
+                contexto,
+                R.string.usuario_delete_success
+            )
+            onShowSnackBar(mensage, true)
+            preventivosVM.resetPreventivoState()
+            // preventivosVM.resetInfoState()
+            preventivosVM.getAll()
+            refresh()
+        }
+
+        is PreventivosMessageState.Error -> {
+            mensage = ContextCompat.getString(
+                contexto,
+                R.string.usuario_delete_failure
+            )
+            onShowSnackBar(mensage, false)
+            //preventivosVM.resetInfoState()
+        }
+    }
+
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         Image(
+            contentScale = ContentScale.FillHeight,
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = "Escudo caravaca de la cruz",
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
         )
         Column {
             Box(
@@ -71,44 +120,98 @@ fun PreventivosBus(
                     .fillMaxWidth()
                     .padding(2.dp)
                     .border(BorderStroke(1.dp, Color.Black))
+                    .height(75.dp)
+                    .background(Color.White)
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .height(50.dp)
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = "Filtrar preventivos",
-                        color = Color.Black,
+                    Row(
                         modifier = Modifier
-                            .align(Alignment.CenterVertically)
+                            .weight(1f)
                             .padding(8.dp)
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    IconButton(
-                        onClick = { /*TODO*/ }, modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .padding(8.dp)
+                            .background(Color.White),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(imageVector = Icons.Filled.Search, contentDescription = "")
+                        OutlinedTextField(
+                            value = "", // Aquí puedes poner el valor del campo de texto
+                            onValueChange = { /* Aquí puedes manejar el cambio del valor */ },
+                            label = { Text("Usuario2") },
+                            readOnly = true,
+                            trailingIcon = {
+                                IconButton(
+                                    onClick = { preventivosVM.setExpanded(true) }
+                                ) {
+                                    Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+                                }
+                            },
+                            singleLine = true,
+                            modifier = Modifier
+                                .weight(1.5f)
+                                .padding(8.dp)
+                                .focusRequester(focusRequester)
+                        )
+                        DropdownMenu(
+                            expanded = preventivosVM.preventivoBusState.expanded,
+                            onDismissRequest = { preventivosVM.setExpanded(false) }
+                        ) {
+                            options.forEach { option ->
+                                DropdownMenuItem(
+                                    text = { Text(option) },
+                                    onClick = {
+                                        preventivosVM.setExpanded(false)
+                                    }
+                                )
+                            }
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .weight(2f)
+                            .padding(8.dp)
+                            .background(Color.White),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedTextField(
+                            value = "",
+                            onValueChange = { },
+                            label = { Text("Buscar") },
+                            modifier = Modifier
+                                .weight(1f),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color.White,
+                                errorBorderColor = Color.White,
+                                unfocusedBorderColor = Color.White
+                            )
+                        )
+                        IconButton(
+                            onClick = { /* TODO: Implement search action */ },
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        ) {
+                            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+                        }
                     }
                 }
             }
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 content = {
                     items(preventivos) {
                         PreventivoCard(
-                            it
+                            preventivo = it,
+                            onNavUp = onNavUp,
+                            modifier = modifier,
+                            preventivosVM = preventivosVM
                         )
                     }
                 }
             )
         }
-        if (true) {
+        if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
             Row(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(16.dp)
                     .align(Alignment.BottomEnd),
@@ -117,10 +220,14 @@ fun PreventivosBus(
             ) {
                 FloatingActionButton(
                     onClick = {},
-                    contentColor = Color.White,
-                    elevation = FloatingActionButtonDefaults.elevation(8.dp)
+                    containerColor = AppColors.Blue,
+                    elevation = FloatingActionButtonDefaults.elevation(8.dp),
                 ) {
-                    Icon(imageVector = Icons.Filled.Add, contentDescription = "Añadir")
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Añadir",
+                        tint = AppColors.White
+                    )
                 }
             }
         }
@@ -128,16 +235,22 @@ fun PreventivosBus(
 }
 
 @Composable
-fun PreventivoCard(preventivo: Preventivo) {
+fun PreventivoCard(
+    preventivo: Preventivo,
+    preventivosVM: PreventivosVM,
+    onNavUp: () -> Unit,
+    modifier: Modifier
+) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .height(200.dp),
-        shape = RoundedCornerShape(8.dp)
+            .height(270.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(AppColors.posit)
     ) {
         Column {
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(modifier = modifier.fillMaxWidth()) {
                 Image(
                     painter = painterResource(
                         id =
@@ -148,34 +261,47 @@ fun PreventivoCard(preventivo: Preventivo) {
                         }
                     ),
                     contentDescription = null,
-                    modifier = Modifier
+                    modifier = modifier
                         .padding(6.dp)
-                        .size(40.dp)
+                        .size(80.dp)
                         .align(Alignment.Top)
                 )
                 Text(
                     text = preventivo.titulo,
-                    modifier = Modifier
+                    modifier = modifier
                         .align(Alignment.CenterVertically)
                 )
-                if (true) {
-                    Spacer(modifier = Modifier.width(180.dp))
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
-                    }
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
+                if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
+                    Row(
+                        modifier = modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        IconButton(onClick = {
+                            preventivosVM.resetPreventivoState()
+                            preventivosVM.clonePreventivoState(preventivo)
+                            preventivosVM.setShowDlgBorrar(true)
+                        }) {
+                            Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
+                        }
+                        IconButton(onClick = {
+                            preventivosVM.resetPreventivoState()
+                            preventivosVM.clonePreventivoState(preventivo)
+                            onNavUp()
+                        }) {
+                            Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
+                        }
                     }
                 }
             }
-            Spacer(modifier = Modifier.size(10.dp))
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
                     onClick = { /*TODO*/ },
-                    modifier = Modifier.padding(start = 122.dp)
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
                 ) {
                     Text("Asignar")
                 }
@@ -190,15 +316,24 @@ fun PreventivoCard(preventivo: Preventivo) {
                         )
                     )
                 ) {
-                    Row {
-                        Spacer(modifier = Modifier.width(30.dp))
+                    Column(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(start = 32.dp),
+                        horizontalAlignment = Alignment.Start
+                    ) {
                         Text(
-                            text = "Fecha del preventivo: " + preventivo.fechaDia1
+                            text = "Fecha del preventivo: ",
+                        )
+                        DayItem(
+                            date = preventivo.fechaDia1,
+                            modifier = modifier,
+                            multipleDays = false
                         )
                     }
                 } else {
                     Column(
-                        modifier = Modifier
+                        modifier = modifier
                             .fillMaxWidth()
                             .padding(start = 32.dp),
                         horizontalAlignment = Alignment.Start
@@ -206,7 +341,7 @@ fun PreventivoCard(preventivo: Preventivo) {
                         Text(
                             text = "Fechas del preventivo: "
                         )
-                        LazyRow {
+                        LazyRow(modifier = modifier.width(290.dp)) {
                             items(
                                 listOf(
                                     preventivo.fechaDia1,
@@ -218,24 +353,41 @@ fun PreventivoCard(preventivo: Preventivo) {
                                     preventivo.fechaDia7
                                 )
                             ) { it ->
-                                horizontalDayList(it)
+                                DayItem(date = it, modifier = modifier, multipleDays = true)
                             }
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(8.dp))
             }
-            Spacer(modifier = Modifier.width(36.dp))
         }
     }
 }
 
 @Composable
-fun horizontalDayList(date: String?) {
+fun DayItem(date: String?, modifier: Modifier, multipleDays: Boolean) {
     if (date != null) {
-        Column {
-            Checkbox(checked = true, onCheckedChange = {})
-            Text(text = FormatDate.use(date))
+        Column(
+            modifier = modifier
+                .padding(4.dp)
+                .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
+                .padding(8.dp)
+                .then(
+                    if (multipleDays) modifier.fillMaxWidth() else modifier.width(80.dp)
+                )
+        ) {
+            if (multipleDays) {
+                Checkbox(
+                    checked = true,
+                    onCheckedChange = {},
+                    modifier = modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+            Text(
+                text = FormatVisibleDate.use(date),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = modifier.align(Alignment.CenterHorizontally)
+            )
         }
     }
 }

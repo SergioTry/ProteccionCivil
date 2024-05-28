@@ -1,13 +1,13 @@
 package com.dam.proteccioncivil.ui.dialogs
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -35,6 +35,7 @@ fun DlgServicios(
                 .fillMaxWidth()
                 .padding(8.dp),
             shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(AppColors.dialogColors)
         ) {
             Column(
                 modifier = Modifier
@@ -46,35 +47,6 @@ fun DlgServicios(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     textDecoration = TextDecoration.Underline,
                 )
-                Spacer(modifier = Modifier.height(32.dp))
-                TextButton(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = onInfomursClick,
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonColors(
-                        AppColors.Blue,
-                        AppColors.White,
-                        AppColors.GreyDisabled,
-                        AppColors.White
-                    )
-                ) {
-                    Text("Infomurs")
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                TextButton(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = onGuardiasClick,
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonColors(
-                        AppColors.Blue,
-                        AppColors.White,
-                        AppColors.GreyDisabled,
-                        AppColors.White
-                    )
-                ) {
-                    Text("Guardias")
-                }
-                Spacer(modifier = Modifier.height(8.dp))
                 TextButton(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     onClick = onPreventivosClick,
@@ -87,6 +59,32 @@ fun DlgServicios(
                     )
                 ) {
                     Text("Preventivos")
+                }
+                TextButton(
+                    onClick = onInfomursClick,
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonColors(
+                        AppColors.Blue,
+                        AppColors.White,
+                        AppColors.GreyDisabled,
+                        AppColors.White
+                    ),
+                    modifier = modifier.width(90.dp).align(Alignment.CenterHorizontally)
+                ) {
+                    Text("Infomurs")
+                }
+                TextButton(
+                    onClick = onGuardiasClick,
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonColors(
+                        AppColors.Blue,
+                        AppColors.White,
+                        AppColors.GreyDisabled,
+                        AppColors.White
+                    ),
+                    modifier = modifier.width(90.dp).align(Alignment.CenterHorizontally)
+                ) {
+                    Text("Guardias")
                 }
             }
         }

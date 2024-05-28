@@ -35,10 +35,34 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
     var anunciosMtoState by mutableStateOf(AnunciosMtoState())
         private set
 
-    var showDlgConfirmation = false
+    var anunciosBusState by mutableStateOf(AnunciosBusState())
 
     fun resetInfoState() {
         anunciosMessageState = AnunciosMessageState.Loading
+    }
+
+    fun setLoading(loading: Boolean){
+        anunciosBusState = anunciosBusState.copy(
+            loading = loading,
+            showDlgBorrar = anunciosBusState.showDlgBorrar,
+            showDlgDate = anunciosBusState.showDlgDate
+        )
+    }
+
+    fun setShowDlgBorrar(showDlgBorrar: Boolean){
+        anunciosBusState = anunciosBusState.copy(
+            loading = anunciosBusState.loading,
+            showDlgBorrar = showDlgBorrar,
+            showDlgDate = anunciosBusState.showDlgDate
+        )
+    }
+
+    fun setShowDlgDate(showDlgDate: Boolean){
+        anunciosBusState = anunciosBusState.copy(
+            loading = anunciosBusState.loading,
+            showDlgBorrar = anunciosBusState.showDlgBorrar,
+            showDlgDate = showDlgDate
+        )
     }
 
     override fun getAll() {

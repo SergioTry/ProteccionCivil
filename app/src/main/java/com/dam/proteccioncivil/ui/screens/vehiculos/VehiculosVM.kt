@@ -35,8 +35,17 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepository) : CRUD<V
 
     var vehiculosBusState by mutableStateOf(VehiculosBusState())
 
+    fun setExpanded(expanded: Boolean) {
+        vehiculosBusState = vehiculosBusState.copy(
+            expanded = expanded,
+            showDlgConfirmation = vehiculosBusState.showDlgConfirmation,
+            showDlgDate = vehiculosBusState.showDlgDate
+        )
+    }
+
     fun setShowDlgBorrar(showDlgBorrar: Boolean) {
         vehiculosBusState = vehiculosBusState.copy(
+            expanded = vehiculosBusState.expanded,
             showDlgConfirmation = showDlgBorrar,
             showDlgDate = vehiculosBusState.showDlgDate
         )
@@ -44,6 +53,7 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepository) : CRUD<V
 
     fun setShowDlgDate(showDlgDate: Boolean) {
         vehiculosBusState = vehiculosBusState.copy(
+            expanded = vehiculosBusState.expanded,
             showDlgConfirmation = vehiculosBusState.showDlgConfirmation,
             showDlgDate = showDlgDate
         )

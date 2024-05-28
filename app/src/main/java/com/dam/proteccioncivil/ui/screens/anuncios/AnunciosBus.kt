@@ -40,7 +40,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Anuncio
-import com.dam.proteccioncivil.data.model.FormatDate
+import com.dam.proteccioncivil.data.model.FormatVisibleDate
+import com.dam.proteccioncivil.data.model.Loading
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosMessageState
@@ -60,23 +61,29 @@ fun AnunciosBus(
     val mensage: String
     val contexto = LocalContext.current
 
+    if (anunciosVM.anunciosBusState.loading) {
+        Loading()
+    }
+
     when (anunciosVM.anunciosMessageState) {
         is AnunciosMessageState.Loading -> {
         }
 
         is AnunciosMessageState.Success -> {
             mensage = ContextCompat.getString(contexto, R.string.anuncios_delete_success)
-            onShowSnackBar(mensage,true)
+            onShowSnackBar(mensage, true)
             anunciosVM.resetAnuncioMtoState()
             anunciosVM.resetInfoState()
             anunciosVM.getAll()
             refresh()
+            anunciosVM.setLoading(false)
         }
 
         is AnunciosMessageState.Error -> {
             mensage = ContextCompat.getString(contexto, R.string.anuncios_delete_failure)
-            onShowSnackBar(mensage,false)
+            onShowSnackBar(mensage, false)
             anunciosVM.resetInfoState()
+            anunciosVM.setLoading(false)
         }
     }
 
@@ -131,15 +138,15 @@ fun AnunciosBus(
                 }
             }
         }
-        if (anunciosVM.showDlgConfirmation) {
+        if (anunciosVM.anunciosBusState.showDlgDate) {
             DlgConfirmacion(
                 mensaje = R.string.anuncios_delete_confirmation,
                 onCancelarClick = {
-                    anunciosVM.showDlgConfirmation = false
-                    refresh()
+                    anunciosVM.setShowDlgDate(false)
                 },
                 onAceptarClick = {
-                    anunciosVM.showDlgConfirmation = false
+                    anunciosVM.setShowDlgDate(false)
+                    anunciosVM.setLoading(true)
                     anunciosVM.deleteBy()
                 }
             )
@@ -172,25 +179,30 @@ fun AnuncioCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Anuncio " + FormatDate.use(anuncio.fechaPublicacion),
+                        text = "Anuncio " + FormatVisibleDate.use(anuncio.fechaPublicacion),
                         modifier = Modifier.padding(top = 8.dp),
                         fontSize = 18.sp
                     )
                     if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                         Row {
-                            IconButton(onClick = {
-                                anunciosVM.resetAnuncioMtoState()
-                                anunciosVM.cloneAnuncioMtoState(anuncio)
-                                anunciosVM.showDlgConfirmation = true
-                                refresh()
-                            }) {
+                            IconButton(
+                                enabled = !anunciosVM.anunciosBusState.loading,
+                                onClick = {
+                                    anunciosVM.resetAnuncioMtoState()
+                                    anunciosVM.cloneAnuncioMtoState(anuncio)
+                                    anunciosVM.deleteBy()
+                                    anunciosVM.setLoading(true)
+                                    refresh()
+                                }) {
                                 Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
                             }
-                            IconButton(onClick = {
-                                anunciosVM.resetAnuncioMtoState()
-                                anunciosVM.cloneAnuncioMtoState(anuncio)
-                                onNavUp()
-                            }) {
+                            IconButton(
+                                enabled = !anunciosVM.anunciosBusState.loading,
+                                onClick = {
+                                    anunciosVM.resetAnuncioMtoState()
+                                    anunciosVM.cloneAnuncioMtoState(anuncio)
+                                    onNavUp()
+                                }) {
                                 Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
                             }
                         }

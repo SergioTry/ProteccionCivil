@@ -10,8 +10,9 @@ data class AnunciosMtoState(
 )
 
 data class AnunciosBusState(
-    val anuncioSelected: Int = -1,
-    val showDlgBorrar: Boolean = false
+    val loading: Boolean = false,
+    val showDlgBorrar: Boolean = false,
+    val showDlgDate: Boolean = false
 )
 
 fun AnunciosMtoState.toAnuncio(): Anuncio = Anuncio(

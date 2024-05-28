@@ -15,6 +15,7 @@ sealed interface UsuariosMessageState {
 }
 
 data class UsuariosBusState(
+    val expanded: Boolean = false,
     val showDlgDate: Boolean = false,
     val showDlgConfirmation: Boolean = false)
 

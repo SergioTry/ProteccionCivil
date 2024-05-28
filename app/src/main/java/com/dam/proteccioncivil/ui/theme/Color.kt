@@ -10,5 +10,6 @@ object AppColors {
     val Blue = Color(0xFF0D47A1)
     val errorCarmesi = Color(0xFFFF0000)
     val posit = Color(0xFFF5E876)
-    val dialogColors = Color(0xFF0C9DE2)
+    val dialogColors = Color(0xFFF8E7BD)
+    val Green = Color(0xFF097709)
 }
