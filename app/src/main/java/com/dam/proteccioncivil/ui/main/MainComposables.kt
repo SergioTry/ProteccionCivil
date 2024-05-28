@@ -62,6 +62,8 @@ fun MainTopAppBar(
     canNavigateBack: Boolean,
     showLoginScreen: () -> Unit,
     showPrefScreen: () -> Unit,
+    showDatosPersonalesScreen: () -> Unit,
+    showSobreScreen: () -> Unit,
     calendarioVM: CalendarioVM,
     showAnoScreen: () -> Unit,
     showDlgSalir: () -> Unit,
@@ -139,6 +141,18 @@ fun MainTopAppBar(
                         DropdownMenuItem(text = { Text(text = stringResource(R.string.screen_name_preferences)) },
                             onClick = {
                                 showPrefScreen()
+                                showMenu = false
+                            })
+
+                        DropdownMenuItem(text = { Text(text = stringResource(R.string.screen_name_personal_data)) },
+                            onClick = {
+                                showDatosPersonalesScreen()
+                                showMenu = false
+                            })
+
+                        DropdownMenuItem(text = { Text(text = stringResource(R.string.screen_name_about)) },
+                            onClick = {
+                                showSobreScreen()
                                 showMenu = false
                             })
 

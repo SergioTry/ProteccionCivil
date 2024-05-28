@@ -83,4 +83,8 @@
     <string name="vehiculo_delete_success">Vehiculo eliminado con exito</string>
     <string name="vehiculo_delete_failure">Error al eliminar el vehiculo</string>
     <string name="screen_name_servicios">Servicios</string>
+    <string name="screen_name_personal_data">Datos personales</string>
+    <string name="screen_name_about">Sobre...</string>
+    <string name="sobre_text">Desarrolladores:\nSergio Férnandez\nPedro Antonio Pozo Sánchez</string>
+    <string name="sobre_descrip_text">Esta aplicación ha sido desarrollada como un\nTFG para el grado superior DAM del instituto\nIES Gines Perez Chirinos y donada al cuerpo\nde voluntaruios de protección civil de Caravaca\nde la cruz.</string>
 </resources>

@@ -54,7 +54,9 @@ import com.dam.proteccioncivil.ui.screens.login.LoginVM
 import com.dam.proteccioncivil.ui.screens.preferencias.PrefScreen
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosScreen
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosVM
+import com.dam.proteccioncivil.ui.screens.sobre.SobreScreen
 import com.dam.proteccioncivil.ui.screens.splash.SplashScreen
+import com.dam.proteccioncivil.ui.screens.usuarios.DatosPersonalesScreen
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosMto
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosScreen
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
@@ -85,7 +87,9 @@ enum class AppScreens(@StringRes val title: Int) {
     Chat(title = R.string.screen_name_chat),
     Preventivos(title = R.string.screen_name_preventidos),
     PreventivosMto(title = R.string.screen_name_preventidos_mto),
-    Recursos(title = R.string.screen_name_resources)
+    Recursos(title = R.string.screen_name_resources),
+    Sobre(title = R.string.screen_name_about),
+    DatosPersonales(title = R.string.screen_name_personal_data),
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -95,6 +99,7 @@ fun MainApp(
     windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
+    val version = "0.0.0"
     val configuration = LocalConfiguration.current
     val activity = (LocalContext.current as? Activity)
     val context = LocalContext.current
@@ -160,7 +165,12 @@ fun MainApp(
                             backButtonNavigation(currentScreen, navController)
                         },
                         navController = navController,
-                        calendarioVM = calendarioVM
+                        calendarioVM = calendarioVM,
+                        showDatosPersonalesScreen = {
+                            usuariosVM.getAll()
+                            navController.navigate(AppScreens.DatosPersonales.name)
+                        },
+                        showSobreScreen = {navController.navigate(AppScreens.Sobre.name)}
                     )
                 }
             },
@@ -194,7 +204,8 @@ fun MainApp(
                 vehiculosVM,
                 preventivosVM,
                 mainVM,
-                loginVM
+                loginVM,
+                version
             )
         }
     }
@@ -287,7 +298,8 @@ private fun NavHostRoutes(
     vehiculosVM: VehiculosVM,
     preventivosVM: PreventivosVM,
     mainVM: MainVM,
-    loginVM: LoginVM
+    loginVM: LoginVM,
+    version: String
 ) {
     NavHost(
         navController = navController,
@@ -301,14 +313,17 @@ private fun NavHostRoutes(
                 } else {
                     navController.navigate(AppScreens.Home.name)
                 }
-            }, "0.0.0")
+            }, version)
         }
         composable(route = AppScreens.Home.name) {
             MainScreen(mainVM)
         }
+        composable(route = AppScreens.Sobre.name) {
+            SobreScreen(version = version)
+        }
         composable(route = AppScreens.Login.name) {
             LoginScreen(
-                version = "0.0.0",
+                version = version,
                 mainVM = mainVM,
                 loginVM = loginVM,
                 onNavUp = {
@@ -336,6 +351,24 @@ private fun NavHostRoutes(
                     }
                 }
             )
+        }
+        composable(route = AppScreens.DatosPersonales.name) {
+            DatosPersonalesScreen(usuariosUiState = usuariosVM.usuariosUiState, usuariosVM = usuariosVM, onShowSnackBar = { mensaje, isSuccess ->
+                scope.launch {
+                    if (isSuccess) {
+                        snackbarHostState.showSnackbar(
+                            mensaje,
+                            "",
+                            duration = SnackbarDuration.Short
+                        )
+                    } else {
+                        snackbarHostState.showSnackbar(
+                            mensaje,
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                }
+            } )
         }
         composable(route = AppScreens.Preferences.name) {
             PrefScreen(
