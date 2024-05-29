@@ -1,12 +1,25 @@
 package com.dam.proteccioncivil.data.model
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.spr.jetpack_loading.components.indicators.BallClipRotateMultipleIndicator
@@ -149,4 +162,44 @@ fun esMayorDeEdad(fechaNacimiento: LocalDateTime): Boolean {
     val ahora = LocalDateTime.now()
     val edad = Period.between(fechaNacimiento.toLocalDate(), ahora.toLocalDate()).years
     return edad >= 18
+}
+
+@Composable
+fun LabelledSwitch(
+    modifier: Modifier = Modifier,
+    checked: Boolean,
+    label: String,
+    onCheckedChange: ((Boolean) -> Unit),
+    colors: SwitchColors = SwitchDefaults.colors(),
+    roundedInt: Int
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .border(
+                BorderStroke(1.dp, color = Color.Black),
+                shape = RoundedCornerShape(roundedInt.dp)
+            )
+            .height(56.dp)
+            .toggleable(
+                value = checked,
+                onValueChange = onCheckedChange,
+                role = Role.Switch
+            )
+    )
+    {
+        Text(
+            text = label,
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(start = 8.dp, end = 16.dp),
+            style = TextStyle(Color.Black)
+        )
+        Switch(
+            checked = checked,
+            onCheckedChange = null,
+            colors = colors,
+            modifier = Modifier.align(Alignment.CenterEnd).padding(end = 8.dp)
+        )
+    }
 }

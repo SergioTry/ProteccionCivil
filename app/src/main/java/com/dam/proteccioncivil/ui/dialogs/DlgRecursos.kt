@@ -14,10 +14,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.theme.AppColors
 
 @Composable
@@ -31,25 +34,25 @@ fun DlgRecursos(
         onDismissRequest = onCancelarClick,
     ) {
         Card(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(8.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(AppColors.dialogColors)
         ) {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp, top = 16.dp)
             ) {
                 Text(
-                    text = "Seleccione un recurso",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = stringResource(id = R.string.recursos_select), color = Color.Black,
+                    modifier = modifier.align(Alignment.CenterHorizontally),
                     textDecoration = TextDecoration.Underline,
                 )
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = modifier.height(32.dp))
                 TextButton(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    modifier = modifier.align(Alignment.CenterHorizontally),
                     onClick = onVoluntariosClick,
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonColors(
@@ -59,11 +62,11 @@ fun DlgRecursos(
                         AppColors.White
                     )
                 ) {
-                    Text("Voluntarios")
+                    Text(stringResource(id = R.string.opc_voluntarios))
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = modifier.height(8.dp))
                 TextButton(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    modifier = modifier.align(Alignment.CenterHorizontally),
                     onClick = onVehiculosClick,
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonColors(
@@ -73,9 +76,9 @@ fun DlgRecursos(
                         AppColors.White
                     )
                 ) {
-                    Text("Vehículos")
+                    Text(stringResource(id = R.string.vehiculos))
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = modifier.height(8.dp))
             }
         }
     }

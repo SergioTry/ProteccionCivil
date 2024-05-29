@@ -23,8 +23,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,18 +41,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
-import com.dam.proteccioncivil.ui.screens.preferencias.LabelledSwitch
+import com.dam.proteccioncivil.data.model.LabelledSwitch
 import com.dam.proteccioncivil.ui.theme.AppColors
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun DatosPersonalesScreen(
+fun DatosPersonales(
     usuariosVM: UsuariosVM,
     onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier
@@ -64,7 +63,6 @@ fun DatosPersonalesScreen(
     val contexto = LocalContext.current
     val activity = (LocalContext.current as? Activity)
     val scrollState = rememberScrollState()
-    var expanded by remember { mutableStateOf(false) }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
@@ -73,7 +71,7 @@ fun DatosPersonalesScreen(
         }
 
         is UsuariosMessageState.Success -> {
-            mensage = if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
+            mensage = if (usuariosVM.usuariosMtoState.codUsuario == "0") {
                 ContextCompat.getString(contexto, R.string.usuario_create_success)
             } else {
                 ContextCompat.getString(contexto, R.string.usuario_edit_success)
@@ -85,7 +83,7 @@ fun DatosPersonalesScreen(
         }
 
         is UsuariosMessageState.Error -> {
-            mensage = if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
+            mensage = if (usuariosVM.usuariosMtoState.codUsuario == "0") {
                 ContextCompat.getString(contexto, R.string.usuario_create_failure)
             } else {
                 ContextCompat.getString(contexto, R.string.usuario_edit_failure)
@@ -106,8 +104,8 @@ fun DatosPersonalesScreen(
     ) {
         Image(
             contentScale = ContentScale.FillHeight,
-            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
-            contentDescription = "Escudo caravaca de la cruz",
+            painter = painterResource(id = R.drawable.fondo),
+            contentDescription = getString(contexto, R.string.fondo_desc),
             modifier = modifier.fillMaxSize(),
         )
         Column(modifier = modifier.verticalScroll(scrollState)) {
@@ -115,12 +113,13 @@ fun DatosPersonalesScreen(
                 modifier = modifier
                     .padding(8.dp),
                 shape = RoundedCornerShape(8.dp),
-                colors = CardDefaults.cardColors(AppColors.posit)
+                colors = CardDefaults.cardColors(Color.White),
+                border = CardDefaults.outlinedCardBorder(true)
             ) {
                 Column {
                     Column(modifier = modifier.padding(12.dp)) {
                         OutlinedTextField(
-                            label = { Text(text = "DNI") },
+                            label = { Text(text = stringResource(id = R.string.dni_lit)) },
                             value = usuariosVM.usuariosMtoState.dni,
                             isError = usuariosVM.usuariosMtoState.dni == "",
                             onValueChange = { usuariosVM.setDni(it) },
@@ -137,7 +136,7 @@ fun DatosPersonalesScreen(
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
                             readOnly = true,
-                            label = { Text(text = "Nombre") },
+                            label = { Text(text = stringResource(id = R.string.nombre_lit)) },
                             isError = usuariosVM.usuariosMtoState.nombre == "",
                             value = usuariosVM.usuariosMtoState.nombre,
                             onValueChange = { usuariosVM.setNombre(it) },
@@ -153,7 +152,7 @@ fun DatosPersonalesScreen(
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
                             readOnly = true,
-                            label = { Text(text = "Apellidos") },
+                            label = { Text(text = stringResource(id = R.string.apellidos_lit)) },
                             isError = usuariosVM.usuariosMtoState.apellidos == "",
                             value = usuariosVM.usuariosMtoState.apellidos,
                             onValueChange = { usuariosVM.setApellidos(it) },
@@ -168,7 +167,7 @@ fun DatosPersonalesScreen(
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
                             readOnly = true,
-                            label = { Text(text = "Correo Electronico") },
+                            label = { Text(text = stringResource(id = R.string.correElectronico_lit)) },
                             isError = usuariosVM.usuariosMtoState.correoElectronico == "",
                             value = usuariosVM.usuariosMtoState.correoElectronico,
                             onValueChange = { usuariosVM.setCorreoElectronico(it) },
@@ -183,7 +182,7 @@ fun DatosPersonalesScreen(
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
                             readOnly = true,
-                            label = { Text(text = "Identificador") },
+                            label = { Text(text = stringResource(id = R.string.identificador_lit)) },
                             isError = usuariosVM.usuariosMtoState.username == "",
                             value = usuariosVM.usuariosMtoState.username,
                             onValueChange = { usuariosVM.setUsername(it) },
@@ -198,7 +197,7 @@ fun DatosPersonalesScreen(
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
                             readOnly = true,
-                            label = { Text(text = "Telefono") },
+                            label = { Text(text = stringResource(id = R.string.telefono_lit)) },
                             isError = usuariosVM.usuariosMtoState.telefono == "",
                             value = usuariosVM.usuariosMtoState.telefono,
                             onValueChange = { usuariosVM.setTelefono(it) },
@@ -212,7 +211,7 @@ fun DatosPersonalesScreen(
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = "Rango") },
+                            label = { Text(text = stringResource(id = R.string.rango_lit)) },
                             isError = usuariosVM.usuariosMtoState.rango == "",
                             value = if (usuariosVM.usuariosMtoState.rango.lowercase() == "jefeservicio") {
                                 "Jefe de Servicio"
@@ -230,19 +229,15 @@ fun DatosPersonalesScreen(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            ),
-                            trailingIcon = {
-                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                            }
+                            )
                         )
-
                         Spacer(modifier = modifier.size(16.dp))
                         Row {
                             Box(
                                 modifier = modifier.weight(1f)
                             ) {
                                 OutlinedTextField(
-                                    label = { Text(text = "Contraseña") },
+                                    label = { Text(text = stringResource(id = R.string.contrasena_lit)) },
                                     isError = usuariosVM.usuariosMtoState.password == "",
                                     value = password,
                                     enabled = usuariosVM.usuariosBusState.changePassword,
@@ -269,14 +264,17 @@ fun DatosPersonalesScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.Edit,
-                                        contentDescription = "Calendar Month Icon"
+                                        contentDescription = getString(
+                                            contexto,
+                                            R.string.editar_desc
+                                        ),
                                     )
                                 }
                             }
                         }
                         if (usuariosVM.usuariosBusState.changePassword) {
                             OutlinedTextField(
-                                label = { Text(text = "Confirmar contraseña") },
+                                label = { Text(text = stringResource(id = R.string.confirmarContrasena_lit)) },
                                 value = confirmPassword,
                                 isError = usuariosVM.usuariosMtoState.confirmPassword == "",
                                 enabled = usuariosVM.usuariosBusState.changePassword,
@@ -293,18 +291,19 @@ fun DatosPersonalesScreen(
                         Spacer(modifier = modifier.size(16.dp))
                         LabelledSwitch(
                             checked = usuariosVM.usuariosMtoState.conductor,
-                            label = "Conductor",
+                            label = stringResource(id = R.string.conductor_lit),
                             onCheckedChange = {
                                 usuariosVM.setConductor(it)
                             },
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.Blue,
                                 uncheckedThumbColor = Color.Gray
-                            )
+                            ),
+                            roundedInt = 4
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = "Fecha Nacimiento") },
+                            label = { Text(text = stringResource(id = R.string.fechaNacimiento_lit)) },
                             isError = usuariosVM.usuariosMtoState.fechaNacimiento == "",
                             value = FormatVisibleDate.use(usuariosVM.usuariosMtoState.fechaNacimiento),
                             onValueChange = {},
@@ -334,7 +333,7 @@ fun DatosPersonalesScreen(
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = AppColors.errorCarmesi)
                     ) {
-                        Text(text = "Cancelar")
+                        Text(text = stringResource(id = R.string.opc_cancel))
                     }
                     Spacer(modifier = modifier.width(100.dp))
                     Button(
@@ -343,34 +342,15 @@ fun DatosPersonalesScreen(
                         enabled = usuariosVM.usuariosMtoState.datosObligatorios ||
                                 usuariosVM.usuariosBusState.changePassword && password.isNotEmpty() && confirmPassword.isNotEmpty(),
                         onClick = {
-                            if (!usuariosVM.usuariosBusState.changePassword && !usuariosVM.usuariosMtoState.codUsuario.equals(
-                                    "0"
-                                )
-                            ) {
-                                if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
-                                    usuariosVM.setNew()
-                                } else {
-                                    usuariosVM.update()
-                                }
-                            } else {
-                                usuariosVM.setPassword(password)
-                                usuariosVM.setConfirmPassword(confirmPassword)
-                                if (usuariosVM.passwordCorrect()) {
-                                    if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
-                                        usuariosVM.setNew()
-                                    } else {
-                                        usuariosVM.update()
-                                    }
-                                }
+                            usuariosVM.setPassword(password)
+                            usuariosVM.setConfirmPassword(confirmPassword)
+                            if (usuariosVM.passwordCorrect()) {
+                                usuariosVM.changePassword()
                             }
                         }
                     ) {
                         Text(
-                            text = if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
-                                "Añadir"
-                            } else {
-                                "Editar"
-                            }
+                            text = stringResource(id = R.string.opc_edit)
                         )
                     }
                 }

@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -54,6 +55,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Loading
 import com.dam.proteccioncivil.data.model.Token
@@ -75,6 +77,7 @@ fun LoginScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     var isChecked by remember { mutableStateOf(savedToken) }
+    val contexto = LocalContext.current
 
     var loading by remember { mutableStateOf(false) }
 
@@ -83,7 +86,7 @@ fun LoginScreen(
         }
 
         is LoginUiState.Success -> {
-            onShowSnackBar("Login correcto", true)
+            onShowSnackBar(getString(contexto, R.string.login_success), true)
             loading = false
             loginVM.resetInfoState()
             onNavUp()
@@ -113,8 +116,8 @@ fun LoginScreen(
         }
         Image(
             contentScale = ContentScale.FillHeight,
-            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
-            contentDescription = "Escudo de Caravaca De La Cruz",
+            painter = painterResource(id = R.drawable.fondo),
+            contentDescription = getString(contexto,R.string.fondo_desc),
             modifier = modifier.fillMaxSize(),
         )
         Column(
@@ -209,7 +212,11 @@ fun LoginScreen(
                         else Icons.Filled.VisibilityOff
                         val description = if (passwordVisible) "Hide password" else "Show password"
                         IconButton(onClick = { if (!loading) passwordVisible = !passwordVisible }) {
-                            Icon(imageVector = image, description, tint = MaterialTheme.colorScheme.secondary)
+                            Icon(
+                                imageVector = image,
+                                description,
+                                tint = MaterialTheme.colorScheme.secondary
+                            )
                         }
                     })
                 Row(
@@ -227,7 +234,7 @@ fun LoginScreen(
                         modifier = modifier.background(Color.White)
                     )
                     Spacer(modifier.size(6.dp))
-                    Text("Recuérdame")
+                    Text(stringResource(R.string.lbl_remember_me))
                 }
             }
             Button(
@@ -247,7 +254,7 @@ fun LoginScreen(
                     disabledContainerColor = AppColors.GreyDisabled
                 )
             ) {
-                Text("Login")
+                Text(stringResource(R.string.lbl_login))
                 Icon(imageVector = Icons.Filled.Check, contentDescription = null)
             }
         }

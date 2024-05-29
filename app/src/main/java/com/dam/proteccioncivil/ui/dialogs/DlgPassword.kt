@@ -27,10 +27,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -42,7 +42,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosMessageState
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
@@ -64,27 +64,28 @@ fun DlgPassword(
     val focusManager = LocalFocusManager.current
     var password1Visible by remember { mutableStateOf(false) }
     var password2Visible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Dialog(
         onDismissRequest = {}
     ) {
         Card(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(8.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp, top = 16.dp)
             ) {
                 Text(
-                    text = "Establezca una nueva contraseña",
-                    modifier = Modifier.padding(start = 8.dp),
+                    text = stringResource(R.string.new_password),
+                    modifier = modifier.padding(start = 8.dp),
                     textDecoration = TextDecoration.Underline,
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = modifier.height(16.dp))
                 OutlinedTextField(
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = Color.LightGray,
@@ -92,7 +93,7 @@ fun DlgPassword(
                         focusedLabelColor = Color.Blue,
                         unfocusedLabelColor = Color.Blue
                     ),
-                    modifier = Modifier
+                    modifier = modifier
                         .align(Alignment.CenterHorizontally)
                         .focusRequester(passwordFocusRequester),
                     value = usuariosVM.usuariosMtoState.password,
@@ -133,7 +134,7 @@ fun DlgPassword(
                         focusedLabelColor = Color.Blue,
                         unfocusedLabelColor = Color.Blue
                     ),
-                    modifier = Modifier
+                    modifier = modifier
                         .align(Alignment.CenterHorizontally)
                         .focusRequester(confirmPasswordFocusRequester),
                     value = usuariosVM.usuariosMtoState.confirmPassword,
@@ -174,9 +175,9 @@ fun DlgPassword(
                         }
                     }
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = modifier.height(4.dp))
                 TextButton(
-                    modifier = Modifier
+                    modifier = modifier
                         .align(Alignment.End)
                         .padding(end = 8.dp),
                     onClick = {
@@ -191,9 +192,9 @@ fun DlgPassword(
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors()
                 ) {
-                    Text("Establecer")
+                    Text(stringResource(id = R.string.btn_establecer))
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = modifier.height(8.dp))
             }
         }
     }
@@ -205,7 +206,7 @@ fun DlgPassword(
         is UsuariosMessageState.Success -> {
             backToLogin()
             // Preferencias
-            onShowSnackBar("Contraseña modificada")
+            onShowSnackBar(getString(context, R.string.password_establecido))
             usuariosVM.resetInfoState()
         }
 

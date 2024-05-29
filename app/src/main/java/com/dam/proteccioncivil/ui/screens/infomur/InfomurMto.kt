@@ -44,8 +44,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
@@ -109,8 +112,8 @@ fun InfomurMto(
     ) {
         Image(
             contentScale = ContentScale.FillHeight,
-            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
-            contentDescription = "Escudo caravaca de la cruz",
+            painter = painterResource(id = R.drawable.fondo),
+            contentDescription = getString(contexto, R.string.fondo_desc),
             modifier = modifier.fillMaxSize(),
         )
         Card(
@@ -128,7 +131,7 @@ fun InfomurMto(
                             modifier = modifier.weight(1f)
                         ) {
                             OutlinedTextField(
-                                label = { Text(text = "Fecha Infomur") },
+                                label = { Text(text = stringResource(id = R.string.fechaInfomur_lit)) },
                                 value = FormatVisibleDate.use(infomursVM.infomursMtoState.fechaInfomur),
                                 isError = infomursVM.infomursMtoState.fechaInfomur == "",
                                 onValueChange = {},
@@ -138,7 +141,8 @@ fun InfomurMto(
                                     unfocusedBorderColor = Color.Black,
                                     focusedLabelColor = Color.Blue,
                                     unfocusedLabelColor = Color.Black
-                                )
+                                ),
+                                textStyle = TextStyle(color = AppColors.Black)
                             )
                             IconButton(
                                 onClick = {
@@ -148,7 +152,8 @@ fun InfomurMto(
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.DateRange,
-                                    contentDescription = "Calendar Month Icon"
+                                    contentDescription = getString(contexto, R.string.fecha_desc),
+                                    tint = AppColors.Black
                                 )
                             }
                         }
@@ -157,7 +162,12 @@ fun InfomurMto(
                     OutlinedTextField(
                         value = infomursVM.infomursMtoState.descripcion,
                         onValueChange = { infomursVM.setDescripcion(it) },
-                        label = { Text(text = "Descripcion") },
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.descripcion_lit),
+                                color = AppColors.Black
+                            )
+                        },
                         isError = infomursVM.infomursMtoState.descripcion == "",
                         modifier = modifier
                             .fillMaxWidth()
@@ -167,7 +177,7 @@ fun InfomurMto(
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
                             unfocusedLabelColor = Color.Black
-                        )
+                        ), textStyle = TextStyle(color = AppColors.Black)
                     )
                     Spacer(modifier = modifier.size(16.dp))
                     ExposedDropdownMenuBox(
@@ -175,17 +185,29 @@ fun InfomurMto(
                         onExpandedChange = { expandedUser1 = !expandedUser1 },
                     ) {
                         OutlinedTextField(
-                            value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario1 }?.nombre
+                            value =
+                            infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario1 }?.nombre
                                 ?: "",
                             onValueChange = { },
                             isError = infomursVM.infomursMtoState.codUsuario1 == "0",
-                            label = { Text("Usuario1") },
+                            label = {
+                                Text(
+                                    stringResource(id = R.string.usuario1_lit),
+                                    color = AppColors.Black
+                                )
+                            },
                             readOnly = true,
                             trailingIcon = {
                                 IconButton(
                                     onClick = { expandedUser1 = true }
                                 ) {
-                                    Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+                                    Icon(
+                                        Icons.Filled.ArrowDropDown,
+                                        contentDescription = getString(
+                                            contexto,
+                                            R.string.drop_down_desc
+                                        )
+                                    )
                                 }
                             },
                             singleLine = true,
@@ -197,7 +219,7 @@ fun InfomurMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ), textStyle = TextStyle(color = AppColors.Black)
                         )
                         DropdownMenu(
                             expanded = expandedUser1,
@@ -226,7 +248,12 @@ fun InfomurMto(
                                 ?: "",
                             onValueChange = { },
                             isError = infomursVM.infomursMtoState.codUsuario2 == "0",
-                            label = { Text("Usuario2") },
+                            label = {
+                                Text(
+                                    stringResource(id = R.string.usuario2_lit),
+                                    color = AppColors.Black
+                                )
+                            },
                             readOnly = true,
                             trailingIcon = {
                                 IconButton(
@@ -244,7 +271,8 @@ fun InfomurMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(color = AppColors.Black)
                         )
                         DropdownMenu(
                             expanded = expandedUser2,

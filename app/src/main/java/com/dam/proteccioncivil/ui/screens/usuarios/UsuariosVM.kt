@@ -76,6 +76,38 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
         )
     }
 
+     fun getUsuarioById() {
+        viewModelScope.launch {
+            usuariosUiState = UsuariosUiState.Loading
+            usuariosUiState = try {
+                var usuario: Usuario?
+                withTimeout(timeoutMillis) {
+                    usuario = usuariosRepository.getUsuarioById(Token.codUsuario!!)
+                }
+                if (usuario != null) {
+                    UsuariosUiState.Success(listOf(usuario!!))
+                } else {
+                    UsuariosUiState.Error("Error, no se ha recibido respuesta del servidor")
+                }
+            } catch (e: IOException) {
+                UsuariosUiState.Error(e.message.toString())
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()
+                val errorBodyString = errorBody?.string()
+                if (errorBodyString != null) {
+                    val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
+                    val error = jsonObject["body"]?.asString ?: ""
+                    Log.e("UsuariosVM (getUsuarioById) ", errorBodyString)
+                    UsuariosUiState.Error(error)
+                } else {
+                    UsuariosUiState.Error("Error")
+                }
+            } catch (ex: TimeoutCancellationException) {
+                UsuariosUiState.Error("Error, no se ha recibido respuesta del servidor")
+            }
+        }
+    }
+
     override fun getAll() {
         viewModelScope.launch {
             usuariosUiState = UsuariosUiState.Loading

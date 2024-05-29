@@ -1,7 +1,6 @@
 package com.dam.proteccioncivil.ui.screens.splash
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,15 +14,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.main.MainVM
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
-import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
@@ -32,6 +32,8 @@ fun SplashScreen(
     showLogin: (Boolean) -> Unit,
     version: String
 ) {
+    val contexto = LocalContext.current
+
     LaunchedEffect(key1 = true) {
         mainVM.getPreferences(loginVM, showLogin)
     }
@@ -46,12 +48,12 @@ fun SplashScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.pcc_icono),
-                contentDescription = "SplashScreen image",
+                contentDescription = getString(contexto, R.string.logo_proteccion_civil_desc),
                 modifier = Modifier.size(200.dp)
             )
 
             Text(
-                text = "¡Bienvenido!",
+                text = stringResource(id = R.string.bienvenido_lit),
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
@@ -60,7 +62,7 @@ fun SplashScreen(
             contentAlignment = Alignment.BottomEnd
         ) {
             Text(
-                text = "Versión: $version",
+                text = stringResource(id = R.string.version_text) + " " + version,
                 modifier = Modifier
                     .padding(16.dp),
                 fontSize = 10.sp,

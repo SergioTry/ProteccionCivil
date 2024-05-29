@@ -71,7 +71,7 @@ fun PantallaMensajes() {
                 }
                 Image(
                     contentScale = ContentScale.FillHeight,
-                    painter = painterResource(id = R.drawable.fondo_removebg_gimp),
+                    painter = painterResource(id = R.drawable.fondo),
                     contentDescription = "Escudo caravaca de la cruz",
                     modifier = Modifier.fillMaxSize(),
                 )

@@ -3,12 +3,11 @@ package com.dam.proteccioncivil.ui.screens.usuarios
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.ui.screens.ErrorScreen
 import com.dam.proteccioncivil.ui.screens.LoadingScreen
 
 @Composable
-fun DatosPersonalesScreen(
+fun DatosPersonales(
     usuariosUiState: UsuariosUiState,
     usuariosVM: UsuariosVM,
     onShowSnackBar: (String, Boolean) -> Unit,
@@ -17,9 +16,9 @@ fun DatosPersonalesScreen(
     when (usuariosUiState) {
         is UsuariosUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
         is UsuariosUiState.Success -> {
-            val usuario = usuariosUiState.usuarios.find { it.codUsuario == Token.codUsuario }
-            usuariosVM.cloneUsuarioMtoState(usuario!!)
-            DatosPersonalesScreen(
+            //Cuando se llama a un único recurso, se recibe una lista con un único objeto, que es el que queremos tratar.
+            usuariosVM.cloneUsuarioMtoState(usuariosUiState.usuarios[0])
+            DatosPersonales(
                 usuariosVM = usuariosVM,
                 onShowSnackBar = onShowSnackBar, modifier = modifier
             )

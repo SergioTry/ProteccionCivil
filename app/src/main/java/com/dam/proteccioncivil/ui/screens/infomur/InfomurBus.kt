@@ -1,6 +1,7 @@
 package com.dam.proteccioncivil.ui.screens.infomur
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
@@ -34,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,8 +93,8 @@ fun InfomurBus(
     ) {
         Image(
             contentScale = ContentScale.FillHeight,
-            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
-            contentDescription = "Escudo caravaca de la cruz",
+            painter = painterResource(id = R.drawable.fondo),
+            contentDescription = getString(contexto, R.string.fondo_desc),
             modifier = modifier.fillMaxSize(),
         )
         LazyColumn(
@@ -103,20 +106,36 @@ fun InfomurBus(
                         onNavUp = { onNavUp() },
                         infomursVM = infomursVM,
                         modifier = modifier,
-                        refresh = refresh
+                        refresh = refresh,
+                        contexto = contexto
                     )
                 }
             }
         )
-        if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .align(Alignment.BottomEnd),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.End
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .align(Alignment.BottomEnd),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.End
+        ) {
+            FloatingActionButton(
+                onClick = {
+                    refresh()
+                },
+                contentColor = Color.White,
+                elevation = FloatingActionButtonDefaults.elevation(8.dp),
+                containerColor = AppColors.Blue,
+                modifier = modifier.padding(end = 8.dp)
             ) {
+                Icon(
+                    imageVector = Icons.Filled.CloudSync,
+                    contentDescription = getString(contexto, R.string.anadir_desc),
+                    tint = AppColors.White
+                )
+            }
+            if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 FloatingActionButton(
                     onClick = {
                         infomursVM.resetInfomurMtoState()
@@ -128,7 +147,7 @@ fun InfomurBus(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Añadir",
+                        contentDescription = getString(contexto, R.string.anadir_desc),
                         tint = AppColors.White
                     )
                 }
@@ -155,7 +174,8 @@ fun InfomurCard(
     onNavUp: () -> Unit,
     modifier: Modifier,
     infomursVM: InfomursVM,
-    refresh: () -> Unit
+    refresh: () -> Unit,
+    contexto: Context
 ) {
     Card(
         modifier = modifier
@@ -169,28 +189,45 @@ fun InfomurCard(
             Column {
                 Row(modifier = modifier.fillMaxWidth()) {
                     Text(
-                        text = "Infomur ${FormatVisibleDate.use(infomur.fechaInfomur)}",
+                        text = stringResource(id = R.string.infomur_lit) + " " +
+                                stringResource(id = R.string.dia_lit) + " " +
+                                FormatVisibleDate.use(infomur.fechaInfomur),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         modifier = modifier
-                            .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+                            .padding(start = 8.dp, top = 8.dp, end = 8.dp),
+                        color = AppColors.Black
                     )
                     if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-                        Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                        Row(
+                            modifier = modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
                             IconButton(onClick = {
                                 infomursVM.resetInfomurMtoState()
                                 infomursVM.cloneInfomurMtoState(infomur)
                                 infomursVM.setShowDlgBorrar(true)
                                 refresh()
                             }) {
-                                Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = getString(
+                                        contexto,
+                                        R.string.eliminar_desc
+                                    ),
+                                    tint = AppColors.Black
+                                )
                             }
                             IconButton(onClick = {
                                 infomursVM.resetInfomurMtoState()
                                 infomursVM.cloneInfomurMtoState(infomur)
                                 onNavUp()
                             }) {
-                                Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
+                                Icon(
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = getString(contexto, R.string.editar_desc),
+                                    tint = AppColors.Black
+                                )
                             }
                         }
                     }
@@ -200,20 +237,23 @@ fun InfomurCard(
                     text = infomur.descripcion,
                     modifier = modifier.padding(start = 8.dp),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = AppColors.Black
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 Text(
                     text = infomursVM.users.find { it.codUsuario.toString() == infomur.codUsuario1.toString() }?.nombre
                         ?: "",
                     modifier = modifier
-                        .padding(start = 8.dp)
+                        .padding(start = 8.dp),
+                    color = AppColors.Black
                 )
                 Text(
                     text = infomursVM.users.find { it.codUsuario.toString() == infomur.codUsuario2.toString() }?.nombre
                         ?: "",
                     modifier = modifier
-                        .padding(start = 8.dp)
+                        .padding(start = 8.dp),
+                    color = AppColors.Black
                 )
             }
         }

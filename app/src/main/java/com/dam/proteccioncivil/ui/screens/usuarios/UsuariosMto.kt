@@ -47,13 +47,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
+import com.dam.proteccioncivil.data.model.LabelledSwitch
 import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
-import com.dam.proteccioncivil.ui.screens.preferencias.LabelledSwitch
 import com.dam.proteccioncivil.ui.theme.AppColors
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,7 +89,7 @@ fun UsuariosMto(
         }
 
         is UsuariosMessageState.Success -> {
-            mensage = if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
+            mensage = if (usuariosVM.usuariosMtoState.codUsuario == "0") {
                 ContextCompat.getString(contexto, R.string.usuario_create_success)
             } else {
                 ContextCompat.getString(contexto, R.string.usuario_edit_success)
@@ -100,7 +102,7 @@ fun UsuariosMto(
         }
 
         is UsuariosMessageState.Error -> {
-            mensage = if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
+            mensage = if (usuariosVM.usuariosMtoState.codUsuario == "0") {
                 ContextCompat.getString(contexto, R.string.usuario_create_failure)
             } else {
                 ContextCompat.getString(contexto, R.string.usuario_edit_failure)
@@ -121,8 +123,8 @@ fun UsuariosMto(
     ) {
         Image(
             contentScale = ContentScale.FillHeight,
-            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
-            contentDescription = "Escudo caravaca de la cruz",
+            painter = painterResource(id = R.drawable.fondo),
+            contentDescription = getString(contexto, R.string.fondo_desc),
             modifier = Modifier.fillMaxSize(),
         )
         Column(modifier = Modifier.verticalScroll(scrollState)) {
@@ -135,7 +137,7 @@ fun UsuariosMto(
                 Column {
                     Column(modifier = Modifier.padding(12.dp)) {
                         OutlinedTextField(
-                            label = { Text(text = "DNI") },
+                            label = { Text(text = stringResource(id = R.string.dni_lit)) },
                             value = usuariosVM.usuariosMtoState.dni,
                             isError = usuariosVM.usuariosMtoState.dni == "",
                             onValueChange = { usuariosVM.setDni(it) },
@@ -150,7 +152,7 @@ fun UsuariosMto(
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = "Nombre") },
+                            label = { Text(text = stringResource(id = R.string.nombre_lit)) },
                             isError = usuariosVM.usuariosMtoState.nombre == "",
                             value = usuariosVM.usuariosMtoState.nombre,
                             onValueChange = { usuariosVM.setNombre(it) },
@@ -165,7 +167,7 @@ fun UsuariosMto(
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = "Apellidos") },
+                            label = { Text(text = stringResource(id = R.string.apellidos_lit)) },
                             isError = usuariosVM.usuariosMtoState.apellidos == "",
                             value = usuariosVM.usuariosMtoState.apellidos,
                             onValueChange = { usuariosVM.setApellidos(it) },
@@ -179,7 +181,7 @@ fun UsuariosMto(
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = "Correo Electronico") },
+                            label = { Text(text = stringResource(id = R.string.correElectronico_lit)) },
                             isError = usuariosVM.usuariosMtoState.correoElectronico == "",
                             value = usuariosVM.usuariosMtoState.correoElectronico,
                             onValueChange = { usuariosVM.setCorreoElectronico(it) },
@@ -193,7 +195,7 @@ fun UsuariosMto(
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = "Identificador") },
+                            label = { Text(text = stringResource(id = R.string.identificador_lit)) },
                             isError = usuariosVM.usuariosMtoState.username == "",
                             value = usuariosVM.usuariosMtoState.username,
                             onValueChange = { usuariosVM.setUsername(it) },
@@ -207,7 +209,7 @@ fun UsuariosMto(
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = "Telefono") },
+                            label = { Text(text = stringResource(id = R.string.telefono_lit)) },
                             isError = usuariosVM.usuariosMtoState.telefono == "",
                             value = usuariosVM.usuariosMtoState.telefono,
                             onValueChange = { usuariosVM.setTelefono(it) },
@@ -225,7 +227,7 @@ fun UsuariosMto(
                             onExpandedChange = { expanded = !expanded }
                         ) {
                             OutlinedTextField(
-                                label = { Text(text = "Rango") },
+                                label = { Text(text = stringResource(id = R.string.rango_lit)) },
                                 isError = usuariosVM.usuariosMtoState.rango == "",
                                 value = if (usuariosVM.usuariosMtoState.rango.lowercase() == "jefeservicio") {
                                     "Jefe de Servicio"
@@ -288,7 +290,7 @@ fun UsuariosMto(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 OutlinedTextField(
-                                    label = { Text(text = "Contraseña") },
+                                    label = { Text(text = stringResource(id = R.string.contrasena_lit)) },
                                     isError = usuariosVM.usuariosMtoState.password == "",
                                     value = password,
                                     enabled = if (usuariosVM.usuariosMtoState.codUsuario == "0") true else changePassword,
@@ -313,13 +315,16 @@ fun UsuariosMto(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.Edit,
-                                        contentDescription = "Calendar Month Icon"
+                                        contentDescription = getString(
+                                            contexto,
+                                            R.string.editar_desc
+                                        )
                                     )
                                 }
                             }
                         }
                         OutlinedTextField(
-                            label = { Text(text = "Confirmar contraseña") },
+                            label = { Text(text = stringResource(id = R.string.confirmarContrasena_lit)) },
                             value = confirmPassword,
                             isError = usuariosVM.usuariosMtoState.confirmPassword == "",
                             enabled = if (usuariosVM.usuariosMtoState.codUsuario == "0") true else changePassword,
@@ -335,14 +340,15 @@ fun UsuariosMto(
                         Spacer(modifier = Modifier.size(16.dp))
                         LabelledSwitch(
                             checked = usuariosVM.usuariosMtoState.conductor,
-                            label = "Conductor",
+                            label = stringResource(id = R.string.conductor_lit),
                             onCheckedChange = {
                                 usuariosVM.setConductor(it)
                             },
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.Blue,
                                 uncheckedThumbColor = Color.Gray
-                            )
+                            ),
+                            roundedInt = 4
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         Row {
@@ -350,7 +356,7 @@ fun UsuariosMto(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 OutlinedTextField(
-                                    label = { Text(text = "Fecha Nacimiento") },
+                                    label = { Text(text = stringResource(id = R.string.fechaNacimiento_lit)) },
                                     isError = usuariosVM.usuariosMtoState.fechaNacimiento == "",
                                     value = FormatVisibleDate.use(usuariosVM.usuariosMtoState.fechaNacimiento),
                                     onValueChange = {},
@@ -370,13 +376,15 @@ fun UsuariosMto(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.DateRange,
-                                        contentDescription = "Calendar Month Icon"
+                                        contentDescription = getString(
+                                            contexto,
+                                            R.string.editar_desc
+                                        )
                                     )
                                 }
                             }
                         }
                     }
-
                     if (usuariosVM.usuariosBusState.showDlgDate) {
                         DlgSeleccionFecha(
                             onClick = {
@@ -404,7 +412,7 @@ fun UsuariosMto(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = AppColors.errorCarmesi)
                 ) {
-                    Text(text = "Cancelar")
+                    Text(text = stringResource(id = R.string.opc_cancel))
                 }
                 Spacer(modifier = Modifier.width(100.dp))
                 Button(
@@ -413,8 +421,8 @@ fun UsuariosMto(
                     enabled = usuariosVM.usuariosMtoState.datosObligatorios && hayCambios ||
                             changePassword && password.isNotEmpty() && confirmPassword.isNotEmpty(),
                     onClick = {
-                        if (!changePassword && !usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
-                            if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
+                        if (!changePassword && usuariosVM.usuariosMtoState.codUsuario != "0") {
+                            if (usuariosVM.usuariosMtoState.codUsuario == "0") {
                                 usuariosVM.setNew()
                             } else {
                                 usuariosVM.update()
@@ -423,7 +431,7 @@ fun UsuariosMto(
                             usuariosVM.setPassword(password)
                             usuariosVM.setConfirmPassword(confirmPassword)
                             if (usuariosVM.passwordCorrect()) {
-                                if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
+                                if (usuariosVM.usuariosMtoState.codUsuario == "0") {
                                     usuariosVM.setNew()
                                 } else {
                                     usuariosVM.update()
@@ -433,10 +441,10 @@ fun UsuariosMto(
                     }
                 ) {
                     Text(
-                        text = if (usuariosVM.usuariosMtoState.codUsuario.equals("0")) {
-                            "Añadir"
+                        text = if (usuariosVM.usuariosMtoState.codUsuario == "0") {
+                            stringResource(id = R.string.opc_create)
                         } else {
-                            "Editar"
+                            stringResource(id = R.string.opc_edit)
                         }
                     )
                 }

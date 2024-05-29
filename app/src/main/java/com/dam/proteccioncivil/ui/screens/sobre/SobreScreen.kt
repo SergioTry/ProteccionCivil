@@ -20,12 +20,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.theme.AppColors
 
@@ -34,6 +36,7 @@ fun SobreScreen(
     version: String
 ) {
     val scrollState = rememberScrollState()
+    val contexto = LocalContext.current
 
     Surface(
         color = MaterialTheme.colorScheme.background,
@@ -48,13 +51,13 @@ fun SobreScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.logochirinostransparente),
-                contentDescription = "SplashScreen image",
+                contentDescription = getString(contexto, R.string.logo_chirinos_desc),
                 modifier = Modifier.size(160.dp),
             )
             Spacer(modifier = Modifier.height(20.dp))
             Image(
                 painter = painterResource(id = R.drawable.pcc_icono),
-                contentDescription = "SplashScreen image",
+                contentDescription = getString(contexto, R.string.logo_proteccion_civil_desc),
                 modifier = Modifier.size(200.dp)
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -85,7 +88,7 @@ fun SobreScreen(
             contentAlignment = Alignment.TopEnd
         ) {
             Text(
-                text = "Versión: $version",
+                text = stringResource(id = R.string.version_text) + " " + version,
                 modifier = Modifier
                     .padding(16.dp),
                 fontSize = 10.sp,

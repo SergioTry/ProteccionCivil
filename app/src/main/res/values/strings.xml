@@ -2,89 +2,165 @@
     <string name="app_name">ProteccionCivil</string>
     <string name="db_name">ProteccionCivilDS</string>
 
-    <!--    Preferencias-->
+    <!--Preferencias-->
     <string name="value_pref_token">""</string>
     <string name="value_pref_defaultsplashtime">1</string>
+    <string name="version">0.0.1</string>
 
-    <!--Nombres de pantallas-->
-    <string name="screen_name_calendar">Calendario</string>
-    <string name="screen_name_chat">Chat</string>
-    <string name="screen_name_news">Anuncios</string>
-    <string name="screen_name_news_mto">Anuncios Mto</string>
-    <string name="screen_name_home">Inicio</string>
-    <string name="screen_name_login">Inicio de sesión</string>
-    <string name="screen_name_vehicles">Vehículos</string>
-    <string name="screen_name_vehicles_mto">Vehiculos Mto</string>
-    <string name="screen_name_splash">Splash</string>
-    <string name="screen_name_preferences">Preferencias</string>
-    <string name="screen_name_preventidos_mto">Preventivos Mto</string>
+    <!-- Nombres de pantallas -->
+    <string name="screen_name_about">Acerca de...</string>
     <string name="screen_name_announces">Anuncios</string>
     <string name="screen_name_announces_mto">Anuncios Mto</string>
+    <string name="screen_name_calendar">Calendario</string>
+    <string name="screen_name_chat">Chat</string>
     <string name="screen_name_guards">Guardias</string>
     <string name="screen_name_guards_mto">Guardias Mto</string>
+    <string name="screen_name_home">Inicio</string>
     <string name="screen_name_infomurs">Infomurs</string>
     <string name="screen_name_infomurs_mto">Infomurs Mto</string>
+    <string name="screen_name_login">Inicio de sesión</string>
+    <string name="screen_name_news">Anuncios</string>
+    <string name="screen_name_news_mto">Anuncios Mto</string>
+    <string name="screen_name_personal_data">Datos personales</string>
+    <string name="screen_name_preferences">Preferencias</string>
+    <string name="screen_name_preventivos">Preventivos</string>
+    <string name="screen_name_preventivos_mto">Preventivos Mto</string>
+    <string name="screen_name_resources">Recursos</string>
+    <string name="screen_name_servicios">Servicios</string>
+    <string name="screen_name_splash">Splash</string>
+    <string name="screen_name_users">Usuarios</string>
+    <string name="screen_name_users_mto">Usuarios Mto</string>
+    <string name="screen_name_vehicles">Vehículos</string>
+    <string name="screen_name_vehicles_mto">Vehículos Mto</string>
+
 
     <!--Opciones de menú-->
     <string name="menu_salir">Salir</string>
 
-    <!--Indicadores-->
-    <string name="retry">Reintentar</string>
+    <!-- Indicadores -->
     <string name="loading">Cargando</string>
-    <string name="loading_failed">Error al cargar los datos</string>
+    <string name="retry">Reintentar</string>
 
-    <!--Opciones-->
+    <!-- Opciones -->
     <string name="opc_accept">Aceptar</string>
     <string name="opc_cancel">Cancelar</string>
+    <string name="opc_voluntarios">Voluntarios</string>
 
-    <!--Preguntas-->
-    <string name="question_exit">¿Quieres cerrar la aplicación?</string>
+    <!-- Preguntas -->
+    <string name="anuncios_delete_confirmation">¿Está seguro de que desea eliminar este anuncio?</string>
+    <string name="exit_confirmation">¿Quieres cerrar la aplicación?</string>
+    <string name="guardia_delete_confirmation">¿Está seguro de que quiere eliminar esta guardia?</string>
+    <string name="infomurs_delete_confirmation">¿Está seguro de que quiere eliminar este infomur?</string>
 
-    <string name="lbl_password">Contraseña</string>
-    <string name="lbl_username">Usuario</string>
-    <string name="username">Nombre de usuario</string>
-    <string name="screen_name_resources">Recursos</string>
-    <string name="screen_name_preventidos">Preventivos</string>
+    <!-- Mensajes de estado -->
+    <string name="anuncio_create_failure">Error al crear el anuncio</string>
     <string name="anuncio_create_success">Creación de anuncio correcta</string>
+    <string name="anuncio_edit_failure">Error al editar el anuncio</string>
     <string name="anuncio_edit_success">Edición de anuncio correcta</string>
-    <string name="anuncio_create_failure">Hubo un error al crear el anuncio</string>
-    <string name="anuncio_edit_failure">Hubo un error al editar el anuncio</string>
+    <string name="anuncios_delete_failure">Error al eliminar el anuncio</string>
     <string name="anuncios_delete_success">Eliminación de anuncio correcta</string>
-    <string name="anuncios_delete_failure">Hubo un error al eliminar el anuncio</string>
-    <string name="infomurs_delete_failure">Hubo un error al eliminar el infomur</string>
-    <string name="infomurs_delete_success">Exito al eliminar el infomur</string>
-    <string name="infomur_create_success">Exito al crear el infomur</string>
-    <string name="infomur_create_failure">Hubo un error al crear el infomur</string>
-    <string name="infomur_edit_success">Exito al editar el infomur</string>
-    <string name="infomur_edit_failure">Hubo un error al editar el infomur</string>
-    <string name="guardia_create_failure">Hubo un error al crear la guardia</string>
-    <string name="guardia_edit_failure">Hubo un error al editar la guardia</string>
-    <string name="guardia_edit_success">Exito al editar la guardia</string>
-    <string name="guardia_create_success">Exito al crear la guardia</string>
-    <string name="guardia_delete_success">Exito al eliminar la guardia</string>
-    <string name="guardia_delete_failure">Hubo un error al eliminar la guardia</string>
-    <string name="anuncios_delete_confirmation">Esta seguro de que desea eliminar este anuncio</string>
-    <string name="infomurs_delete_confirmation">Esta seguro de que quiere eliminar este infomur</string>
-    <string name="guardia_delete_confirmation">Esta seguro de que quiere eliminar esta guardia</string>
-    <string name="screen_name_users">Usuarios</string>
-    <string name="screen_name_users_mto">UsuariosMto</string>
-    <string name="usuario_delete_success">Exito al eliminar el usuario</string>
-    <string name="usuario_delete_failure">Error al eliminar el usuario</string>
-    <string name="usuario_create_success">Exito al crear el usuario</string>
-    <string name="usuario_edit_success">Exito al editar el usuario</string>
+    <string name="guardia_create_failure">Error al crear la guardia</string>
+    <string name="guardia_create_success">Éxito al crear la guardia</string>
+    <string name="guardia_delete_failure">Error al eliminar la guardia</string>
+    <string name="guardia_delete_success">Éxito al eliminar la guardia</string>
+    <string name="guardia_edit_failure">Error al editar la guardia</string>
+    <string name="guardia_edit_success">Éxito al editar la guardia</string>
+    <string name="infomur_create_failure">Error al crear el infomur</string>
+    <string name="infomur_create_success">Éxito al crear el infomur</string>
+    <string name="infomur_edit_failure">Error al editar el infomur</string>
+    <string name="infomur_edit_success">Éxito al editar el infomur</string>
+    <string name="infomurs_delete_failure">Error al eliminar el infomur</string>
+    <string name="infomurs_delete_success">Éxito al eliminar el infomur</string>
+    <string name="loading_failure">Error al cargar los datos</string>
+    <string name="login_success">Login correcto</string>
     <string name="usuario_create_failure">Error al crear el usuario</string>
+    <string name="usuario_create_success">Éxito al crear el usuario</string>
+    <string name="usuario_delete_failure">Error al eliminar el usuario</string>
+    <string name="usuario_delete_success">Éxito al eliminar el usuario</string>
     <string name="usuario_edit_failure">Error al editar el usuario</string>
-    <string name="but_aceptar">Aceptar</string>
-    <string name="but_cancelar">Cancelar</string>
-    <string name="vehiculo_create_success">Vehiculo creado con exito</string>
-    <string name="vehiculo_edit_success">Vehiculo editado con exito</string>
-    <string name="vehiculo_create_failure">Error al crear el vehiculo</string>
-    <string name="vehiculo_edit_failure">Vehiculo editado con exito</string>
-    <string name="vehiculo_delete_success">Vehiculo eliminado con exito</string>
-    <string name="vehiculo_delete_failure">Error al eliminar el vehiculo</string>
-    <string name="screen_name_servicios">Servicios</string>
-    <string name="screen_name_personal_data">Datos personales</string>
-    <string name="screen_name_about">Sobre...</string>
-    <string name="sobre_text">Desarrolladores:\nSergio Férnandez\nPedro Antonio Pozo Sánchez</string>
-    <string name="sobre_descrip_text">Esta aplicación ha sido desarrollada como un\nTFG para el grado superior DAM del instituto\nIES Gines Perez Chirinos y donada al cuerpo\nde voluntaruios de protección civil de Caravaca\nde la cruz.</string>
+    <string name="usuario_edit_success">Éxito al editar el usuario</string>
+    <string name="vehiculo_create_failure">Error al crear el vehículo</string>
+    <string name="vehiculo_create_success">Vehículo creado con éxito</string>
+    <string name="vehiculo_delete_failure">Error al eliminar el vehículo</string>
+    <string name="vehiculo_delete_success">Vehículo eliminado con éxito</string>
+    <string name="vehiculo_edit_failure">Error al editar el vehículo</string>
+    <string name="vehiculo_edit_success">Vehículo editado con éxito</string>
+
+
+    <!---Descripciones-->
+    <string name="logo_chirinos_desc">Imagen del logo del IES Ginés Peréz Chirinos</string>
+    <string name="logo_proteccion_civil_desc">Imagen del logo de Protección civil</string>
+    <string name="fondo_desc">Imagen de fondo para la aplicación</string>
+    <string name="anadir_desc">Icono para identificar el botón de añadir</string>
+    <string name="eliminar_desc">Icono para identificar los botones de borrado</string>
+    <string name="editar_desc">Icono para identificar los botones de edicion</string>
+    <string name="fecha_desc">Icono para identificar los botones de selección de fecha\n</string>
+    <string name="drop_down_desc">Icono para identificar los menus desplegables</string>
+    <string name="error_icon">Icono para mostrar en caso de error</string>
+    <string name="guardia_image_desc">Imagen asociada a guardia</string>
+    <string name="close_icon_desc">Icono asociado para las opciones de cerrar</string>
+
+    <!--Literales-->
+
+    <!-- Textos literales -->
+    <string name="confirmarContrasena_lit">Confirmar contraseña</string>
+    <string name="correElectronico_lit">Correo electrónico</string>
+    <string name="descripcion_lit">Descripción</string>
+    <string name="descripcion_mantenimiento_lit">Descripción próximo mantenimiento</string>
+    <string name="fechaInfomur_lit">Fecha Infomur</string>
+    <string name="fecha_mantenimiento_lit">Fecha próximo mantenimiento</string>
+    <string name="fechaNacimiento_lit">Fecha de nacimiento</string>
+    <string name="new_password">Establecer una nueva contraseña</string>
+    <string name="no_disponible_lit">No disponible</string>
+    <string name="password_establecido">Contraseña modificada</string>
+    <string name="recursos_select">Seleccione un recurso</string>
+    <string name="remember_credentials">Inicio de sesión automático</string>
+    <string name="servicios">Seleccione un Preventivo</string>
+    <string name="sobre_descrip_text">Esta aplicación ha sido desarrollada como un\nTFG para el grado superior DAM del instituto\nIES Ginés Pérez Chirinos y donada al cuerpo\nde voluntarios de protección civil de Caravaca\nde la Cruz.</string>
+    <string name="sobre_text">Desarrolladores:\nSergio Fernández\nPedro Antonio Pozo Sánchez</string>
+    <string name="usuario1_lit">Primer voluntario</string>
+    <string name="usuario2_lit">Segundo voluntario</string>
+    <string name="username">Nombre de usuario</string>
+
+    <!-- Palabras literales -->
+    <string name="anuncio_lit">Anuncio</string>
+    <string name="apellidos_lit">Apellidos</string>
+    <string name="asignar_lit">Asignar</string>
+    <string name="bienvenido_lit">¡Bienvenido!</string>
+    <string name="btn_establecer">Establecer</string>
+    <string name="buscar_lit">Buscar</string>
+    <string name="conductor_lit">Conductor</string>
+    <string name="contrasena_lit">Contraseña</string>
+    <string name="crear_lit">Crear</string>
+    <string name="dia_lit">Día</string>
+    <string name="disponible_lit">Disponible</string>
+    <string name="dni_lit">DNI</string>
+    <string name="filtro_lit">Filtros</string>
+    <string name="guardias">Guardias</string>
+    <string name="identificador_lit">Identificador</string>
+    <string name="infomur_lit">Infomur</string>
+    <string name="infomurs">Infomurs</string>
+    <string name="lbl_login">Inicio de sesión</string>
+    <string name="lbl_password">Contraseña</string>
+    <string name="lbl_remember_me">Recuérdame</string>
+    <string name="lbl_username">Usuario</string>
+    <string name="lit_texto">Texto</string>
+    <string name="marca_lit">Marca</string>
+    <string name="matricula_lit">Matrícula</string>
+    <string name="modelo_lit">Modelo</string>
+    <string name="nombre_lit">Nombre</string>
+    <string name="opc_create">Crear</string>
+    <string name="opc_edit">Editar</string>
+    <string name="preventivos">Preventivos</string>
+    <string name="rango_lit">Rango</string>
+    <string name="telefono_lit">Teléfono</string>
+    <string name="vehiculos">Vehículos</string>
+    <string name="version_text">Versión</string>
+    <string name="fechaGuardia_lit">Fecha guardia</string>
+    <string name="guardia_lit">Guardia</string>
+    <string name="buscar_desc">Icono asociado a las busquedas</string>
+    <string name="refresh_desc">Icono asociado a recargar la pantalla</string>
+    <string name="fecha_preventivo_lit">"Fecha del preventivo: "</string>
+    <string name="fechas_preventivo_lit">Fechas del preventivo:</string>
+
 </resources>

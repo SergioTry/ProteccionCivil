@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import androidx.navigation.NavHostController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
@@ -172,7 +173,6 @@ fun MainTopAppBar(
 fun MainBottomBar(
     menuOptions: Map<ImageVector, String>,
     navController: NavHostController,
-    calendarioVM: CalendarioVM,
     mainVM: MainVM
 ) {
     NavigationBar(containerColor = MaterialTheme.colorScheme.primary) {
@@ -290,7 +290,7 @@ fun CustomSnackBar(
                 if (isSuccess) {
                     Image(
                         painter = painter,
-                        contentDescription = "Imagen asociada a guardia",
+                        contentDescription = getString(context, R.string.guardia_image_desc),
                         modifier = Modifier
                             .weight(0.15f)
                     )
@@ -298,7 +298,7 @@ fun CustomSnackBar(
                 } else {
                     Image(
                         painter = painter,
-                        contentDescription = "Imagen asociada a guardia",
+                        contentDescription = getString(context, R.string.guardia_image_desc),
                         modifier = Modifier
                             .size(50.dp)
                             .weight(0.15f)
@@ -319,7 +319,7 @@ fun CustomSnackBar(
                     }) {
                     Icon(
                         imageVector = Icons.Filled.Close,
-                        contentDescription = "Close snackBar icon",
+                        contentDescription = getString(context, R.string.close_icon_desc),
                         tint = MaterialTheme.colorScheme.tertiary
                     )
                 }

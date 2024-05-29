@@ -22,7 +22,7 @@ fun DlgConfirmacion(
     AlertDialog(
         containerColor = Color.White,
         onDismissRequest = { },
-        text = { Text(stringResource(mensaje)) },
+        text = { Text(stringResource(mensaje), color = Color.Black) },
         modifier = modifier,
         dismissButton = {
             TextButton(

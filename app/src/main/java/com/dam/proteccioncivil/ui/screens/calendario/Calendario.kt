@@ -85,7 +85,7 @@ fun Calendario(
     ) {
         Image(
             contentScale = ContentScale.FillHeight,
-            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
+            painter = painterResource(id = R.drawable.fondo),
             contentDescription = "Escudo de Caravaca De La Cruz",
             modifier = modifier.fillMaxSize(),
         )

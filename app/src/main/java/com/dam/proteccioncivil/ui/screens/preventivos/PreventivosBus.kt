@@ -2,6 +2,7 @@ package com.dam.proteccioncivil.ui.screens.preventivos
 
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
@@ -50,10 +53,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.HasNonNullElement
@@ -111,7 +117,7 @@ fun PreventivosBus(
         Image(
             contentScale = ContentScale.FillHeight,
             painter = painterResource(id = R.drawable.fondo),
-            contentDescription = "Escudo caravaca de la cruz",
+            contentDescription = getString(contexto, R.string.fondo_desc),
             modifier = modifier.fillMaxSize(),
         )
         Column {
@@ -138,20 +144,27 @@ fun PreventivosBus(
                         OutlinedTextField(
                             value = "", // Aquí puedes poner el valor del campo de texto
                             onValueChange = { /* Aquí puedes manejar el cambio del valor */ },
-                            label = { Text("Usuario2") },
+                            label = {
+                                Text(
+                                    stringResource(id = R.string.filtro_lit),
+                                    color = Color.Black
+                                )
+                            },
                             readOnly = true,
                             trailingIcon = {
                                 IconButton(
                                     onClick = { preventivosVM.setExpanded(true) }
                                 ) {
-                                    Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+                                    Icon(Icons.Filled.ArrowDropDown, contentDescription = getString(contexto, R.string.drop_down_desc))
                                 }
                             },
                             singleLine = true,
                             modifier = Modifier
+                                .fillMaxHeight()
                                 .weight(1.5f)
                                 .padding(8.dp)
-                                .focusRequester(focusRequester)
+                                .focusRequester(focusRequester),
+                            textStyle = TextStyle(color = AppColors.Black)
                         )
                         DropdownMenu(
                             expanded = preventivosVM.preventivoBusState.expanded,
@@ -177,20 +190,29 @@ fun PreventivosBus(
                         OutlinedTextField(
                             value = "",
                             onValueChange = { },
-                            label = { Text("Buscar") },
+                            label = {
+                                Text(
+                                    stringResource(id = R.string.buscar_lit),
+                                    color = Color.Black
+                                )
+                            },
                             modifier = Modifier
                                 .weight(1f),
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = Color.White,
                                 errorBorderColor = Color.White,
                                 unfocusedBorderColor = Color.White
-                            )
+                            ), textStyle = TextStyle(color = AppColors.Black)
                         )
                         IconButton(
                             onClick = { /* TODO: Implement search action */ },
                             modifier = Modifier.align(Alignment.CenterVertically)
                         ) {
-                            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+                            Icon(
+                                imageVector = Icons.Filled.Search,
+                                contentDescription = getString(contexto, R.string.buscar_desc),
+                                tint = AppColors.Black
+                            )
                         }
                     }
                 }
@@ -203,21 +225,37 @@ fun PreventivosBus(
                             preventivo = it,
                             onNavUp = onNavUp,
                             modifier = modifier,
-                            preventivosVM = preventivosVM
+                            preventivosVM = preventivosVM,
+                            contexto = contexto
                         )
                     }
                 }
             )
         }
-        if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .align(Alignment.BottomEnd),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.End
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .align(Alignment.BottomEnd),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.End
+        ) {
+            FloatingActionButton(
+                onClick = {
+                    refresh()
+                },
+                contentColor = Color.White,
+                elevation = FloatingActionButtonDefaults.elevation(8.dp),
+                containerColor = AppColors.Blue,
+                modifier = modifier.padding(end = 8.dp)
             ) {
+                Icon(
+                    imageVector = Icons.Filled.CloudSync,
+                    contentDescription = ContextCompat.getString(contexto, R.string.refresh_desc),
+                    tint = AppColors.White
+                )
+            }
+            if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 FloatingActionButton(
                     onClick = {},
                     containerColor = AppColors.Blue,
@@ -225,7 +263,7 @@ fun PreventivosBus(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Añadir",
+                        contentDescription = getString(contexto, R.string.anadir_desc),
                         tint = AppColors.White
                     )
                 }
@@ -239,7 +277,8 @@ fun PreventivoCard(
     preventivo: Preventivo,
     preventivosVM: PreventivosVM,
     onNavUp: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    contexto: Context
 ) {
     Card(
         modifier = modifier
@@ -269,7 +308,8 @@ fun PreventivoCard(
                 Text(
                     text = preventivo.titulo,
                     modifier = modifier
-                        .align(Alignment.CenterVertically)
+                        .align(Alignment.CenterVertically),
+                    color = Color.Black
                 )
                 if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                     Row(
@@ -281,14 +321,22 @@ fun PreventivoCard(
                             preventivosVM.clonePreventivoState(preventivo)
                             preventivosVM.setShowDlgBorrar(true)
                         }) {
-                            Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = getString(contexto, R.string.eliminar_desc),
+                                tint = AppColors.Black
+                            )
                         }
                         IconButton(onClick = {
                             preventivosVM.resetPreventivoState()
                             preventivosVM.clonePreventivoState(preventivo)
                             onNavUp()
                         }) {
-                            Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = getString(contexto, R.string.editar_desc),
+                                tint = AppColors.Black
+                            )
                         }
                     }
                 }
@@ -323,7 +371,8 @@ fun PreventivoCard(
                         horizontalAlignment = Alignment.Start
                     ) {
                         Text(
-                            text = "Fecha del preventivo: ",
+                            text = stringResource(id = R.string.fecha_preventivo_lit),
+                            color = Color.Black
                         )
                         DayItem(
                             date = preventivo.fechaDia1,
@@ -339,7 +388,8 @@ fun PreventivoCard(
                         horizontalAlignment = Alignment.Start
                     ) {
                         Text(
-                            text = "Fechas del preventivo: "
+                            text = stringResource(id = R.string.fechas_preventivo_lit),
+                            color = Color.Black
                         )
                         LazyRow(modifier = modifier.width(290.dp)) {
                             items(
@@ -386,7 +436,8 @@ fun DayItem(date: String?, modifier: Modifier, multipleDays: Boolean) {
                 text = FormatVisibleDate.use(date),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = modifier.align(Alignment.CenterHorizontally)
+                modifier = modifier.align(Alignment.CenterHorizontally),
+                color = Color.Black
             )
         }
     }

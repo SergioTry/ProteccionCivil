@@ -39,12 +39,12 @@ fun DlgSeleccionFecha(
             TextButton(onClick = {
                 onClick(FormatDate.use(selectedDate.toString()))
             }) {
-                Text(text = stringResource(id = R.string.but_aceptar))
+                Text(text = stringResource(id = R.string.opc_accept))
             }
         },
         dismissButton = {
             TextButton(onClick = { onClick("") }) {
-                Text(text = stringResource(id = R.string.but_cancelar))
+                Text(text = stringResource(id = R.string.opc_cancel))
             }
         },
         modifier = modifier

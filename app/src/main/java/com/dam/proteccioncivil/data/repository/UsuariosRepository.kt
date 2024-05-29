@@ -9,6 +9,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
 interface UsuariosRepository {
     suspend fun updateUsuario(codUsuario: Int, usuarioData: Map<String, String>)
     suspend fun getUsuarios(): List<Usuario>
+    suspend fun getUsuarioById(codUsuario: Int): Usuario?
     suspend fun getUsuariosPreventivo(codPreventivo: Int): List<Usuario>
     suspend fun deleteUsuario(id: Int)
     suspend fun setUsuario(usuarioData: Map<String, String>)
@@ -25,6 +26,11 @@ class NetworkUsuariosRepository(
     override suspend fun getUsuarios(): List<Usuario> {
         val apiResponse = usuariosApiService.getUsuarios("Bearer ${Token.token}")
         return Json.decodeFromJsonElement<List<Usuario>>(apiResponse.body)
+    }
+
+    override suspend fun getUsuarioById(codUsuario: Int): Usuario? {
+        val apiResponse = usuariosApiService.getUsuarioByCodUsuario("Bearer ${Token.token}",codUsuario)
+        return Json.decodeFromJsonElement<Usuario?>(apiResponse.body)
     }
 
     override suspend fun getUsuariosPreventivo(codPreventivo: Int): List<Usuario> {

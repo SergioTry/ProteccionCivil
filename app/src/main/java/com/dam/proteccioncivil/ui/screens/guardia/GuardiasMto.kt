@@ -44,8 +44,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
@@ -75,7 +78,7 @@ fun GuardiaMto(
         }
 
         is GuardiasMessageState.Success -> {
-            mensage = if (guardiasVM.guardiasMtoState.codGuardia.equals("0")) {
+            mensage = if (guardiasVM.guardiasMtoState.codGuardia == "0") {
                 ContextCompat.getString(contexto, R.string.guardia_create_success)
             } else {
                 ContextCompat.getString(contexto, R.string.guardia_edit_success)
@@ -88,7 +91,7 @@ fun GuardiaMto(
         }
 
         is GuardiasMessageState.Error -> {
-            mensage = if (guardiasVM.guardiasMtoState.codGuardia.equals("0")) {
+            mensage = if (guardiasVM.guardiasMtoState.codGuardia == "0") {
                 ContextCompat.getString(contexto, R.string.guardia_create_failure)
             } else {
                 ContextCompat.getString(contexto, R.string.guardia_edit_failure)
@@ -97,7 +100,7 @@ fun GuardiaMto(
             guardiasVM.resetInfoState()
         }
     }
-    if(guardiasVM.guardiasMtoState.codGuardia == "0"){
+    if (guardiasVM.guardiasMtoState.codGuardia == "0") {
         guardiasVM.setFechaGuardia(FormatDate.use())
     }
 
@@ -108,8 +111,8 @@ fun GuardiaMto(
     ) {
         Image(
             contentScale = ContentScale.FillHeight,
-            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
-            contentDescription = "Escudo caravaca de la cruz",
+            painter = painterResource(id = R.drawable.fondo),
+            contentDescription = getString(contexto, R.string.fondo_desc),
             modifier = modifier.fillMaxSize(),
         )
         Card(
@@ -126,7 +129,7 @@ fun GuardiaMto(
                             modifier = modifier.weight(1f)
                         ) {
                             OutlinedTextField(
-                                label = { Text(text = "Fecha Infomur") },
+                                label = { Text(text = stringResource(id = R.string.fechaGuardia_lit)) },
                                 value = FormatVisibleDate.use(guardiasVM.guardiasMtoState.fechaGuardia),
                                 onValueChange = {},
                                 modifier = modifier.fillMaxWidth(),
@@ -136,7 +139,8 @@ fun GuardiaMto(
                                     unfocusedBorderColor = Color.Black,
                                     focusedLabelColor = Color.Blue,
                                     unfocusedLabelColor = Color.Black
-                                )
+                                ),
+                                textStyle = TextStyle(color = Color.Black)
                             )
                             IconButton(
                                 onClick = {
@@ -146,7 +150,8 @@ fun GuardiaMto(
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.DateRange,
-                                    contentDescription = "Calendar Month Icon"
+                                    contentDescription = getString(contexto, R.string.fecha_desc),
+                                    tint = Color.Black
                                 )
                             }
                         }
@@ -154,7 +159,7 @@ fun GuardiaMto(
                     Spacer(modifier = modifier.size(16.dp))
                     OutlinedTextField(
                         value = guardiasVM.guardiasMtoState.descripcion,
-                        label = { Text("Descripción") },
+                        label = { Text(stringResource(id = R.string.descripcion_lit)) },
                         onValueChange = {
                             guardiasVM.setDescripcion(it)
                         }, modifier = modifier
@@ -166,7 +171,8 @@ fun GuardiaMto(
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
                             unfocusedLabelColor = Color.Black
-                        )
+                        ),
+                        textStyle = TextStyle(color = Color.Black)
                     )
                     ExposedDropdownMenuBox(
                         expanded = expandedUser1,
@@ -177,13 +183,20 @@ fun GuardiaMto(
                                 ?: "",
                             onValueChange = { },
                             isError = guardiasVM.guardiasMtoState.codUsuario1 == "0",
-                            label = { Text("Usuario1") },
+                            label = { Text(stringResource(id = R.string.usuario1_lit)) },
                             readOnly = true,
                             trailingIcon = {
                                 IconButton(
                                     onClick = { expandedUser1 = true }
                                 ) {
-                                    Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+                                    Icon(
+                                        Icons.Filled.ArrowDropDown,
+                                        contentDescription = getString(
+                                            contexto,
+                                            R.string.drop_down_desc
+                                        ),
+                                        tint = Color.Black
+                                    )
                                 }
                             },
                             singleLine = true,
@@ -195,7 +208,8 @@ fun GuardiaMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(color = Color.Black)
                         )
                         DropdownMenu(
                             expanded = expandedUser1,
@@ -223,13 +237,20 @@ fun GuardiaMto(
                                 ?: "",
                             onValueChange = {},
                             isError = guardiasVM.guardiasMtoState.codUsuario2 == "0",
-                            label = { Text("Usuario2") },
+                            label = { Text(stringResource(id = R.string.usuario2_lit)) },
                             readOnly = true,
                             trailingIcon = {
                                 IconButton(
                                     onClick = { expandedUser2 = true }
                                 ) {
-                                    Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+                                    Icon(
+                                        Icons.Filled.ArrowDropDown,
+                                        contentDescription = getString(
+                                            contexto,
+                                            R.string.drop_down_desc
+                                        ),
+                                        tint = Color.Black
+                                    )
                                 }
                             },
                             singleLine = true,
@@ -241,7 +262,8 @@ fun GuardiaMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(color = Color.Black)
                         )
                         DropdownMenu(
                             expanded = expandedUser2,
@@ -277,7 +299,7 @@ fun GuardiaMto(
                     activity?.onBackPressed()
                 }
             ) {
-                Text(text = "Cancelar")
+                Text(text = stringResource(id = R.string.opc_cancel))
             }
             Spacer(modifier = modifier.width(100.dp))
             Button(
@@ -295,10 +317,10 @@ fun GuardiaMto(
                 Text(
                     text =
                     if (guardiasVM.guardiasMtoState.codGuardia == "0") {
-                        "Añadir"
+                        stringResource(id = R.string.opc_create)
                     } else {
-                        "Editar"
-                    }
+                        stringResource(id = R.string.opc_edit)
+                    }, color = Color.Black
                 )
             }
         }

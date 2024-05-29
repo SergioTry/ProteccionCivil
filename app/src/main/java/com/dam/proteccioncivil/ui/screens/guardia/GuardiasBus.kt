@@ -1,6 +1,7 @@
 package com.dam.proteccioncivil.pantallas.anuncios
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
@@ -34,10 +36,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.Guardia
@@ -94,8 +98,8 @@ fun GuardiasBus(
     ) {
         Image(
             contentScale = ContentScale.FillHeight,
-            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
-            contentDescription = "Escudo caravaca de la cruz",
+            painter = painterResource(id = R.drawable.fondo),
+            contentDescription = getString(contexto, R.string.fondo_desc),
             modifier = modifier.fillMaxSize(),
         )
         LazyColumn(
@@ -106,20 +110,36 @@ fun GuardiasBus(
                         guardia = it,
                         onNavUp = { onNavUp() },
                         guardiasVM = guardiasVM,
-                        modifier = modifier
+                        modifier = modifier,
+                        contexto = contexto
                     )
                 }
             }
         )
-        if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .align(Alignment.BottomEnd),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.End
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .align(Alignment.BottomEnd),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.End
+        ) {
+            FloatingActionButton(
+                onClick = {
+                    refresh()
+                },
+                contentColor = Color.White,
+                elevation = FloatingActionButtonDefaults.elevation(8.dp),
+                containerColor = AppColors.Blue,
+                modifier = modifier.padding(end = 8.dp)
             ) {
+                Icon(
+                    imageVector = Icons.Filled.CloudSync,
+                    contentDescription = getString(contexto, R.string.anadir_desc),
+                    tint = AppColors.White
+                )
+            }
+            if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 FloatingActionButton(
                     onClick = {
                         guardiasVM.resetGuardiaMtoState()
@@ -131,7 +151,7 @@ fun GuardiasBus(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Añadir",
+                        contentDescription = getString(contexto, R.string.anadir_desc),
                         tint = AppColors.White
                     )
                 }
@@ -157,7 +177,8 @@ fun GuardiaCard(
     guardia: Guardia,
     guardiasVM: GuardiasVM,
     onNavUp: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    contexto: Context
 ) {
     Card(
         modifier = modifier
@@ -171,11 +192,14 @@ fun GuardiaCard(
             Column {
                 Row(modifier = modifier.fillMaxWidth()) {
                     Text(
-                        text = "Guardia ${FormatVisibleDate.use(guardia.fechaGuardia)}",
+                        text = stringResource(id = R.string.guardia_lit) + " " + FormatVisibleDate.use(
+                            guardia.fechaGuardia
+                        ),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         modifier = modifier
-                            .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+                            .padding(start = 8.dp, top = 8.dp, end = 8.dp),
+                        color = Color.Black
                     )
                     if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                         Row(
@@ -187,14 +211,25 @@ fun GuardiaCard(
                                 guardiasVM.cloneGuardiaMtoState(guardia)
                                 guardiasVM.setShowDlgBorrar(true)
                             }) {
-                                Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = getString(
+                                        contexto,
+                                        R.string.eliminar_desc
+                                    ),
+                                    tint = Color.Black
+                                )
                             }
                             IconButton(onClick = {
                                 guardiasVM.resetGuardiaMtoState()
                                 guardiasVM.cloneGuardiaMtoState(guardia)
                                 onNavUp()
                             }) {
-                                Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
+                                Icon(
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = getString(contexto, R.string.editar_desc),
+                                    tint = Color.Black
+                                )
                             }
                         }
                     }
@@ -204,20 +239,23 @@ fun GuardiaCard(
                     text = guardia.descripcion,
                     modifier = modifier.padding(start = 8.dp),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = Color.Black
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 Text(
                     text = guardiasVM.users.find { it.codUsuario.toString() == guardia.codUsuario1.toString() }?.nombre
                         ?: "",
                     modifier = modifier
-                        .padding(start = 8.dp)
+                        .padding(start = 8.dp),
+                    color = Color.Black
                 )
                 Text(
                     text = guardiasVM.users.find { it.codUsuario.toString() == guardia.codUsuario2.toString() }?.nombre
                         ?: "",
                     modifier = modifier
-                        .padding(start = 8.dp)
+                        .padding(start = 8.dp),
+                    color = Color.Black
                 )
             }
         }

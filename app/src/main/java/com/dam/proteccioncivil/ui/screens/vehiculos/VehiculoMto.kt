@@ -34,8 +34,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
@@ -54,7 +56,7 @@ fun VehiculoMto(
     val contexto = LocalContext.current
     val activity = (LocalContext.current as? Activity)
 
-    if (vehiculosVM.vehiculosMtoState.codVehiculo.equals("0")) {
+    if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
         vehiculosVM.setFechaMantenimiento(FormatDate.use())
     }
 
@@ -63,7 +65,7 @@ fun VehiculoMto(
         }
 
         is VehiculoMessageState.Success -> {
-            mensage = if (vehiculosVM.vehiculosMtoState.codVehiculo.equals("0")) {
+            mensage = if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
                 ContextCompat.getString(contexto, R.string.vehiculo_create_success)
             } else {
                 ContextCompat.getString(contexto, R.string.vehiculo_edit_success)
@@ -76,7 +78,7 @@ fun VehiculoMto(
         }
 
         is VehiculoMessageState.Error -> {
-            mensage = if (vehiculosVM.vehiculosMtoState.codVehiculo.equals("0")) {
+            mensage = if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
                 ContextCompat.getString(contexto, R.string.vehiculo_create_failure)
             } else {
                 ContextCompat.getString(contexto, R.string.vehiculo_edit_failure)
@@ -86,7 +88,7 @@ fun VehiculoMto(
         }
     }
 
-    if (vehiculosVM.vehiculosMtoState.codVehiculo.equals("0")) {
+    if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
         vehiculosVM.setFechaMantenimiento(FormatDate.use())
     }
 
@@ -99,8 +101,8 @@ fun VehiculoMto(
     ) {
         Image(
             contentScale = ContentScale.FillHeight,
-            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
-            contentDescription = "Escudo caravaca de la cruz",
+            painter = painterResource(id = R.drawable.fondo),
+            contentDescription = stringResource(id = R.string.fondo_desc),
             modifier = Modifier.fillMaxSize(),
         )
         Card(
@@ -127,7 +129,7 @@ fun VehiculoMto(
 //                    )
                     // Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
-                        label = { Text(text = "Matricula") },
+                        label = { Text(text = stringResource(id = R.string.matricula_lit)) },
                         value = vehiculosVM.vehiculosMtoState.matricula,
                         onValueChange = { vehiculosVM.setMatricula(it) },
                         modifier = Modifier.fillMaxWidth(),
@@ -141,7 +143,7 @@ fun VehiculoMto(
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
-                        label = { Text(text = "Marca") },
+                        label = { Text(text = stringResource(id = R.string.marca_lit)) },
                         value = vehiculosVM.vehiculosMtoState.marca,
                         onValueChange = { vehiculosVM.setMarca(it) },
                         modifier = Modifier.fillMaxWidth(),
@@ -155,7 +157,7 @@ fun VehiculoMto(
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
-                        label = { Text(text = "Modelo") },
+                        label = { Text(text = stringResource(id = R.string.modelo_lit)) },
                         value = vehiculosVM.vehiculosMtoState.modelo,
                         onValueChange = { vehiculosVM.setModelo(it) },
                         modifier = Modifier.fillMaxWidth(),
@@ -173,7 +175,7 @@ fun VehiculoMto(
                             modifier = Modifier.weight(1f)
                         ) {
                             OutlinedTextField(
-                                label = { Text(text = "Fecha proximo mantenimiento") },
+                                label = { Text(text = stringResource(id = R.string.fecha_mantenimiento_lit)) },
                                 value = FormatVisibleDate.use(vehiculosVM.vehiculosMtoState.fechaMantenimiento),
                                 onValueChange = {},
                                 modifier = Modifier.fillMaxWidth(),
@@ -187,14 +189,14 @@ fun VehiculoMto(
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.DateRange,
-                                    contentDescription = "Calendar Month Icon"
+                                    contentDescription = getString(contexto, R.string.fecha_desc)
                                 )
                             }
                         }
                     }
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
-                        label = { Text(text = "Descripción proximo mantenimiento") },
+                        label = { Text(text = stringResource(id = R.string.descripcion_mantenimiento_lit)) },
                         value = vehiculosVM.vehiculosMtoState.descripcion.let { if(it != "null" && it != null) vehiculosVM.vehiculosMtoState.descripcion else "" }
                             ?: "",
                         onValueChange = { vehiculosVM.setDescripcion(it) },
@@ -225,14 +227,14 @@ fun VehiculoMto(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = AppColors.errorCarmesi),
             ) {
-                Text(text = "Cancelar")
+                Text(text = stringResource(id = R.string.opc_cancel))
             }
             Spacer(modifier = Modifier.width(100.dp))
             Button(
                 enabled = vehiculosVM.vehiculosMtoState.datosObligatorios,
                 colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
                 onClick = {
-                    if (vehiculosVM.vehiculosMtoState.codVehiculo.equals("0")) {
+                    if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
                         vehiculosVM.setNew()
                     } else {
                         vehiculosVM.update()
@@ -240,10 +242,10 @@ fun VehiculoMto(
                 }
             ) {
                 Text(
-                    text = if (vehiculosVM.vehiculosMtoState.codVehiculo.equals("0")) {
-                        "Añadir"
+                    text = if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
+                        stringResource(id = R.string.opc_create)
                     } else {
-                        "Editar"
+                        stringResource(id = R.string.opc_edit)
                     }
                 )
             }

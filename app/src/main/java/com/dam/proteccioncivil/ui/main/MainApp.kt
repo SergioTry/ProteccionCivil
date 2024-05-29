@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -56,7 +57,7 @@ import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosScreen
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosVM
 import com.dam.proteccioncivil.ui.screens.sobre.SobreScreen
 import com.dam.proteccioncivil.ui.screens.splash.SplashScreen
-import com.dam.proteccioncivil.ui.screens.usuarios.DatosPersonalesScreen
+import com.dam.proteccioncivil.ui.screens.usuarios.DatosPersonales
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosMto
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosScreen
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
@@ -85,8 +86,8 @@ enum class AppScreens(@StringRes val title: Int) {
     Infomurs(title = R.string.screen_name_infomurs),
     InfomursMto(title = R.string.screen_name_infomurs_mto),
     Chat(title = R.string.screen_name_chat),
-    Preventivos(title = R.string.screen_name_preventidos),
-    PreventivosMto(title = R.string.screen_name_preventidos_mto),
+    Preventivos(title = R.string.screen_name_preventivos),
+    PreventivosMto(title = R.string.screen_name_preventivos_mto),
     Recursos(title = R.string.screen_name_resources),
     Sobre(title = R.string.screen_name_about),
     DatosPersonales(title = R.string.screen_name_personal_data),
@@ -99,7 +100,6 @@ fun MainApp(
     windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
-    val version = "0.0.0"
     val configuration = LocalConfiguration.current
     val activity = (LocalContext.current as? Activity)
     val context = LocalContext.current
@@ -167,7 +167,7 @@ fun MainApp(
                         navController = navController,
                         calendarioVM = calendarioVM,
                         showDatosPersonalesScreen = {
-                            usuariosVM.getAll()
+                            usuariosVM.getUsuarioById()
                             navController.navigate(AppScreens.DatosPersonales.name)
                         },
                         showSobreScreen = {navController.navigate(AppScreens.Sobre.name)}
@@ -179,8 +179,7 @@ fun MainApp(
                     MainBottomBar(
                         menuOptions = menuOptions,
                         navController = navController,
-                        mainVM = mainVM,
-                        calendarioVM = calendarioVM
+                        mainVM = mainVM
                     )
                 }
             },
@@ -204,8 +203,7 @@ fun MainApp(
                 vehiculosVM,
                 preventivosVM,
                 mainVM,
-                loginVM,
-                version
+                loginVM
             )
         }
     }
@@ -249,7 +247,7 @@ fun MainApp(
                 mainVM.setShowDlgSalir(false)
                 activity?.finish()
             },
-            mensaje = R.string.question_exit
+            mensaje = R.string.exit_confirmation
         )
     }
     if (mainVM.uiMainState.showDlgServicios) {
@@ -298,9 +296,9 @@ private fun NavHostRoutes(
     vehiculosVM: VehiculosVM,
     preventivosVM: PreventivosVM,
     mainVM: MainVM,
-    loginVM: LoginVM,
-    version: String
+    loginVM: LoginVM
 ) {
+    val context = LocalContext.current
     NavHost(
         navController = navController,
         startDestination = AppScreens.Splash.name,
@@ -313,17 +311,17 @@ private fun NavHostRoutes(
                 } else {
                     navController.navigate(AppScreens.Home.name)
                 }
-            }, version)
+            }, getString(context,R.string.version))
         }
         composable(route = AppScreens.Home.name) {
             MainScreen(mainVM)
         }
         composable(route = AppScreens.Sobre.name) {
-            SobreScreen(version = version)
+            SobreScreen(version = getString(context,R.string.version))
         }
         composable(route = AppScreens.Login.name) {
             LoginScreen(
-                version = version,
+                version = getString(context,R.string.version),
                 mainVM = mainVM,
                 loginVM = loginVM,
                 onNavUp = {
@@ -353,7 +351,7 @@ private fun NavHostRoutes(
             )
         }
         composable(route = AppScreens.DatosPersonales.name) {
-            DatosPersonalesScreen(usuariosUiState = usuariosVM.usuariosUiState, usuariosVM = usuariosVM, onShowSnackBar = { mensaje, isSuccess ->
+            DatosPersonales(usuariosUiState = usuariosVM.usuariosUiState, usuariosVM = usuariosVM, onShowSnackBar = { mensaje, isSuccess ->
                 scope.launch {
                     if (isSuccess) {
                         snackbarHostState.showSnackbar(
@@ -372,10 +370,7 @@ private fun NavHostRoutes(
         }
         composable(route = AppScreens.Preferences.name) {
             PrefScreen(
-                mainVM = mainVM,
-                onNavUp = {
-                    navController.navigate(AppScreens.Home.name)
-                }
+                mainVM = mainVM
             )
         }
 

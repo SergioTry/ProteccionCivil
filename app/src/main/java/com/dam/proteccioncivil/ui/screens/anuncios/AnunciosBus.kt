@@ -1,6 +1,7 @@
 package com.dam.proteccioncivil.pantallas.anuncios
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
@@ -35,9 +37,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Anuncio
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
@@ -94,8 +98,8 @@ fun AnunciosBus(
     ) {
         Image(
             contentScale = ContentScale.FillHeight,
-            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
-            contentDescription = "Escudo caravaca de la cruz",
+            painter = painterResource(id = R.drawable.fondo),
+            contentDescription = getString(contexto, R.string.fondo_desc),
             modifier = modifier.fillMaxSize(),
         )
         LazyColumn(
@@ -107,20 +111,36 @@ fun AnunciosBus(
                         onNavUp = { onNavUp() },
                         anunciosVM = anunciosVM,
                         refresh = { refresh() },
-                        modifier = modifier
+                        modifier = modifier,
+                        contexto = contexto
                     )
                 }
             }
         )
-        if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .align(Alignment.BottomEnd),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.End
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .align(Alignment.BottomEnd),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.End
+        ) {
+            FloatingActionButton(
+                onClick = {
+                    refresh()
+                },
+                contentColor = Color.White,
+                elevation = FloatingActionButtonDefaults.elevation(8.dp),
+                containerColor = AppColors.Blue,
+                modifier = modifier.padding(end = 8.dp)
             ) {
+                Icon(
+                    imageVector = Icons.Filled.CloudSync,
+                    contentDescription = getString(contexto, R.string.anadir_desc),
+                    tint = AppColors.White
+                )
+            }
+            if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 FloatingActionButton(
                     onClick = {
                         anunciosVM.resetAnuncioMtoState()
@@ -132,20 +152,20 @@ fun AnunciosBus(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Añadir",
+                        contentDescription = getString(contexto, R.string.anadir_desc),
                         tint = AppColors.White
                     )
                 }
             }
         }
-        if (anunciosVM.anunciosBusState.showDlgDate) {
+        if (anunciosVM.anunciosBusState.showDlgBorrar) {
             DlgConfirmacion(
                 mensaje = R.string.anuncios_delete_confirmation,
                 onCancelarClick = {
-                    anunciosVM.setShowDlgDate(false)
+                    anunciosVM.setShowDlgBorrar(false)
                 },
                 onAceptarClick = {
-                    anunciosVM.setShowDlgDate(false)
+                    anunciosVM.setShowDlgBorrar(false)
                     anunciosVM.setLoading(true)
                     anunciosVM.deleteBy()
                 }
@@ -160,7 +180,8 @@ fun AnuncioCard(
     anunciosVM: AnunciosVM,
     onNavUp: () -> Unit,
     refresh: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    contexto: Context
 ) {
     Card(
         modifier = modifier
@@ -179,9 +200,12 @@ fun AnuncioCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Anuncio " + FormatVisibleDate.use(anuncio.fechaPublicacion),
+                        text = stringResource(id = R.string.anuncio_lit) + " " + FormatVisibleDate.use(
+                            anuncio.fechaPublicacion
+                        ),
                         modifier = Modifier.padding(top = 8.dp),
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        color = AppColors.Black
                     )
                     if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                         Row {
@@ -190,11 +214,15 @@ fun AnuncioCard(
                                 onClick = {
                                     anunciosVM.resetAnuncioMtoState()
                                     anunciosVM.cloneAnuncioMtoState(anuncio)
-                                    anunciosVM.deleteBy()
+                                    anunciosVM.setShowDlgBorrar(true)
                                     anunciosVM.setLoading(true)
                                     refresh()
                                 }) {
-                                Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = getString(contexto, R.string.eliminar_desc),
+                                    tint = AppColors.Black
+                                )
                             }
                             IconButton(
                                 enabled = !anunciosVM.anunciosBusState.loading,
@@ -203,7 +231,11 @@ fun AnuncioCard(
                                     anunciosVM.cloneAnuncioMtoState(anuncio)
                                     onNavUp()
                                 }) {
-                                Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
+                                Icon(
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = getString(contexto, R.string.eliminar_desc),
+                                    tint = AppColors.Black
+                                )
                             }
                         }
                     }
@@ -217,6 +249,7 @@ fun AnuncioCard(
                     Text(
                         text = anuncio.texto,
                         fontSize = 16.sp,
+                        color = AppColors.Black
                     )
                 }
             }

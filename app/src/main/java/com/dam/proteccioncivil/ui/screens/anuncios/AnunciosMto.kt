@@ -30,8 +30,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.Loading
@@ -95,8 +97,8 @@ fun AnunciosMto(
     ) {
         Image(
             contentScale = ContentScale.FillHeight,
-            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
-            contentDescription = "Escudo caravaca de la cruz",
+            painter = painterResource(id = R.drawable.fondo),
+            contentDescription = getString(contexto, R.string.fondo_desc),
             modifier = Modifier.fillMaxSize(),
         )
         Card(
@@ -112,7 +114,12 @@ fun AnunciosMto(
                     OutlinedTextField(
                         value = anunciosVM.anunciosMtoState.texto,
                         onValueChange = { anunciosVM.setTexto(it) },
-                        label = { Text(text = "Texto") },
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.lit_texto),
+                                color = AppColors.Black
+                            )
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxHeight(),
@@ -121,7 +128,7 @@ fun AnunciosMto(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
+                            unfocusedLabelColor = Color.Black,
                         )
                     )
                 }
@@ -144,7 +151,7 @@ fun AnunciosMto(
                 enabled = !anunciosVM.anunciosBusState.loading,
                 colors = ButtonDefaults.buttonColors(containerColor = AppColors.errorCarmesi)
             ) {
-                Text(text = "Cancelar")
+                Text(text = stringResource(id = R.string.opc_cancel), color = AppColors.Black)
             }
             Spacer(modifier = Modifier.width(100.dp))
             Button(
@@ -163,10 +170,11 @@ fun AnunciosMto(
                 Text(
                     text =
                     if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
-                        "Añadir"
+                        stringResource(id = R.string.opc_create)
                     } else {
-                        "Editar"
-                    }
+                        stringResource(id = R.string.opc_edit)
+                    },
+                    color = AppColors.Black
                 )
             }
         }

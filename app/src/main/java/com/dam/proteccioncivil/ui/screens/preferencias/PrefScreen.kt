@@ -2,41 +2,26 @@ package com.dam.proteccioncivil.ui.screens.preferencias
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.selection.toggleable
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.LabelledSwitch
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.ui.main.MainVM
-import com.dam.proteccioncivil.ui.theme.AppColors
 
 
 @Composable
 fun PrefScreen(
     mainVM: MainVM,
-    onNavUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -46,7 +31,7 @@ fun PrefScreen(
     ) {
         Image(
             contentScale = ContentScale.FillHeight,
-            painter = painterResource(id = R.drawable.fondo_removebg_gimp),
+            painter = painterResource(id = R.drawable.fondo),
             contentDescription = null,
             modifier = Modifier.fillMaxSize()
         )
@@ -55,7 +40,7 @@ fun PrefScreen(
         ) {
             LabelledSwitch(
                 checked = mainVM.uiPrefState.username.isNotEmpty() || mainVM.uiPrefState.password.isNotEmpty(),
-                label = "Inicio de sesión automático",
+                label = stringResource(id = R.string.remember_credentials),
                 onCheckedChange = {
                     if (mainVM.uiPrefState.username.isNotEmpty() || mainVM.uiPrefState.password.isNotEmpty()) {
                         mainVM.resetCredentials()
@@ -74,51 +59,8 @@ fun PrefScreen(
                     checkedTrackColor = Color.Gray,
                     uncheckedBorderColor = MaterialTheme.colorScheme.secondary,
                     checkedBorderColor = MaterialTheme.colorScheme.secondary
-                )
-            )
-        }
-    }
-}
-
-
-@Composable
-fun LabelledSwitch(
-    modifier: Modifier = Modifier,
-    checked: Boolean,
-    label: String,
-    onCheckedChange: ((Boolean) -> Unit),
-    colors: SwitchColors = SwitchDefaults.colors()
-) {
-    Card(
-        modifier = modifier
-            .padding(8.dp)
-            .border(1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp)),
-        colors = CardDefaults.cardColors(AppColors.White),
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .toggleable(
-                    value = checked,
-                    onValueChange = onCheckedChange,
-                    role = Role.Switch
-                )
-                .padding(horizontal = 16.dp)
-        ) {
-            Text(
-                text = label,
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(end = 16.dp),
-                style = TextStyle(Color.Black)
-            )
-            Switch(
-                checked = checked,
-                onCheckedChange = null,
-                colors = colors,
-                modifier = Modifier.align(Alignment.CenterEnd)
+                ),
+                roundedInt = 4
             )
         }
     }

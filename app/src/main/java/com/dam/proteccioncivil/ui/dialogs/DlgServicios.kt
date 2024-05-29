@@ -13,10 +13,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.theme.AppColors
 
 @Composable
@@ -31,24 +33,25 @@ fun DlgServicios(
         onDismissRequest = onCancelarClick
     ) {
         Card(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(8.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(AppColors.dialogColors)
         ) {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp, top = 16.dp)
             ) {
                 Text(
-                    text = "Seleccione un Preventivo",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = stringResource(id = R.string.servicios),
+                    modifier = modifier.align(Alignment.CenterHorizontally),
                     textDecoration = TextDecoration.Underline,
+                    color = AppColors.Black
                 )
                 TextButton(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    modifier = modifier.align(Alignment.CenterHorizontally),
                     onClick = onPreventivosClick,
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonColors(
@@ -58,7 +61,7 @@ fun DlgServicios(
                         AppColors.White
                     )
                 ) {
-                    Text("Preventivos")
+                    Text(stringResource(id = R.string.preventivos))
                 }
                 TextButton(
                     onClick = onInfomursClick,
@@ -69,9 +72,11 @@ fun DlgServicios(
                         AppColors.GreyDisabled,
                         AppColors.White
                     ),
-                    modifier = modifier.width(90.dp).align(Alignment.CenterHorizontally)
+                    modifier = modifier
+                        .width(90.dp)
+                        .align(Alignment.CenterHorizontally)
                 ) {
-                    Text("Infomurs")
+                    Text(stringResource(id = R.string.infomurs))
                 }
                 TextButton(
                     onClick = onGuardiasClick,
@@ -82,9 +87,11 @@ fun DlgServicios(
                         AppColors.GreyDisabled,
                         AppColors.White
                     ),
-                    modifier = modifier.width(90.dp).align(Alignment.CenterHorizontally)
+                    modifier = modifier
+                        .width(90.dp)
+                        .align(Alignment.CenterHorizontally)
                 ) {
-                    Text("Guardias")
+                    Text(stringResource(id = R.string.guardias))
                 }
             }
         }
