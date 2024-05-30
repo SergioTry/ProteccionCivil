@@ -1,6 +1,7 @@
 package com.dam.proteccioncivil.ui.screens.usuarios
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -217,7 +218,8 @@ fun UsuariosBus(
                             usuario = it,
                             onNavUp = { onNavUp() },
                             usuariosVM = usuarioVM,
-                            modifier = modifier
+                            modifier = modifier,
+                            contexto = contexto
                         )
                     }
                 }
@@ -242,7 +244,7 @@ fun UsuariosBus(
             ) {
                 Icon(
                     imageVector = Icons.Filled.CloudSync,
-                    contentDescription = getString(contexto, R.string.anadir_desc),
+                    contentDescription = getString(contexto, R.string.refresh_desc),
                     tint = AppColors.White
                 )
             }
@@ -284,7 +286,8 @@ fun usuarioCard(
     usuario: Usuario,
     onNavUp: () -> Unit,
     usuariosVM: UsuariosVM,
-    modifier: Modifier
+    modifier: Modifier,
+    contexto: Context
 ) {
     Card(
         modifier = modifier
@@ -310,7 +313,8 @@ fun usuarioCard(
                 ) {
                     Text(
                         text = usuario.username,
-                        modifier = modifier.align(Alignment.CenterVertically)
+                        modifier = modifier.align(Alignment.CenterVertically),
+                        color = Color.Black
                     )
                     if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                         Row(
@@ -322,7 +326,7 @@ fun usuarioCard(
                                 usuariosVM.cloneUsuarioMtoState(usuario)
                                 usuariosVM.setShowDlgBorrar(true)
                             }) {
-                                Icon(imageVector = Icons.Filled.Delete, contentDescription = "")
+                                Icon(imageVector = Icons.Filled.Delete, contentDescription = getString(contexto, R.string.eliminar_desc),tint = Color.Black)
                             }
                             IconButton(onClick = {
                                 usuariosVM.resetUsuarioMtoState()
@@ -330,13 +334,14 @@ fun usuarioCard(
                                 usuariosVM.setPassword("")
                                 onNavUp()
                             }) {
-                                Icon(imageVector = Icons.Filled.Edit, contentDescription = "")
+                                Icon(imageVector = Icons.Filled.Edit, contentDescription = getString(contexto, R.string.editar_desc),tint = Color.Black)
                             }
                         }
                     }
                 }
                 Text(
-                    text = usuario.nombre + " " + formatApellidos(usuario.apellidos)
+                    text = usuario.nombre + " " + formatApellidos(usuario.apellidos),
+                    color = Color.Black
                 )
             }
         }

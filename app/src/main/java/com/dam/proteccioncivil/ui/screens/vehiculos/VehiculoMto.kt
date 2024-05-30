@@ -35,6 +35,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
@@ -113,23 +114,13 @@ fun VehiculoMto(
         ) {
             Column {
                 Column(modifier = Modifier.padding(12.dp)) {
-//                    OutlinedTextField(
-//                        label = { Text(text = "Identificador") },
-//                        value = vehiculosVM.vehiculosMtoState.codVehiculo,
-//                        readOnly = true,
-//                        onValueChange = {},
-//                        modifier = Modifier
-//                            .fillMaxWidth(),
-//                        colors = OutlinedTextFieldDefaults.colors(
-//                            focusedBorderColor = Color.Blue,
-//                            unfocusedBorderColor = Color.Black,
-//                            focusedLabelColor = Color.Blue,
-//                            unfocusedLabelColor = Color.Black
-//                        )
-//                    )
-                    // Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
-                        label = { Text(text = stringResource(id = R.string.matricula_lit)) },
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.matricula_lit),
+                                color = Color.Black
+                            )
+                        },
                         value = vehiculosVM.vehiculosMtoState.matricula,
                         onValueChange = { vehiculosVM.setMatricula(it) },
                         modifier = Modifier.fillMaxWidth(),
@@ -139,11 +130,17 @@ fun VehiculoMto(
                             focusedLabelColor = Color.Blue,
                             unfocusedLabelColor = Color.Black
                         ),
-                        isError = vehiculosVM.vehiculosMtoState.matricula == ""
+                        isError = vehiculosVM.vehiculosMtoState.matricula == "",
+                        textStyle = TextStyle(Color.Black)
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
-                        label = { Text(text = stringResource(id = R.string.marca_lit)) },
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.marca_lit),
+                                color = Color.Black
+                            )
+                        },
                         value = vehiculosVM.vehiculosMtoState.marca,
                         onValueChange = { vehiculosVM.setMarca(it) },
                         modifier = Modifier.fillMaxWidth(),
@@ -153,11 +150,17 @@ fun VehiculoMto(
                             focusedLabelColor = Color.Blue,
                             unfocusedLabelColor = Color.Black
                         ),
-                        isError = vehiculosVM.vehiculosMtoState.marca == ""
+                        isError = vehiculosVM.vehiculosMtoState.marca == "",
+                        textStyle = TextStyle(Color.Black)
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
-                        label = { Text(text = stringResource(id = R.string.modelo_lit)) },
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.modelo_lit),
+                                color = Color.Black
+                            )
+                        },
                         value = vehiculosVM.vehiculosMtoState.modelo,
                         onValueChange = { vehiculosVM.setModelo(it) },
                         modifier = Modifier.fillMaxWidth(),
@@ -167,7 +170,8 @@ fun VehiculoMto(
                             focusedLabelColor = Color.Blue,
                             unfocusedLabelColor = Color.Black
                         ),
-                        isError = vehiculosVM.vehiculosMtoState.modelo == ""
+                        isError = vehiculosVM.vehiculosMtoState.modelo == "",
+                        textStyle = TextStyle(Color.Black)
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     Row {
@@ -175,11 +179,17 @@ fun VehiculoMto(
                             modifier = Modifier.weight(1f)
                         ) {
                             OutlinedTextField(
-                                label = { Text(text = stringResource(id = R.string.fecha_mantenimiento_lit)) },
+                                label = {
+                                    Text(
+                                        text = stringResource(id = R.string.fecha_mantenimiento_lit),
+                                        color = Color.Black
+                                    )
+                                },
                                 value = FormatVisibleDate.use(vehiculosVM.vehiculosMtoState.fechaMantenimiento),
                                 onValueChange = {},
                                 modifier = Modifier.fillMaxWidth(),
-                                isError = vehiculosVM.vehiculosMtoState.fechaMantenimiento == ""
+                                isError = vehiculosVM.vehiculosMtoState.fechaMantenimiento == "",
+                                textStyle = TextStyle(Color.Black)
                             )
                             IconButton(
                                 onClick = {
@@ -189,15 +199,21 @@ fun VehiculoMto(
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.DateRange,
-                                    contentDescription = getString(contexto, R.string.fecha_desc)
+                                    contentDescription = getString(contexto, R.string.fecha_desc),
+                                    tint = Color.Black
                                 )
                             }
                         }
                     }
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
-                        label = { Text(text = stringResource(id = R.string.descripcion_mantenimiento_lit)) },
-                        value = vehiculosVM.vehiculosMtoState.descripcion.let { if(it != "null" && it != null) vehiculosVM.vehiculosMtoState.descripcion else "" }
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.descripcion_mantenimiento_lit),
+                                color = Color.Black
+                            )
+                        },
+                        value = vehiculosVM.vehiculosMtoState.descripcion.let { if (it != "null" && it != null) vehiculosVM.vehiculosMtoState.descripcion else "" }
                             ?: "",
                         onValueChange = { vehiculosVM.setDescripcion(it) },
                         modifier = Modifier.fillMaxWidth(),

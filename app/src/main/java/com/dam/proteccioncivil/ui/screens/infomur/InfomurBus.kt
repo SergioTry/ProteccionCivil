@@ -131,7 +131,7 @@ fun InfomurBus(
             ) {
                 Icon(
                     imageVector = Icons.Filled.CloudSync,
-                    contentDescription = getString(contexto, R.string.anadir_desc),
+                    contentDescription = getString(contexto, R.string.refresh_desc),
                     tint = AppColors.White
                 )
             }

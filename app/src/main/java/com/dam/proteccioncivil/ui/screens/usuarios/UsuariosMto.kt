@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
@@ -27,7 +28,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +48,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
@@ -137,7 +138,8 @@ fun UsuariosMto(
                 Column {
                     Column(modifier = Modifier.padding(12.dp)) {
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.dni_lit)) },
+                            label = { Text(text = stringResource(id = R.string.dni_lit),
+                                color = AppColors.Black) },
                             value = usuariosVM.usuariosMtoState.dni,
                             isError = usuariosVM.usuariosMtoState.dni == "",
                             onValueChange = { usuariosVM.setDni(it) },
@@ -148,11 +150,13 @@ fun UsuariosMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(color = AppColors.Black)
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.nombre_lit)) },
+                            label = { Text(text = stringResource(id = R.string.nombre_lit),
+                                color = AppColors.Black) },
                             isError = usuariosVM.usuariosMtoState.nombre == "",
                             value = usuariosVM.usuariosMtoState.nombre,
                             onValueChange = { usuariosVM.setNombre(it) },
@@ -163,11 +167,13 @@ fun UsuariosMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(color = AppColors.Black)
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.apellidos_lit)) },
+                            label = { Text(text = stringResource(id = R.string.apellidos_lit),
+                                color = AppColors.Black) },
                             isError = usuariosVM.usuariosMtoState.apellidos == "",
                             value = usuariosVM.usuariosMtoState.apellidos,
                             onValueChange = { usuariosVM.setApellidos(it) },
@@ -177,11 +183,13 @@ fun UsuariosMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(color = AppColors.Black)
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.correElectronico_lit)) },
+                            label = { Text(text = stringResource(id = R.string.correElectronico_lit),
+                                color = AppColors.Black) },
                             isError = usuariosVM.usuariosMtoState.correoElectronico == "",
                             value = usuariosVM.usuariosMtoState.correoElectronico,
                             onValueChange = { usuariosVM.setCorreoElectronico(it) },
@@ -191,11 +199,13 @@ fun UsuariosMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(color = AppColors.Black)
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.identificador_lit)) },
+                            label = { Text(text = stringResource(id = R.string.identificador_lit),
+                                color = AppColors.Black) },
                             isError = usuariosVM.usuariosMtoState.username == "",
                             value = usuariosVM.usuariosMtoState.username,
                             onValueChange = { usuariosVM.setUsername(it) },
@@ -205,11 +215,13 @@ fun UsuariosMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(color = AppColors.Black)
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.telefono_lit)) },
+                            label = { Text(text = stringResource(id = R.string.telefono_lit),
+                                color = AppColors.Black) },
                             isError = usuariosVM.usuariosMtoState.telefono == "",
                             value = usuariosVM.usuariosMtoState.telefono,
                             onValueChange = { usuariosVM.setTelefono(it) },
@@ -219,7 +231,8 @@ fun UsuariosMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(color = AppColors.Black)
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         ExposedDropdownMenuBox(
@@ -227,7 +240,8 @@ fun UsuariosMto(
                             onExpandedChange = { expanded = !expanded }
                         ) {
                             OutlinedTextField(
-                                label = { Text(text = stringResource(id = R.string.rango_lit)) },
+                                label = { Text(text = stringResource(id = R.string.rango_lit),
+                                    color = AppColors.Black) },
                                 isError = usuariosVM.usuariosMtoState.rango == "",
                                 value = if (usuariosVM.usuariosMtoState.rango.lowercase() == "jefeservicio") {
                                     "Jefe de Servicio"
@@ -248,8 +262,18 @@ fun UsuariosMto(
                                     unfocusedLabelColor = Color.Black
                                 ),
                                 trailingIcon = {
-                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                                }
+                                    IconButton(onClick = { expanded = !expanded }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.ArrowDropDown,
+                                            contentDescription = getString(
+                                                contexto,
+                                                R.string.drop_down_desc
+                                            ),
+                                            tint = Color.Black
+                                        )
+                                    }
+                                },
+                                textStyle = TextStyle(color = AppColors.Black)
                             )
                             ExposedDropdownMenu(
                                 expanded = expanded,
@@ -290,7 +314,12 @@ fun UsuariosMto(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 OutlinedTextField(
-                                    label = { Text(text = stringResource(id = R.string.contrasena_lit)) },
+                                    label = {
+                                        Text(
+                                            text = stringResource(id = R.string.contrasena_lit),
+                                            color = Color.Black
+                                        )
+                                    },
                                     isError = usuariosVM.usuariosMtoState.password == "",
                                     value = password,
                                     enabled = if (usuariosVM.usuariosMtoState.codUsuario == "0") true else changePassword,
@@ -301,7 +330,8 @@ fun UsuariosMto(
                                         unfocusedBorderColor = Color.Black,
                                         focusedLabelColor = Color.Blue,
                                         unfocusedLabelColor = Color.Black
-                                    )
+                                    ),
+                                    textStyle = TextStyle(color = AppColors.Black)
                                 )
                                 IconButton(
                                     onClick = {
@@ -318,13 +348,19 @@ fun UsuariosMto(
                                         contentDescription = getString(
                                             contexto,
                                             R.string.editar_desc
-                                        )
+                                        ),
+                                        tint = Color.Black
                                     )
                                 }
                             }
                         }
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.confirmarContrasena_lit)) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.confirmarContrasena_lit),
+                                    color = Color.Black
+                                )
+                            },
                             value = confirmPassword,
                             isError = usuariosVM.usuariosMtoState.confirmPassword == "",
                             enabled = if (usuariosVM.usuariosMtoState.codUsuario == "0") true else changePassword,
@@ -335,7 +371,8 @@ fun UsuariosMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(color = AppColors.Black)
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         LabelledSwitch(
@@ -356,7 +393,8 @@ fun UsuariosMto(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 OutlinedTextField(
-                                    label = { Text(text = stringResource(id = R.string.fechaNacimiento_lit)) },
+                                    label = { Text(text = stringResource(id = R.string.fechaNacimiento_lit),
+                                        color = AppColors.Black) },
                                     isError = usuariosVM.usuariosMtoState.fechaNacimiento == "",
                                     value = FormatVisibleDate.use(usuariosVM.usuariosMtoState.fechaNacimiento),
                                     onValueChange = {},
@@ -366,7 +404,8 @@ fun UsuariosMto(
                                         unfocusedBorderColor = Color.Black,
                                         focusedLabelColor = Color.Blue,
                                         unfocusedLabelColor = Color.Black
-                                    )
+                                    ),
+                                    textStyle = TextStyle(color = AppColors.Black)
                                 )
                                 IconButton(
                                     onClick = {
@@ -379,7 +418,8 @@ fun UsuariosMto(
                                         contentDescription = getString(
                                             contexto,
                                             R.string.editar_desc
-                                        )
+                                        ),
+                                        tint = Color.Black
                                     )
                                 }
                             }

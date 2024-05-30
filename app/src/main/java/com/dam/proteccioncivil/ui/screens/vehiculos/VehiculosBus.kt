@@ -230,7 +230,7 @@ fun VehiculosBus(
             ) {
                 Icon(
                     imageVector = Icons.Filled.CloudSync,
-                    contentDescription = getString(contexto, R.string.anadir_desc),
+                    contentDescription = getString(contexto, R.string.refresh_desc),
                     tint = AppColors.White
                 )
             }
@@ -291,7 +291,8 @@ fun vehiculoCard(
                     fontWeight = FontWeight.Bold,
                     modifier = modifier
                         .align(Alignment.Start)
-                        .padding(16.dp)
+                        .padding(16.dp),
+                    color = Color.Black
                 )
                 Image(
                     painter = painterResource(id = R.drawable.pcc_icono),
@@ -306,19 +307,22 @@ fun vehiculoCard(
                 Spacer(modifier = modifier.height(8.dp))
                 Text(
                     text = vehiculo.km.toString(),
-                    modifier = modifier.padding(start = 8.dp)
+                    modifier = modifier.padding(start = 8.dp),
+                    color = Color.Black
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 Text(
                     text = if (ShortToBoolean.use(vehiculo.disponible)) stringResource(id = R.string.disponible_lit) else stringResource(
                         id = R.string.no_disponible_lit
                     ),
-                    modifier = modifier.padding(start = 8.dp)
+                    modifier = modifier.padding(start = 8.dp),
+                    color = Color.Black
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 Text(
                     text = vehiculo.marca + " " + vehiculo.modelo,
-                    modifier = modifier.padding(start = 8.dp)
+                    modifier = modifier.padding(start = 8.dp),
+                    color = Color.Black
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 if (Token.rango == "Admin" || Token.rango == "JefeServicio" || ShortToBoolean.use(
@@ -343,7 +347,8 @@ fun vehiculoCard(
                     }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
-                            contentDescription = getString(contexto, R.string.eliminar_desc)
+                            contentDescription = getString(contexto, R.string.eliminar_desc),
+                            tint = Color.Black
                         )
                     }
                     Spacer(modifier = modifier.height(28.dp))
@@ -354,7 +359,8 @@ fun vehiculoCard(
                     }) {
                         Icon(
                             imageVector = Icons.Filled.Edit,
-                            contentDescription = getString(contexto, R.string.editar_desc)
+                            contentDescription = getString(contexto, R.string.editar_desc),
+                            tint = Color.Black
                         )
                     }
                 }
