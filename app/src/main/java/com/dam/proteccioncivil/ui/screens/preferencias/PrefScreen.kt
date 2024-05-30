@@ -60,7 +60,8 @@ fun PrefScreen(
                     uncheckedBorderColor = MaterialTheme.colorScheme.secondary,
                     checkedBorderColor = MaterialTheme.colorScheme.secondary
                 ),
-                roundedInt = 4
+                roundedInt = 4,
+                color = Color.White
             )
         }
     }

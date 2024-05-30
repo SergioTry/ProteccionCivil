@@ -186,7 +186,7 @@ fun GuardiaCard(
             .fillMaxWidth()
             .height(180.dp),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(AppColors.posit)
+        colors = CardDefaults.cardColors(AppColors.Posit)
     ) {
         Row(modifier = modifier.fillMaxWidth()) {
             Column {

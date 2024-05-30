@@ -37,7 +37,7 @@ fun DlgServicios(
                 .fillMaxWidth()
                 .padding(8.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(AppColors.dialogColors)
+            colors = CardDefaults.cardColors(AppColors.DialogColors)
         ) {
             Column(
                 modifier = modifier

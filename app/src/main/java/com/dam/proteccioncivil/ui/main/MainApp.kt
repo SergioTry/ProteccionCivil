@@ -170,7 +170,7 @@ fun MainApp(
                             usuariosVM.getUsuarioById()
                             navController.navigate(AppScreens.DatosPersonales.name)
                         },
-                        showSobreScreen = {navController.navigate(AppScreens.Sobre.name)}
+                        showSobreScreen = { navController.navigate(AppScreens.Sobre.name) }
                     )
                 }
             },
@@ -311,17 +311,17 @@ private fun NavHostRoutes(
                 } else {
                     navController.navigate(AppScreens.Home.name)
                 }
-            }, getString(context,R.string.version))
+            }, getString(context, R.string.version))
         }
         composable(route = AppScreens.Home.name) {
             MainScreen(mainVM)
         }
         composable(route = AppScreens.Sobre.name) {
-            SobreScreen(version = getString(context,R.string.version))
+            SobreScreen(version = getString(context, R.string.version))
         }
         composable(route = AppScreens.Login.name) {
             LoginScreen(
-                version = getString(context,R.string.version),
+                version = getString(context, R.string.version),
                 mainVM = mainVM,
                 loginVM = loginVM,
                 onNavUp = {
@@ -351,22 +351,25 @@ private fun NavHostRoutes(
             )
         }
         composable(route = AppScreens.DatosPersonales.name) {
-            DatosPersonales(usuariosUiState = usuariosVM.usuariosUiState, usuariosVM = usuariosVM, onShowSnackBar = { mensaje, isSuccess ->
-                scope.launch {
-                    if (isSuccess) {
-                        snackbarHostState.showSnackbar(
-                            mensaje,
-                            "",
-                            duration = SnackbarDuration.Short
-                        )
-                    } else {
-                        snackbarHostState.showSnackbar(
-                            mensaje,
-                            duration = SnackbarDuration.Short
-                        )
+            DatosPersonales(
+                usuariosUiState = usuariosVM.usuariosUiState,
+                usuariosVM = usuariosVM,
+                onShowSnackBar = { mensaje, isSuccess ->
+                    scope.launch {
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
                     }
-                }
-            } )
+                })
         }
         composable(route = AppScreens.Preferences.name) {
             PrefScreen(
@@ -662,8 +665,8 @@ private fun NavHostRoutes(
                 preventivosUiState = preventivosVM.preventivosUiState,
                 preventivosVM = preventivosVM,
                 retryAction = { usuariosVM.getAll() },
-                onNavUp = { navController.navigate(AppScreens.UsuariosMto.name) },
-                refresh = { navController.navigate(AppScreens.Usuarios.name) },
+                onNavUp = { },
+                refresh = { navController.navigate(AppScreens.Preventivos.name) },
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
                         if (isSuccess) {

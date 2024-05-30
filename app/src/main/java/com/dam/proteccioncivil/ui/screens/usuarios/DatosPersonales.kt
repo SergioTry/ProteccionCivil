@@ -42,6 +42,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
@@ -119,7 +120,12 @@ fun DatosPersonales(
                 Column {
                     Column(modifier = modifier.padding(12.dp)) {
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.dni_lit)) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.dni_lit),
+                                    color = Color.Black
+                                )
+                            },
                             value = usuariosVM.usuariosMtoState.dni,
                             isError = usuariosVM.usuariosMtoState.dni == "",
                             onValueChange = { usuariosVM.setDni(it) },
@@ -131,12 +137,20 @@ fun DatosPersonales(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(Color.Black)
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
                             readOnly = true,
-                            label = { Text(text = stringResource(id = R.string.nombre_lit)) },
+                            label = {
+                                Text(
+                                    text = stringResource(
+                                        id = R.string.nombre_lit
+                                    ),
+                                    color = Color.Black
+                                )
+                            },
                             isError = usuariosVM.usuariosMtoState.nombre == "",
                             value = usuariosVM.usuariosMtoState.nombre,
                             onValueChange = { usuariosVM.setNombre(it) },
@@ -147,12 +161,18 @@ fun DatosPersonales(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(Color.Black)
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
                             readOnly = true,
-                            label = { Text(text = stringResource(id = R.string.apellidos_lit)) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.apellidos_lit),
+                                    color = Color.Black
+                                )
+                            },
                             isError = usuariosVM.usuariosMtoState.apellidos == "",
                             value = usuariosVM.usuariosMtoState.apellidos,
                             onValueChange = { usuariosVM.setApellidos(it) },
@@ -162,12 +182,14 @@ fun DatosPersonales(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(Color.Black)
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
                             readOnly = true,
-                            label = { Text(text = stringResource(id = R.string.correElectronico_lit)) },
+                            label = { Text(text = stringResource(id = R.string.correElectronico_lit),
+                                color = Color.Black) },
                             isError = usuariosVM.usuariosMtoState.correoElectronico == "",
                             value = usuariosVM.usuariosMtoState.correoElectronico,
                             onValueChange = { usuariosVM.setCorreoElectronico(it) },
@@ -177,12 +199,14 @@ fun DatosPersonales(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(Color.Black)
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
                             readOnly = true,
-                            label = { Text(text = stringResource(id = R.string.identificador_lit)) },
+                            label = { Text(text = stringResource(id = R.string.identificador_lit),
+                                color = Color.Black) },
                             isError = usuariosVM.usuariosMtoState.username == "",
                             value = usuariosVM.usuariosMtoState.username,
                             onValueChange = { usuariosVM.setUsername(it) },
@@ -192,12 +216,14 @@ fun DatosPersonales(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(Color.Black)
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
                             readOnly = true,
-                            label = { Text(text = stringResource(id = R.string.telefono_lit)) },
+                            label = { Text(text = stringResource(id = R.string.telefono_lit),
+                                color = Color.Black) },
                             isError = usuariosVM.usuariosMtoState.telefono == "",
                             value = usuariosVM.usuariosMtoState.telefono,
                             onValueChange = { usuariosVM.setTelefono(it) },
@@ -207,11 +233,13 @@ fun DatosPersonales(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(Color.Black)
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.rango_lit)) },
+                            label = { Text(text = stringResource(id = R.string.rango_lit),
+                                color = Color.Black) },
                             isError = usuariosVM.usuariosMtoState.rango == "",
                             value = if (usuariosVM.usuariosMtoState.rango.lowercase() == "jefeservicio") {
                                 "Jefe de Servicio"
@@ -229,7 +257,8 @@ fun DatosPersonales(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(Color.Black)
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         Row {
@@ -237,7 +266,8 @@ fun DatosPersonales(
                                 modifier = modifier.weight(1f)
                             ) {
                                 OutlinedTextField(
-                                    label = { Text(text = stringResource(id = R.string.contrasena_lit)) },
+                                    label = { Text(text = stringResource(id = R.string.contrasena_lit),
+                                        color = Color.Black) },
                                     isError = usuariosVM.usuariosMtoState.password == "",
                                     value = password,
                                     enabled = usuariosVM.usuariosBusState.changePassword,
@@ -248,7 +278,8 @@ fun DatosPersonales(
                                         unfocusedBorderColor = Color.Black,
                                         focusedLabelColor = Color.Blue,
                                         unfocusedLabelColor = Color.Black
-                                    )
+                                    ),
+                                    textStyle = TextStyle(Color.Black)
                                 )
                                 IconButton(
                                     onClick = {
@@ -274,7 +305,8 @@ fun DatosPersonales(
                         }
                         if (usuariosVM.usuariosBusState.changePassword) {
                             OutlinedTextField(
-                                label = { Text(text = stringResource(id = R.string.confirmarContrasena_lit)) },
+                                label = { Text(text = stringResource(id = R.string.confirmarContrasena_lit),
+                                    color = Color.Black) },
                                 value = confirmPassword,
                                 isError = usuariosVM.usuariosMtoState.confirmPassword == "",
                                 enabled = usuariosVM.usuariosBusState.changePassword,
@@ -285,7 +317,8 @@ fun DatosPersonales(
                                     unfocusedBorderColor = Color.Black,
                                     focusedLabelColor = Color.Blue,
                                     unfocusedLabelColor = Color.Black
-                                )
+                                ),
+                                textStyle = TextStyle(Color.Black)
                             )
                         }
                         Spacer(modifier = modifier.size(16.dp))
@@ -299,11 +332,13 @@ fun DatosPersonales(
                                 checkedThumbColor = Color.Blue,
                                 uncheckedThumbColor = Color.Gray
                             ),
-                            roundedInt = 4
+                            roundedInt = 4,
+                            color = Color.White
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.fechaNacimiento_lit)) },
+                            label = { Text(text = stringResource(id = R.string.fechaNacimiento_lit),
+                                color = Color.Black) },
                             isError = usuariosVM.usuariosMtoState.fechaNacimiento == "",
                             value = FormatVisibleDate.use(usuariosVM.usuariosMtoState.fechaNacimiento),
                             onValueChange = {},
@@ -314,7 +349,8 @@ fun DatosPersonales(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            )
+                            ),
+                            textStyle = TextStyle(Color.Black)
                         )
                     }
                 }
@@ -331,7 +367,7 @@ fun DatosPersonales(
                             usuariosVM.resetUsuarioMtoState()
                             activity?.onBackPressed()
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = AppColors.errorCarmesi)
+                        colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
                     ) {
                         Text(text = stringResource(id = R.string.opc_cancel))
                     }

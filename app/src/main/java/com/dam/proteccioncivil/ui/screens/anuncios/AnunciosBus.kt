@@ -189,7 +189,7 @@ fun AnuncioCard(
             .fillMaxWidth()
             .heightIn(180.dp, 280.dp),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(AppColors.posit)
+        colors = CardDefaults.cardColors(AppColors.Posit)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column {

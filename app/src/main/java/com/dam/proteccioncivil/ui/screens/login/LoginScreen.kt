@@ -139,7 +139,7 @@ fun LoginScreen(
                         focusedLabelColor = Color.Blue,
                         unfocusedLabelColor = Color.Black,
                         unfocusedBorderColor = Color.Black,
-                        errorBorderColor = AppColors.errorCarmesi,
+                        errorBorderColor = AppColors.RojoError,
                         errorLabelColor = Color.Black
                     ),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -172,7 +172,7 @@ fun LoginScreen(
                     focusedLabelColor = Color.Blue,
                     unfocusedLabelColor = Color.Black,
                     unfocusedBorderColor = Color.Black,
-                    errorBorderColor = AppColors.errorCarmesi,
+                    errorBorderColor = AppColors.RojoError,
                     errorLabelColor = Color.Black
                 ),
                     modifier = modifier

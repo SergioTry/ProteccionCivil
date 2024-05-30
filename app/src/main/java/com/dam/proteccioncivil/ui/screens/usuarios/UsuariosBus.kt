@@ -294,7 +294,7 @@ fun usuarioCard(
             .padding(16.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(AppColors.posit)
+        colors = CardDefaults.cardColors(AppColors.Posit)
     ) {
         Row(modifier = modifier.fillMaxWidth()) {
             Image(

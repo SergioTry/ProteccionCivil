@@ -63,7 +63,7 @@ fun SobreScreen(
             Spacer(modifier = Modifier.height(20.dp))
             Card(
                 colors = CardColors(
-                    containerColor = AppColors.posit,
+                    containerColor = AppColors.Posit,
                     contentColor = Color.Black,
                     disabledContentColor = Color.Gray,
                     disabledContainerColor = Color.LightGray

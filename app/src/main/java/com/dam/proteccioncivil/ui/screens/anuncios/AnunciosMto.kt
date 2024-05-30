@@ -107,7 +107,7 @@ fun AnunciosMto(
                 .fillMaxWidth()
                 .heightIn(180.dp, 280.dp),
             shape = RoundedCornerShape(8.dp),
-            colors = CardDefaults.cardColors(AppColors.posit)
+            colors = CardDefaults.cardColors(AppColors.Posit)
         ) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(12.dp)) {
@@ -149,7 +149,7 @@ fun AnunciosMto(
                     onCancel()
                 },
                 enabled = !anunciosVM.anunciosBusState.loading,
-                colors = ButtonDefaults.buttonColors(containerColor = AppColors.errorCarmesi)
+                colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
             ) {
                 Text(text = stringResource(id = R.string.opc_cancel), color = AppColors.Black)
             }

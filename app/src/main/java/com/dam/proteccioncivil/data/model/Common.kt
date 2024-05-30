@@ -171,7 +171,8 @@ fun LabelledSwitch(
     label: String,
     onCheckedChange: ((Boolean) -> Unit),
     colors: SwitchColors = SwitchDefaults.colors(),
-    roundedInt: Int
+    roundedInt: Int,
+    color: Color
 ) {
     Box(
         modifier = modifier
@@ -186,6 +187,8 @@ fun LabelledSwitch(
                 onValueChange = onCheckedChange,
                 role = Role.Switch
             )
+            .background(color)
+            .padding(8.dp)
     )
     {
         Text(
@@ -199,7 +202,9 @@ fun LabelledSwitch(
             checked = checked,
             onCheckedChange = null,
             colors = colors,
-            modifier = Modifier.align(Alignment.CenterEnd).padding(end = 8.dp)
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 8.dp)
         )
     }
 }

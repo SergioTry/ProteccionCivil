@@ -133,7 +133,7 @@ fun UsuariosMto(
                 modifier = Modifier
                     .padding(8.dp),
                 shape = RoundedCornerShape(8.dp),
-                colors = CardDefaults.cardColors(AppColors.posit)
+                colors = CardDefaults.cardColors(AppColors.Posit)
             ) {
                 Column {
                     Column(modifier = Modifier.padding(12.dp)) {
@@ -385,7 +385,8 @@ fun UsuariosMto(
                                 checkedThumbColor = Color.Blue,
                                 uncheckedThumbColor = Color.Gray
                             ),
-                            roundedInt = 4
+                            roundedInt = 4,
+                            color = AppColors.Posit
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         Row {
@@ -450,7 +451,7 @@ fun UsuariosMto(
                         usuariosVM.resetUsuarioMtoState()
                         activity?.onBackPressed()
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = AppColors.errorCarmesi)
+                    colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
                 ) {
                     Text(text = stringResource(id = R.string.opc_cancel))
                 }

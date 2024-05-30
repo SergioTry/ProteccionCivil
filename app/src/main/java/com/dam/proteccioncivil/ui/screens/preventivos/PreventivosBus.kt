@@ -286,7 +286,7 @@ fun PreventivoCard(
             .fillMaxWidth()
             .height(270.dp),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(AppColors.posit)
+        colors = CardDefaults.cardColors(AppColors.Posit)
     ) {
         Column {
             Row(modifier = modifier.fillMaxWidth()) {

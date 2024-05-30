@@ -8,8 +8,8 @@ object AppColors {
     val White = Color(0xFFFFFFFF)
     val Black = Color(0xFF2B2B2B)
     val Blue = Color(0xFF0D47A1)
-    val errorCarmesi = Color(0xFFFF0000)
-    val posit = Color(0xFFF5E876)
-    val dialogColors = Color(0xFFF8E7BD)
+    val RojoError = Color(0xFFFF0000)
+    val Posit = Color(0xFFF5E876)
+    val DialogColors = Color(0xFFF8E7BD)
     val Green = Color(0xFF097709)
 }
