@@ -25,7 +25,7 @@ interface PreventivosApiService {
     // en caso de que se use alguno de estos parámetros
     // será necesario añadir en el body de la petición
     // el campo "CodUsuario".
-    @GET("preventivos/{codPreventivo}")
+    @PUT("preventivos/{codPreventivo}")
     suspend fun updPreventivo(
         @Header("Authorization") authToken: String,
         @Path("codPreventivo") codPreventivo: Int,
