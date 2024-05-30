@@ -13,6 +13,7 @@ fun GuardiasScreen(
     guardiasVM: GuardiasVM,
     retryAction: () -> Unit,
     onNavUp: () -> Unit,
+    onNavDetail: () -> Unit,
     refresh: () -> Unit,
     onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -26,6 +27,7 @@ fun GuardiasScreen(
                 onShowSnackBar,
                 modifier,
                 onNavUp,
+                onNavDetail,
                 refresh
             )
         }

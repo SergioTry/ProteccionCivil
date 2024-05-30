@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -56,6 +57,7 @@ fun InfomurBus(
     onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier,
     onNavUp: () -> Unit,
+    onNavDetail: () -> Unit,
     refresh: () -> Unit
 ) {
     val mensage: String
@@ -107,6 +109,7 @@ fun InfomurBus(
                         infomursVM = infomursVM,
                         modifier = modifier,
                         refresh = refresh,
+                        onNavDetail = { onNavDetail() },
                         contexto = contexto
                     )
                 }
@@ -175,7 +178,8 @@ fun InfomurCard(
     modifier: Modifier,
     infomursVM: InfomursVM,
     refresh: () -> Unit,
-    contexto: Context
+    contexto: Context,
+    onNavDetail: () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -198,11 +202,25 @@ fun InfomurCard(
                             .padding(start = 8.dp, top = 8.dp, end = 8.dp),
                         color = AppColors.Black
                     )
-                    if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-                        Row(
-                            modifier = modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End
-                        ) {
+                    Row(
+                        modifier = modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        IconButton(onClick = {
+                            infomursVM.resetInfomurMtoState()
+                            infomursVM.cloneInfomurMtoState(infomur)
+                            onNavDetail()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.RemoveRedEye,
+                                contentDescription = getString(
+                                    contexto,
+                                    R.string.detalle_desc
+                                ),
+                                tint = AppColors.Black
+                            )
+                        }
+                        if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                             IconButton(onClick = {
                                 infomursVM.resetInfomurMtoState()
                                 infomursVM.cloneInfomurMtoState(infomur)

@@ -7,11 +7,12 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,10 +22,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -33,22 +35,24 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -61,10 +65,12 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.ComboBox
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.HasNonNullElement
 import com.dam.proteccioncivil.data.model.Preventivo
 import com.dam.proteccioncivil.data.model.Token
+import com.dam.proteccioncivil.data.model.filtrosPreventivo
 import com.dam.proteccioncivil.ui.theme.AppColors
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,6 +88,16 @@ fun PreventivosBus(
     val contexto = LocalContext.current
     val options = listOf("Opción 1", "Opción 2", "Opción 3")
     val focusRequester = remember { FocusRequester() }
+
+    var preventivosFiltrados by remember { mutableStateOf(preventivos) }
+
+    if (preventivosVM.preventivoBusState.textoBusqueda != "" && preventivosVM.preventivoBusState.lanzarBusqueda) {
+        preventivosFiltrados = preventivos.filter {
+            it.titulo.lowercase()
+                .contains(preventivosVM.preventivoBusState.textoBusqueda.lowercase())
+        }
+        preventivosVM.setLanzarBusqueda(false)
+    }
 
     when (preventivosVM.preventivosMessageState) {
         is PreventivosMessageState.Loading -> {
@@ -134,93 +150,85 @@ fun PreventivosBus(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Row(
+                    ComboBox(
+                        onSelectedChange = {
+                        },
+                        onExpandedChange = { },
+                        expanded = false,
+                        options = filtrosPreventivo,
+                        optionSelected = "",
                         modifier = Modifier
-                            .weight(1f)
-                            .padding(8.dp)
-                            .background(Color.White),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedTextField(
-                            value = "", // Aquí puedes poner el valor del campo de texto
-                            onValueChange = { /* Aquí puedes manejar el cambio del valor */ },
-                            label = {
-                                Text(
-                                    stringResource(id = R.string.filtro_lit),
-                                    color = Color.Black
-                                )
-                            },
-                            readOnly = true,
-                            trailingIcon = {
-                                IconButton(
-                                    onClick = { preventivosVM.setExpanded(true) }
+                            .weight(4f)
+                    )
+                    OutlinedTextField(
+                        value = preventivosVM.preventivoBusState.textoBusqueda,
+                        onValueChange = { preventivosVM.setTextoBusqueda(it) },
+                        label = {
+                            Text(
+                                stringResource(id = R.string.buscar_lit),
+                            )
+                        },
+                        modifier = Modifier
+                            .weight(6f),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                            focusedContainerColor = MaterialTheme.colorScheme.background,
+                            focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
+                            focusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                        ),
+                        textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary),
+                        trailingIcon = {
+                            Row {
+                                Box(
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .clip(CircleShape)
+                                        .background(Color.Blue)
+                                        .clickable { preventivosVM.setLanzarBusqueda(true) }
                                 ) {
-                                    Icon(Icons.Filled.ArrowDropDown, contentDescription = getString(contexto, R.string.drop_down_desc))
+                                    Icon(
+                                        imageVector = Icons.Filled.Search,
+                                        contentDescription = getString(
+                                            contexto,
+                                            R.string.buscar_desc
+                                        ),
+                                        tint = Color.White,
+                                        modifier = Modifier.align(Alignment.Center)
+                                    )
                                 }
-                            },
-                            singleLine = true,
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(1.5f)
-                                .padding(8.dp)
-                                .focusRequester(focusRequester),
-                            textStyle = TextStyle(color = AppColors.Black)
-                        )
-                        DropdownMenu(
-                            expanded = preventivosVM.preventivoBusState.expanded,
-                            onDismissRequest = { preventivosVM.setExpanded(false) }
-                        ) {
-                            options.forEach { option ->
-                                DropdownMenuItem(
-                                    text = { Text(option) },
-                                    onClick = {
-                                        preventivosVM.setExpanded(false)
-                                    }
-                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Box(
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .clip(CircleShape)
+                                        .background(Color.Red)
+                                        .clickable {
+                                            preventivosVM.setLanzarBusqueda(false)
+                                            preventivosVM.setTextoBusqueda("")
+                                            preventivosFiltrados = preventivos
+                                        }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Close,
+                                        contentDescription = getString(
+                                            contexto,
+                                            R.string.buscar_desc
+                                        ),
+                                        tint = Color.White,
+                                        modifier = Modifier.align(Alignment.Center)
+                                    )
+                                }
                             }
                         }
-                    }
-                    Row(
-                        modifier = Modifier
-                            .weight(2f)
-                            .padding(8.dp)
-                            .background(Color.White),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedTextField(
-                            value = "",
-                            onValueChange = { },
-                            label = {
-                                Text(
-                                    stringResource(id = R.string.buscar_lit),
-                                    color = Color.Black
-                                )
-                            },
-                            modifier = Modifier
-                                .weight(1f),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Color.White,
-                                errorBorderColor = Color.White,
-                                unfocusedBorderColor = Color.White
-                            ), textStyle = TextStyle(color = AppColors.Black)
-                        )
-                        IconButton(
-                            onClick = { /* TODO: Implement search action */ },
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = getString(contexto, R.string.buscar_desc),
-                                tint = AppColors.Black
-                            )
-                        }
-                    }
+                    )
                 }
             }
             LazyColumn(
                 modifier = modifier.fillMaxSize(),
                 content = {
-                    items(preventivos) {
+                    items(preventivosFiltrados) {
                         PreventivoCard(
                             preventivo = it,
                             onNavUp = onNavUp,

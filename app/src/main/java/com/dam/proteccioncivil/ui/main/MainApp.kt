@@ -382,7 +382,14 @@ private fun NavHostRoutes(
                 guardiasUiState = guardiasVM.guardiasUiState,
                 guardiasVM = guardiasVM,
                 retryAction = { guardiasVM.getAll() },
-                onNavUp = { navController.navigate(AppScreens.GuardiasMto.name) },
+                onNavUp = {
+                    guardiasVM.setIsDetail(false)
+                    navController.navigate(AppScreens.GuardiasMto.name)
+                },
+                onNavDetail = {
+                    guardiasVM.setIsDetail(true)
+                    navController.navigate(AppScreens.GuardiasMto.name)
+                },
                 refresh = {
                     navController.popBackStack()
                     navController.navigate(AppScreens.Guardias.name)
@@ -439,7 +446,14 @@ private fun NavHostRoutes(
                 infomursUiState = infomursVM.infomursUiState,
                 infomursVM = infomursVM,
                 retryAction = { infomursVM.getAll() },
-                onNavUp = { navController.navigate(AppScreens.InfomursMto.name) },
+                onNavUp = {
+                    infomursVM.setIsDetail(false)
+                    navController.navigate(AppScreens.InfomursMto.name)
+                },
+                onNavDetail = {
+                    infomursVM.setIsDetail(true)
+                    navController.navigate(AppScreens.InfomursMto.name)
+                },
                 refresh = {
                     navController.popBackStack()
                     navController.navigate(AppScreens.Infomurs.name)

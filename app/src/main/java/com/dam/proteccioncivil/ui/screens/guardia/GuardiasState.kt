@@ -12,6 +12,7 @@ data class GuardiasMtoState(
 )
 
 data class GuardiasBusState(
+    val isDetail: Boolean = false,
     val showDlgDate: Boolean = false,
     val showDlgConfirmation: Boolean = false)
 

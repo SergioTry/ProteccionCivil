@@ -45,8 +45,31 @@ class PreventivosVM(
 
     var preventivoBusState: PreventivoBusState by mutableStateOf(PreventivoBusState())
 
+    fun setLanzarBusqueda(lanzar: Boolean) {
+        preventivoBusState = preventivoBusState.copy(
+            lanzarBusqueda = lanzar,
+            textoBusqueda = preventivoBusState.textoBusqueda,
+            isDetail = preventivoBusState.lanzarBusqueda,
+            showDlgBorrar = preventivoBusState.showDlgBorrar,
+            showDlgDate = preventivoBusState.showDlgDate
+        )
+    }
+
+    fun setTextoBusqueda(texto: String) {
+        preventivoBusState = preventivoBusState.copy(
+            lanzarBusqueda = preventivoBusState.lanzarBusqueda,
+            textoBusqueda = texto,
+            isDetail = preventivoBusState.isDetail,
+            showDlgBorrar = preventivoBusState.showDlgBorrar,
+            showDlgDate = preventivoBusState.showDlgDate
+        )
+    }
+
     fun setExpanded(expanded: Boolean) {
         preventivoBusState = preventivoBusState.copy(
+            lanzarBusqueda = preventivoBusState.lanzarBusqueda,
+            textoBusqueda = preventivoBusState.textoBusqueda,
+            isDetail = preventivoBusState.isDetail,
             expanded = expanded,
             showDlgBorrar = preventivoBusState.showDlgBorrar,
             showDlgDate = preventivoBusState.showDlgDate
@@ -55,6 +78,9 @@ class PreventivosVM(
 
     fun setShowDlgBorrar(showDlgBorrar: Boolean) {
         preventivoBusState = preventivoBusState.copy(
+            lanzarBusqueda = preventivoBusState.lanzarBusqueda,
+            textoBusqueda = preventivoBusState.textoBusqueda,
+            isDetail = preventivoBusState.isDetail,
             expanded = preventivoBusState.expanded,
             showDlgBorrar = showDlgBorrar,
             showDlgDate = preventivoBusState.showDlgDate
@@ -63,6 +89,9 @@ class PreventivosVM(
 
     fun setShowDlgDate(showDlgDate: Boolean) {
         preventivoBusState = preventivoBusState.copy(
+            lanzarBusqueda = preventivoBusState.lanzarBusqueda,
+            textoBusqueda = preventivoBusState.textoBusqueda,
+            isDetail = preventivoBusState.isDetail,
             expanded = preventivoBusState.expanded,
             showDlgBorrar = preventivoBusState.showDlgBorrar,
             showDlgDate = showDlgDate

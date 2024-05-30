@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -77,6 +78,18 @@ fun UsuariosBus(
     val mensage: String
     val contexto = LocalContext.current
     var exposed by remember { mutableStateOf(false) }
+    var usuariosFiltrados by remember { mutableStateOf(usuarios) }
+
+    if (usuarioVM.usuariosBusState.textoBusqueda != "" && usuarioVM.usuariosBusState.lanzarBusqueda) {
+        usuariosFiltrados = usuarios.filter {
+            it.username.lowercase().contains(usuarioVM.usuariosBusState.textoBusqueda.lowercase())
+                    || it.nombre.lowercase()
+                .contains(usuarioVM.usuariosBusState.textoBusqueda.lowercase())
+                    || it.apellidos.lowercase()
+                .contains(usuarioVM.usuariosBusState.textoBusqueda.lowercase())
+        }
+        usuarioVM.setLanzarBusqueda(false)
+    }
 
 
     when (usuarioVM.usuariosMessageState) {
@@ -146,8 +159,8 @@ fun UsuariosBus(
                         .weight(4f)
                 )
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { },
+                    value = usuarioVM.usuariosBusState.textoBusqueda,
+                    onValueChange = { usuarioVM.setTextoBusqueda(it) },
                     label = {
                         Text(
                             stringResource(id = R.string.buscar_lit),
@@ -165,20 +178,40 @@ fun UsuariosBus(
                     ),
                     textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary),
                     trailingIcon = {
-                        Box(
-                            modifier = Modifier
-                                .size(32.dp)
-                                .clip(CircleShape)
-                                .background(Color.Blue)
-                                .clickable {
-                                }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = getString(contexto, R.string.buscar_desc),
-                                tint = Color.White,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
+                        Row {
+                            Box(
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Blue)
+                                    .clickable { usuarioVM.setLanzarBusqueda(true) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Search,
+                                    contentDescription = getString(contexto, R.string.buscar_desc),
+                                    tint = Color.White,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Box(
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Red)
+                                    .clickable {
+                                        usuarioVM.setLanzarBusqueda(false)
+                                        usuarioVM.setTextoBusqueda("")
+                                        usuariosFiltrados = usuarios
+                                    }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = getString(contexto, R.string.buscar_desc),
+                                    tint = Color.White,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
                         }
                     }
                 )
@@ -186,7 +219,7 @@ fun UsuariosBus(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 content = {
-                    items(usuarios) { it ->
+                    items(usuariosFiltrados) { it ->
                         usuarioCard(
                             usuario = it,
                             onNavUp = { onNavUp() },

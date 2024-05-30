@@ -28,6 +28,8 @@ data class VehiculoMtoState(
 )
 
 data class VehiculosBusState(
+    val lanzarBusqueda: Boolean = false,
+    val textoBusqueda: String = "",
     val isDetail: Boolean = false,
     val showDlgDate: Boolean = false,
     val showDlgConfirmation: Boolean = false)

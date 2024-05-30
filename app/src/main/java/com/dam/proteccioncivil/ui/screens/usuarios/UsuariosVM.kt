@@ -40,8 +40,32 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
         usuariosMessageState = UsuariosMessageState.Loading
     }
 
+    fun setLanzarBusqueda(lanzar: Boolean) {
+        usuariosBusState = usuariosBusState.copy(
+            lanzarBusqueda = lanzar,
+            textoBusqueda = usuariosBusState.textoBusqueda,
+            isDetail = lanzar,
+            changePassword = usuariosBusState.changePassword,
+            showDlgConfirmation = usuariosBusState.showDlgConfirmation,
+            showDlgDate = usuariosBusState.showDlgDate
+        )
+    }
+
+    fun setTextoBusqueda(texto: String) {
+        usuariosBusState = usuariosBusState.copy(
+            lanzarBusqueda = usuariosBusState.lanzarBusqueda,
+            textoBusqueda = texto,
+            isDetail = usuariosBusState.isDetail,
+            changePassword = usuariosBusState.changePassword,
+            showDlgConfirmation = usuariosBusState.showDlgConfirmation,
+            showDlgDate = usuariosBusState.showDlgDate
+        )
+    }
+
     fun setIsDetail(isDetail: Boolean) {
         usuariosBusState = usuariosBusState.copy(
+            lanzarBusqueda = usuariosBusState.lanzarBusqueda,
+            textoBusqueda = usuariosBusState.textoBusqueda,
             isDetail = isDetail,
             changePassword = usuariosBusState.changePassword,
             showDlgConfirmation = usuariosBusState.showDlgConfirmation,
@@ -51,6 +75,8 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
 
     fun setChangePassword(changePassword: Boolean) {
         usuariosBusState = usuariosBusState.copy(
+            lanzarBusqueda = usuariosBusState.lanzarBusqueda,
+            textoBusqueda = usuariosBusState.textoBusqueda,
             isDetail = usuariosBusState.isDetail,
             changePassword = changePassword,
             showDlgConfirmation = usuariosBusState.showDlgConfirmation,
@@ -61,6 +87,8 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
 
     fun setShowDlgBorrar(showDlgBorrar: Boolean) {
         usuariosBusState = usuariosBusState.copy(
+            lanzarBusqueda = usuariosBusState.lanzarBusqueda,
+            textoBusqueda = usuariosBusState.textoBusqueda,
             isDetail = usuariosBusState.isDetail,
             changePassword = usuariosBusState.changePassword,
             showDlgConfirmation = showDlgBorrar,
@@ -70,6 +98,8 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
 
     fun setShowDlgDate(showDlgDate: Boolean) {
         usuariosBusState = usuariosBusState.copy(
+            lanzarBusqueda = usuariosBusState.lanzarBusqueda,
+            textoBusqueda = usuariosBusState.textoBusqueda,
             isDetail = usuariosBusState.isDetail,
             changePassword = usuariosBusState.changePassword,
             showDlgConfirmation = usuariosBusState.showDlgConfirmation,

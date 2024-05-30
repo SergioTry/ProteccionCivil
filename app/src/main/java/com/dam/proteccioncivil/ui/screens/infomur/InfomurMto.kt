@@ -131,6 +131,7 @@ fun InfomurMto(
                             modifier = modifier.weight(1f)
                         ) {
                             OutlinedTextField(
+                                readOnly = infomursVM.infomursBusState.isDetail,
                                 label = { Text(text = stringResource(id = R.string.fechaInfomur_lit)) },
                                 value = FormatVisibleDate.use(infomursVM.infomursMtoState.fechaInfomur),
                                 isError = infomursVM.infomursMtoState.fechaInfomur == "",
@@ -144,22 +145,28 @@ fun InfomurMto(
                                 ),
                                 textStyle = TextStyle(color = AppColors.Black)
                             )
-                            IconButton(
-                                onClick = {
-                                    infomursVM.setShowDlgDate(true)
-                                },
-                                modifier = modifier.align(Alignment.CenterEnd)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.DateRange,
-                                    contentDescription = getString(contexto, R.string.fecha_desc),
-                                    tint = AppColors.Black
-                                )
+                            if (!infomursVM.infomursBusState.isDetail) {
+                                IconButton(
+                                    onClick = {
+                                        infomursVM.setShowDlgDate(true)
+                                    },
+                                    modifier = modifier.align(Alignment.CenterEnd)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.DateRange,
+                                        contentDescription = getString(
+                                            contexto,
+                                            R.string.fecha_desc
+                                        ),
+                                        tint = AppColors.Black
+                                    )
+                                }
                             }
                         }
                     }
                     Spacer(modifier = modifier.size(8.dp))
                     OutlinedTextField(
+                        readOnly = infomursVM.infomursBusState.isDetail,
                         value = infomursVM.infomursMtoState.descripcion,
                         onValueChange = { infomursVM.setDescripcion(it) },
                         label = {
@@ -181,12 +188,11 @@ fun InfomurMto(
                     )
                     Spacer(modifier = modifier.size(16.dp))
                     ExposedDropdownMenuBox(
-                        expanded = expandedUser1,
-                        onExpandedChange = { expandedUser1 = !expandedUser1 },
+                        expanded = expandedUser1 && !infomursVM.infomursBusState.isDetail,
+                        onExpandedChange = { if (!infomursVM.infomursBusState.isDetail) expandedUser1 = !expandedUser1 },
                     ) {
                         OutlinedTextField(
-                            value =
-                            infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario1 }?.nombre
+                            value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario1 }?.nombre
                                 ?: "",
                             onValueChange = { },
                             isError = infomursVM.infomursMtoState.codUsuario1 == "0",
@@ -198,16 +204,18 @@ fun InfomurMto(
                             },
                             readOnly = true,
                             trailingIcon = {
-                                IconButton(
-                                    onClick = { expandedUser1 = true }
-                                ) {
-                                    Icon(
-                                        Icons.Filled.ArrowDropDown,
-                                        contentDescription = getString(
-                                            contexto,
-                                            R.string.drop_down_desc
+                                if (!infomursVM.infomursBusState.isDetail) {
+                                    IconButton(
+                                        onClick = { expandedUser1 = true }
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.ArrowDropDown,
+                                            contentDescription = getString(
+                                                contexto,
+                                                R.string.drop_down_desc
+                                            )
                                         )
-                                    )
+                                    }
                                 }
                             },
                             singleLine = true,
@@ -219,10 +227,11 @@ fun InfomurMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            ), textStyle = TextStyle(color = AppColors.Black)
+                            ),
+                            textStyle = TextStyle(color = AppColors.Black)
                         )
                         DropdownMenu(
-                            expanded = expandedUser1,
+                            expanded = expandedUser1 && !infomursVM.infomursBusState.isDetail,
                             onDismissRequest = { expandedUser1 = false }
                         ) {
                             users.forEach { item ->
@@ -234,14 +243,15 @@ fun InfomurMto(
                                             infomursVM.infomursMtoState.codUsuario2
                                         )
                                         expandedUser1 = false
-                                    })
+                                    }
+                                )
                             }
                         }
                     }
                     Spacer(modifier = modifier.size(4.dp))
                     ExposedDropdownMenuBox(
                         expanded = expandedUser2,
-                        onExpandedChange = { expandedUser2 = !expandedUser2 },
+                        onExpandedChange = { if (!infomursVM.infomursBusState.isDetail) expandedUser2 = !expandedUser2 },
                     ) {
                         OutlinedTextField(
                             value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario2 }?.nombre
@@ -256,10 +266,12 @@ fun InfomurMto(
                             },
                             readOnly = true,
                             trailingIcon = {
-                                IconButton(
-                                    onClick = { expandedUser2 = true }
-                                ) {
-                                    Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+                                if (!infomursVM.infomursBusState.isDetail) {
+                                    IconButton(
+                                        onClick = { expandedUser2 = true }
+                                    ) {
+                                        Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+                                    }
                                 }
                             },
                             singleLine = true,
@@ -294,43 +306,45 @@ fun InfomurMto(
                 }
             }
         }
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .align(Alignment.BottomEnd),
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = {
-                    infomursVM.resetInfomurMtoState()
-                    activity?.onBackPressed()
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
+        if (!infomursVM.infomursBusState.isDetail) {
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .align(Alignment.BottomEnd),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(text = "Cancelar")
-            }
-            Spacer(modifier = modifier.width(100.dp))
-            Button(
-                onClick = {
-                    if (infomursVM.infomursMtoState.codInfomur == "0") {
-                        infomursVM.setNew()
-                    } else {
-                        infomursVM.update()
-                    }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
-                enabled = infomursVM.infomursMtoState.datosObligatorios
-            ) {
-                Text(
-                    text =
-                    if (infomursVM.infomursMtoState.codInfomur == "0") {
-                        "Añadir"
-                    } else {
-                        "Editar"
-                    }
-                )
+                Button(
+                    onClick = {
+                        infomursVM.resetInfomurMtoState()
+                        activity?.onBackPressed()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
+                ) {
+                    Text(text = "Cancelar")
+                }
+                Spacer(modifier = modifier.width(100.dp))
+                Button(
+                    onClick = {
+                        if (infomursVM.infomursMtoState.codInfomur == "0") {
+                            infomursVM.setNew()
+                        } else {
+                            infomursVM.update()
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
+                    enabled = infomursVM.infomursMtoState.datosObligatorios
+                ) {
+                    Text(
+                        text =
+                        if (infomursVM.infomursMtoState.codInfomur == "0") {
+                            "Añadir"
+                        } else {
+                            "Editar"
+                        }
+                    )
+                }
             }
             if (infomursVM.infomursBusState.showDlgDate) {
                 DlgSeleccionFecha(

@@ -14,7 +14,6 @@ import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Infomur
 import com.dam.proteccioncivil.data.model.ObjectToStringMap
-import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.InfomursRepository
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
@@ -24,7 +23,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
-
 
 
 @SuppressLint("MutableCollectionMutableState")
@@ -43,6 +41,14 @@ class InfomursVM(
         private set
 
     var infomursBusState by mutableStateOf(InfomursBusState())
+
+    fun setIsDetail(isDetail: Boolean) {
+        infomursBusState = infomursBusState.copy(
+            isDetail = isDetail,
+            showDlgConfirmation = infomursBusState.showDlgConfirmation,
+            showDlgDate = infomursBusState.showDlgDate
+        )
+    }
 
     fun setShowDlgBorrar(showDlgBorrar: Boolean){
         infomursBusState = infomursBusState.copy(

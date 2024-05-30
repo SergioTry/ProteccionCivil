@@ -265,7 +265,7 @@ fun UsuariosMto(
                         Spacer(modifier = Modifier.size(16.dp))
                         ExposedDropdownMenuBox(
                             expanded = expanded,
-                            onExpandedChange = { expanded = !expanded }
+                            onExpandedChange = { if(!usuariosVM.usuariosBusState.isDetail) expanded = !expanded }
                         ) {
                             OutlinedTextField(
                                 label = {

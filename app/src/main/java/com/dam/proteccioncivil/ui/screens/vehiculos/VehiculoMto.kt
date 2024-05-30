@@ -136,6 +136,27 @@ fun VehiculoMto(
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.kilometros_lit),
+                                color = Color.Black
+                            )
+                        },
+                        readOnly = vehiculosVM.vehiculosBusState.isDetail,
+                        value = vehiculosVM.vehiculosMtoState.km,
+                        onValueChange = { vehiculosVM.setKm(it) },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color.Blue,
+                            unfocusedBorderColor = Color.Black,
+                            focusedLabelColor = Color.Blue,
+                            unfocusedLabelColor = Color.Black
+                        ),
+                        isError = vehiculosVM.vehiculosMtoState.km == "0",
+                        textStyle = TextStyle(Color.Black)
+                    )
+                    Spacer(modifier = Modifier.size(16.dp))
+                    OutlinedTextField(
                         readOnly = vehiculosVM.vehiculosBusState.isDetail,
                         label = {
                             Text(

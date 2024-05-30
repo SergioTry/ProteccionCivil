@@ -11,16 +11,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dam.proteccioncivil.MainApplication
-import com.dam.proteccioncivil.data.model.Anuncio
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Guardia
 import com.dam.proteccioncivil.data.model.ObjectToStringMap
-import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.model.Usuario
+import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.GuardiasRepository
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
-import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosUiState
-import com.dam.proteccioncivil.ui.screens.calendario.CalendarioUiState
 import com.google.gson.JsonParser
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
@@ -50,6 +47,14 @@ class GuardiasVM(
     var guardiasBusState by mutableStateOf(GuardiasBusState())
 
     var users by mutableStateOf(UsuariosGuardiaListState().userList)
+
+    fun setIsDetail(isDetail: Boolean) {
+        guardiasBusState = guardiasBusState.copy(
+            isDetail = isDetail,
+            showDlgConfirmation = guardiasBusState.showDlgConfirmation,
+            showDlgDate = guardiasBusState.showDlgDate
+        )
+    }
 
     fun setShowDlgBorrar(showDlgBorrar: Boolean) {
         guardiasBusState = guardiasBusState.copy(

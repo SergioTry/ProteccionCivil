@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -59,6 +60,7 @@ fun GuardiasBus(
     onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier,
     onNavUp: () -> Unit,
+    onNavDetail: () -> Unit,
     refresh: () -> Unit
 ) {
 
@@ -109,6 +111,7 @@ fun GuardiasBus(
                     GuardiaCard(
                         guardia = it,
                         onNavUp = { onNavUp() },
+                        onNavDetail = { onNavDetail() },
                         guardiasVM = guardiasVM,
                         modifier = modifier,
                         contexto = contexto
@@ -177,6 +180,7 @@ fun GuardiaCard(
     guardia: Guardia,
     guardiasVM: GuardiasVM,
     onNavUp: () -> Unit,
+    onNavDetail: () -> Unit,
     modifier: Modifier,
     contexto: Context
 ) {
@@ -201,11 +205,25 @@ fun GuardiaCard(
                             .padding(start = 8.dp, top = 8.dp, end = 8.dp),
                         color = Color.Black
                     )
-                    if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-                        Row(
-                            modifier = modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End
-                        ) {
+                    Row(
+                        modifier = modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        IconButton(onClick = {
+                            guardiasVM.resetGuardiaMtoState()
+                            guardiasVM.cloneGuardiaMtoState(guardia)
+                            onNavDetail()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.RemoveRedEye,
+                                contentDescription = getString(
+                                    contexto,
+                                    R.string.detalle_desc
+                                ),
+                                tint = Color.Black
+                            )
+                        }
+                        if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                             IconButton(onClick = {
                                 guardiasVM.resetGuardiaMtoState()
                                 guardiasVM.cloneGuardiaMtoState(guardia)

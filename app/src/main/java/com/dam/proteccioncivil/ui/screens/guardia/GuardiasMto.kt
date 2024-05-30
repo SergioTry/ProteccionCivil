@@ -132,6 +132,7 @@ fun GuardiaMto(
                                 label = { Text(text = stringResource(id = R.string.fechaGuardia_lit)) },
                                 value = FormatVisibleDate.use(guardiasVM.guardiasMtoState.fechaGuardia),
                                 onValueChange = {},
+                                readOnly = guardiasVM.guardiasBusState.isDetail,
                                 modifier = modifier.fillMaxWidth(),
                                 isError = guardiasVM.guardiasMtoState.fechaGuardia == "",
                                 colors = OutlinedTextFieldDefaults.colors(
@@ -142,17 +143,22 @@ fun GuardiaMto(
                                 ),
                                 textStyle = TextStyle(color = Color.Black)
                             )
-                            IconButton(
-                                onClick = {
-                                    guardiasVM.setShowDlgDate(true)
-                                },
-                                modifier = modifier.align(Alignment.CenterEnd)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.DateRange,
-                                    contentDescription = getString(contexto, R.string.fecha_desc),
-                                    tint = Color.Black
-                                )
+                            if (!guardiasVM.guardiasBusState.isDetail) {
+                                IconButton(
+                                    onClick = {
+                                        guardiasVM.setShowDlgDate(true)
+                                    },
+                                    modifier = modifier.align(Alignment.CenterEnd)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.DateRange,
+                                        contentDescription = getString(
+                                            contexto,
+                                            R.string.fecha_desc
+                                        ),
+                                        tint = Color.Black
+                                    )
+                                }
                             }
                         }
                     }
@@ -165,6 +171,7 @@ fun GuardiaMto(
                         }, modifier = modifier
                             .fillMaxWidth()
                             .height(80.dp),
+                        readOnly = guardiasVM.guardiasBusState.isDetail,
                         isError = guardiasVM.guardiasMtoState.descripcion == "",
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color.Blue,
@@ -176,7 +183,7 @@ fun GuardiaMto(
                     )
                     ExposedDropdownMenuBox(
                         expanded = expandedUser1,
-                        onExpandedChange = { expandedUser1 = !expandedUser1 },
+                        onExpandedChange = { if(!guardiasVM.guardiasBusState.isDetail) expandedUser1 = !expandedUser1 },
                     ) {
                         OutlinedTextField(
                             value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario1 }?.nombre
@@ -186,17 +193,19 @@ fun GuardiaMto(
                             label = { Text(stringResource(id = R.string.usuario1_lit)) },
                             readOnly = true,
                             trailingIcon = {
-                                IconButton(
-                                    onClick = { expandedUser1 = true }
-                                ) {
-                                    Icon(
-                                        Icons.Filled.ArrowDropDown,
-                                        contentDescription = getString(
-                                            contexto,
-                                            R.string.drop_down_desc
-                                        ),
-                                        tint = Color.Black
-                                    )
+                                if (!guardiasVM.guardiasBusState.isDetail) {
+                                    IconButton(
+                                        onClick = { expandedUser1 = true }
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.ArrowDropDown,
+                                            contentDescription = getString(
+                                                contexto,
+                                                R.string.drop_down_desc
+                                            ),
+                                            tint = Color.Black
+                                        )
+                                    }
                                 }
                             },
                             singleLine = true,
@@ -230,7 +239,7 @@ fun GuardiaMto(
                     }
                     ExposedDropdownMenuBox(
                         expanded = expandedUser2,
-                        onExpandedChange = { expandedUser2 = !expandedUser2 },
+                        onExpandedChange = { if(!guardiasVM.guardiasBusState.isDetail) expandedUser2 = !expandedUser2 },
                     ) {
                         OutlinedTextField(
                             value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario2 }?.nombre
@@ -240,17 +249,19 @@ fun GuardiaMto(
                             label = { Text(stringResource(id = R.string.usuario2_lit)) },
                             readOnly = true,
                             trailingIcon = {
-                                IconButton(
-                                    onClick = { expandedUser2 = true }
-                                ) {
-                                    Icon(
-                                        Icons.Filled.ArrowDropDown,
-                                        contentDescription = getString(
-                                            contexto,
-                                            R.string.drop_down_desc
-                                        ),
-                                        tint = Color.Black
-                                    )
+                                if (!guardiasVM.guardiasBusState.isDetail) {
+                                    IconButton(
+                                        onClick = { expandedUser2 = true }
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.ArrowDropDown,
+                                            contentDescription = getString(
+                                                contexto,
+                                                R.string.drop_down_desc
+                                            ),
+                                            tint = Color.Black
+                                        )
+                                    }
                                 }
                             },
                             singleLine = true,
@@ -285,43 +296,45 @@ fun GuardiaMto(
                 }
             }
         }
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .align(Alignment.BottomEnd),
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = {
-                    guardiasVM.resetGuardiaMtoState()
-                    activity?.onBackPressed()
-                }
+        if (!guardiasVM.guardiasBusState.isDetail) {
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .align(Alignment.BottomEnd),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(text = stringResource(id = R.string.opc_cancel))
-            }
-            Spacer(modifier = modifier.width(100.dp))
-            Button(
-                enabled = guardiasVM.guardiasMtoState.datosObligatorios,
-                onClick = {
-                    if (guardiasVM.guardiasMtoState.codGuardia == "0") {
-                        guardiasVM.setNew()
-                    } else {
-                        guardiasVM.update()
+                Button(
+                    onClick = {
+                        guardiasVM.resetGuardiaMtoState()
+                        activity?.onBackPressed()
                     }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue)
+                ) {
+                    Text(text = stringResource(id = R.string.opc_cancel))
+                }
+                Spacer(modifier = modifier.width(100.dp))
+                Button(
+                    enabled = guardiasVM.guardiasMtoState.datosObligatorios,
+                    onClick = {
+                        if (guardiasVM.guardiasMtoState.codGuardia == "0") {
+                            guardiasVM.setNew()
+                        } else {
+                            guardiasVM.update()
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue)
 
-            ) {
-                Text(
-                    text =
-                    if (guardiasVM.guardiasMtoState.codGuardia == "0") {
-                        stringResource(id = R.string.opc_create)
-                    } else {
-                        stringResource(id = R.string.opc_edit)
-                    }, color = Color.Black
-                )
+                ) {
+                    Text(
+                        text =
+                        if (guardiasVM.guardiasMtoState.codGuardia == "0") {
+                            stringResource(id = R.string.opc_create)
+                        } else {
+                            stringResource(id = R.string.opc_edit)
+                        }, color = Color.Black
+                    )
+                }
             }
         }
         if (guardiasVM.guardiasBusState.showDlgDate) {

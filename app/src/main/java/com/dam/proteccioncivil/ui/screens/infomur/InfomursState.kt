@@ -13,6 +13,7 @@ data class InfomursMtoState(
 )
 
 data class InfomursBusState(
+    val isDetail: Boolean = false,
     val showDlgDate: Boolean = false,
     val showDlgConfirmation: Boolean = false)
 
