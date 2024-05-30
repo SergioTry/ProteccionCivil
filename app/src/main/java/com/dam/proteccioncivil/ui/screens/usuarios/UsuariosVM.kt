@@ -378,6 +378,12 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
         )
     }
 
+    fun comboBoxOptionSelected(option: String) {
+        usuariosBusState = usuariosBusState.copy(
+            comboBoxOptionSelected = option
+        )
+    }
+
     fun passwordCorrect(): Boolean {
         return usuariosMtoState.password == usuariosMtoState.confirmPassword
     }

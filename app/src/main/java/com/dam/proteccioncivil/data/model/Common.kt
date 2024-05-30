@@ -10,13 +10,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
@@ -208,3 +220,62 @@ fun LabelledSwitch(
         )
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ComboBox(
+    onSelectedChange: (String) -> Unit,
+    onExpandedChange: (Boolean) -> Unit,
+    expanded: Boolean,
+    options: List<String>,
+    optionSelected: String?,
+    modifier: Modifier = Modifier
+) {
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { onExpandedChange(!expanded) },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                focusedContainerColor = MaterialTheme.colorScheme.background,
+                focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
+                focusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.tertiary,
+            ),
+            readOnly = true,
+            value = optionSelected ?: "",
+            onValueChange = { },
+            label = { Text("Filtro") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            // Sin este modifier no funciona nada por el focus request
+            modifier = Modifier
+                .menuAnchor()
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { onExpandedChange(false) },
+        ) {
+            options.forEach { selectionOption ->
+                DropdownMenuItem(
+                    onClick = {
+                        onSelectedChange(selectionOption)
+                        onExpandedChange(false)
+                    },
+                    text = { Text(text = selectionOption) }
+                )
+            }
+            DropdownMenuItem(
+                onClick = {
+                    onSelectedChange("")
+                    onExpandedChange(false)
+                },
+                text = { Text(text = "BorrarFiltro",color = Color.Red) }
+            )
+        }
+    }
+}
+
+val filtrosUsuarios = listOf("+18", "Conductor","Rango")

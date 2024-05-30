@@ -18,7 +18,9 @@ data class UsuariosBusState(
     val changePassword: Boolean = false,
     val expanded: Boolean = false,
     val showDlgDate: Boolean = false,
-    val showDlgConfirmation: Boolean = false)
+    val showDlgConfirmation: Boolean = false,
+    val comboBoxOptionSelected: String = ""
+)
 
 data class UsuariosMtoState(
     val codUsuario: String = "0",

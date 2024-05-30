@@ -162,5 +162,6 @@
     <string name="refresh_desc">Icono asociado a recargar la pantalla</string>
     <string name="fecha_preventivo_lit">"Fecha del preventivo: "</string>
     <string name="fechas_preventivo_lit">Fechas del preventivo:</string>
+    <string name="range_select">rango</string>
 
 </resources>
