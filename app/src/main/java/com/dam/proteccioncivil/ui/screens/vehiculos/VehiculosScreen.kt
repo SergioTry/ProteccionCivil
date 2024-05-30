@@ -12,6 +12,7 @@ fun VehiculosScreen(
     vehiculosVM: VehiculosVM,
     retryAction: () -> Unit,
     onNavUp: () -> Unit,
+    onNavDetail: () -> Unit,
     refresh: () -> Unit,
     onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -25,6 +26,7 @@ fun VehiculosScreen(
                 onShowSnackBar,
                 modifier,
                 onNavUp,
+                onNavDetail,
                 refresh
             )
         }

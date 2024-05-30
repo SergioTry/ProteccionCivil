@@ -12,6 +12,7 @@ fun UsuariosScreen(
     usuariosVM: UsuariosVM,
     retryAction: () -> Unit,
     onNavUp: () -> Unit,
+    onNavDetail: () -> Unit,
     refresh: () -> Unit,
     onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -25,6 +26,7 @@ fun UsuariosScreen(
                 onShowSnackBar,
                 modifier,
                 onNavUp,
+                onNavDetail,
                 refresh
             )
         }

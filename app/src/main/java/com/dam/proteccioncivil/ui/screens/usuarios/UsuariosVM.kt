@@ -40,28 +40,29 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
         usuariosMessageState = UsuariosMessageState.Loading
     }
 
-    fun setChangePassword(changePassword: Boolean) {
+    fun setIsDetail(isDetail: Boolean) {
         usuariosBusState = usuariosBusState.copy(
-            changePassword = changePassword,
-            expanded = usuariosBusState.expanded,
+            isDetail = isDetail,
+            changePassword = usuariosBusState.changePassword,
             showDlgConfirmation = usuariosBusState.showDlgConfirmation,
             showDlgDate = usuariosBusState.showDlgDate
         )
     }
 
-    fun setExpanded(expanded: Boolean) {
+    fun setChangePassword(changePassword: Boolean) {
         usuariosBusState = usuariosBusState.copy(
-            changePassword = usuariosBusState.changePassword,
-            expanded = expanded,
+            isDetail = usuariosBusState.isDetail,
+            changePassword = changePassword,
             showDlgConfirmation = usuariosBusState.showDlgConfirmation,
             showDlgDate = usuariosBusState.showDlgDate
         )
     }
+
 
     fun setShowDlgBorrar(showDlgBorrar: Boolean) {
         usuariosBusState = usuariosBusState.copy(
+            isDetail = usuariosBusState.isDetail,
             changePassword = usuariosBusState.changePassword,
-            expanded = usuariosBusState.expanded,
             showDlgConfirmation = showDlgBorrar,
             showDlgDate = usuariosBusState.showDlgDate
         )
@@ -69,14 +70,14 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
 
     fun setShowDlgDate(showDlgDate: Boolean) {
         usuariosBusState = usuariosBusState.copy(
+            isDetail = usuariosBusState.isDetail,
             changePassword = usuariosBusState.changePassword,
-            expanded = usuariosBusState.expanded,
             showDlgConfirmation = usuariosBusState.showDlgConfirmation,
             showDlgDate = showDlgDate
         )
     }
 
-     fun getUsuarioById() {
+    fun getUsuarioById() {
         viewModelScope.launch {
             usuariosUiState = UsuariosUiState.Loading
             usuariosUiState = try {

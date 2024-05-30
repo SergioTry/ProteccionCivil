@@ -99,6 +99,7 @@
     <string name="error_icon">Icono para mostrar en caso de error</string>
     <string name="guardia_image_desc">Imagen asociada a guardia</string>
     <string name="close_icon_desc">Icono asociado para las opciones de cerrar</string>
+    <string name="detalle_desc">Icono asociado a los botones para ver el detalle de un recurso</string>
 
     <!--Literales-->
 
@@ -169,5 +170,6 @@
     <string name="range_jef">Jefe de Servicio</string>
     <string name="range_jef_db">JefeServicio</string>
     <string name="range_adm">Administrador</string>
+    <string name="range_select">rango</string>
 
 </resources>

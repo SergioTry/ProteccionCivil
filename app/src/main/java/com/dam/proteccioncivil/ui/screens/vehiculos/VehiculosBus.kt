@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -71,12 +72,14 @@ fun VehiculosBus(
     onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier,
     onNavUp: () -> Unit,
+    onNavDetail: () -> Unit,
     refresh: () -> Unit
 ) {
     val mensage: String
     val contexto = LocalContext.current
     val options = listOf("Opción 1", "Opción 2", "Opción 3")
     val focusRequester = remember { FocusRequester() }
+    var expanded = false
 
     when (vehiculosVM.vehiculosMessageState) {
         is VehiculoMessageState.Loading -> {
@@ -142,7 +145,7 @@ fun VehiculosBus(
                             readOnly = true,
                             trailingIcon = {
                                 IconButton(
-                                    onClick = { vehiculosVM.setExpanded(true) }
+                                    onClick = { expanded = !expanded }
                                 ) {
                                     Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
                                 }
@@ -155,14 +158,14 @@ fun VehiculosBus(
                                 .focusRequester(focusRequester)
                         )
                         DropdownMenu(
-                            expanded = vehiculosVM.vehiculosBusState.expanded,
-                            onDismissRequest = { vehiculosVM.setExpanded(false) }
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
                         ) {
                             options.forEach { option ->
                                 DropdownMenuItem(
                                     text = { Text(option) },
                                     onClick = {
-                                        vehiculosVM.setExpanded(false)
+                                        expanded = false
                                     }
                                 )
                             }
@@ -205,7 +208,8 @@ fun VehiculosBus(
                             onNavUp = { onNavUp() },
                             vehiculosVM = vehiculosVM,
                             modifier = modifier,
-                            contexto = contexto
+                            contexto = contexto,
+                            onNavDetail = { onNavDetail() }
                         )
                     }
                 }
@@ -273,7 +277,8 @@ fun vehiculoCard(
     onNavUp: () -> Unit,
     vehiculosVM: VehiculosVM,
     modifier: Modifier,
-    contexto: Context
+    contexto: Context,
+    onNavDetail: () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -302,14 +307,61 @@ fun vehiculoCard(
                         .align(Alignment.Start)
                 )
             }
-            Spacer(modifier = modifier.width(28.dp))
             Column {
                 Spacer(modifier = modifier.height(8.dp))
-                Text(
-                    text = vehiculo.km.toString(),
-                    modifier = modifier.padding(start = 8.dp),
-                    color = Color.Black
-                )
+                Row {
+                    Column {
+                        Spacer(modifier = modifier.height(12.dp))
+                        Text(
+                            text = vehiculo.km.toString(),
+                            modifier = modifier.padding(start = 8.dp),
+                            color = Color.Black
+                        )
+                    }
+                    Spacer(modifier = modifier.width(45.dp))
+                    IconButton(onClick = {
+                        vehiculosVM.resetVehiculoMtoState()
+                        vehiculosVM.cloneVehiculoMtoState(vehiculo)
+                        onNavDetail()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.RemoveRedEye,
+                            contentDescription = getString(contexto, R.string.detalle_desc),
+                            tint = Color.Black
+                        )
+                    }
+                    if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
+                        IconButton(onClick = {
+                            vehiculosVM.resetVehiculoMtoState()
+                            vehiculosVM.cloneVehiculoMtoState(vehiculo)
+                            vehiculosVM.setShowDlgBorrar(true)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = getString(
+                                    contexto,
+                                    R.string.eliminar_desc
+                                ),
+                                tint = Color.Black
+                            )
+                        }
+                        Spacer(modifier = modifier.height(28.dp))
+                        IconButton(onClick = {
+                            vehiculosVM.resetVehiculoMtoState()
+                            vehiculosVM.cloneVehiculoMtoState(vehiculo)
+                            onNavUp()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = getString(
+                                    contexto,
+                                    R.string.editar_desc
+                                ),
+                                tint = Color.Black
+                            )
+                        }
+                    }
+                }
                 Spacer(modifier = modifier.height(8.dp))
                 Text(
                     text = if (ShortToBoolean.use(vehiculo.disponible)) stringResource(id = R.string.disponible_lit) else stringResource(
@@ -334,34 +386,6 @@ fun vehiculoCard(
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(stringResource(id = R.string.asignar_lit))
-                    }
-                }
-            }
-            if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-                Row {
-                    Spacer(modifier = modifier.height(28.dp))
-                    IconButton(onClick = {
-                        vehiculosVM.resetVehiculoMtoState()
-                        vehiculosVM.cloneVehiculoMtoState(vehiculo)
-                        vehiculosVM.setShowDlgBorrar(true)
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = getString(contexto, R.string.eliminar_desc),
-                            tint = Color.Black
-                        )
-                    }
-                    Spacer(modifier = modifier.height(28.dp))
-                    IconButton(onClick = {
-                        vehiculosVM.resetVehiculoMtoState()
-                        vehiculosVM.cloneVehiculoMtoState(vehiculo)
-                        onNavUp()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Edit,
-                            contentDescription = getString(contexto, R.string.editar_desc),
-                            tint = Color.Black
-                        )
                     }
                 }
             }

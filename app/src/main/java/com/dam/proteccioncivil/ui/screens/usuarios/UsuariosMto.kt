@@ -65,7 +65,7 @@ import com.dam.proteccioncivil.ui.theme.AppColors
 fun UsuariosMto(
     onNavDown: () -> Unit,
     usuariosVM: UsuariosVM,
-    onShowSnackBar: (String, Boolean) -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit
 ) {
 
     val mensage: String
@@ -138,8 +138,12 @@ fun UsuariosMto(
                 Column {
                     Column(modifier = Modifier.padding(12.dp)) {
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.dni_lit),
-                                color = AppColors.Black) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.dni_lit),
+                                    color = AppColors.Black
+                                )
+                            },
                             value = usuariosVM.usuariosMtoState.dni,
                             isError = usuariosVM.usuariosMtoState.dni == "",
                             onValueChange = { usuariosVM.setDni(it) },
@@ -151,12 +155,17 @@ fun UsuariosMto(
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
                             ),
+                            readOnly = usuariosVM.usuariosBusState.isDetail,
                             textStyle = TextStyle(color = AppColors.Black)
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.nombre_lit),
-                                color = AppColors.Black) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.nombre_lit),
+                                    color = AppColors.Black
+                                )
+                            },
                             isError = usuariosVM.usuariosMtoState.nombre == "",
                             value = usuariosVM.usuariosMtoState.nombre,
                             onValueChange = { usuariosVM.setNombre(it) },
@@ -168,12 +177,17 @@ fun UsuariosMto(
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
                             ),
+                            readOnly = usuariosVM.usuariosBusState.isDetail,
                             textStyle = TextStyle(color = AppColors.Black)
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.apellidos_lit),
-                                color = AppColors.Black) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.apellidos_lit),
+                                    color = AppColors.Black
+                                )
+                            },
                             isError = usuariosVM.usuariosMtoState.apellidos == "",
                             value = usuariosVM.usuariosMtoState.apellidos,
                             onValueChange = { usuariosVM.setApellidos(it) },
@@ -184,12 +198,17 @@ fun UsuariosMto(
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
                             ),
+                            readOnly = usuariosVM.usuariosBusState.isDetail,
                             textStyle = TextStyle(color = AppColors.Black)
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.correElectronico_lit),
-                                color = AppColors.Black) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.correElectronico_lit),
+                                    color = AppColors.Black
+                                )
+                            },
                             isError = usuariosVM.usuariosMtoState.correoElectronico == "",
                             value = usuariosVM.usuariosMtoState.correoElectronico,
                             onValueChange = { usuariosVM.setCorreoElectronico(it) },
@@ -200,12 +219,17 @@ fun UsuariosMto(
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
                             ),
+                            readOnly = usuariosVM.usuariosBusState.isDetail,
                             textStyle = TextStyle(color = AppColors.Black)
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.identificador_lit),
-                                color = AppColors.Black) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.identificador_lit),
+                                    color = AppColors.Black
+                                )
+                            },
                             isError = usuariosVM.usuariosMtoState.username == "",
                             value = usuariosVM.usuariosMtoState.username,
                             onValueChange = { usuariosVM.setUsername(it) },
@@ -215,13 +239,17 @@ fun UsuariosMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            ),
+                            ), readOnly = usuariosVM.usuariosBusState.isDetail,
                             textStyle = TextStyle(color = AppColors.Black)
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.telefono_lit),
-                                color = AppColors.Black) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.telefono_lit),
+                                    color = AppColors.Black
+                                )
+                            },
                             isError = usuariosVM.usuariosMtoState.telefono == "",
                             value = usuariosVM.usuariosMtoState.telefono,
                             onValueChange = { usuariosVM.setTelefono(it) },
@@ -231,7 +259,7 @@ fun UsuariosMto(
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
                                 unfocusedLabelColor = Color.Black
-                            ),
+                            ), readOnly = usuariosVM.usuariosBusState.isDetail,
                             textStyle = TextStyle(color = AppColors.Black)
                         )
                         Spacer(modifier = Modifier.size(16.dp))
@@ -240,8 +268,12 @@ fun UsuariosMto(
                             onExpandedChange = { expanded = !expanded }
                         ) {
                             OutlinedTextField(
-                                label = { Text(text = stringResource(id = R.string.rango_lit),
-                                    color = AppColors.Black) },
+                                label = {
+                                    Text(
+                                        text = stringResource(id = R.string.rango_lit),
+                                        color = AppColors.Black
+                                    )
+                                },
                                 isError = usuariosVM.usuariosMtoState.rango == "",
                                 value = if (usuariosVM.usuariosMtoState.rango.lowercase() == "jefeservicio") {
                                     "Jefe de Servicio"
@@ -262,15 +294,17 @@ fun UsuariosMto(
                                     unfocusedLabelColor = Color.Black
                                 ),
                                 trailingIcon = {
-                                    IconButton(onClick = { expanded = !expanded }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.ArrowDropDown,
-                                            contentDescription = getString(
-                                                contexto,
-                                                R.string.drop_down_desc
-                                            ),
-                                            tint = Color.Black
-                                        )
+                                    if (!usuariosVM.usuariosBusState.isDetail) {
+                                        IconButton(onClick = { expanded = !expanded }) {
+                                            Icon(
+                                                imageVector = Icons.Filled.ArrowDropDown,
+                                                contentDescription = getString(
+                                                    contexto,
+                                                    R.string.drop_down_desc
+                                                ),
+                                                tint = Color.Black
+                                            )
+                                        }
                                     }
                                 },
                                 textStyle = TextStyle(color = AppColors.Black)
@@ -309,77 +343,82 @@ fun UsuariosMto(
                             }
                         }
                         Spacer(modifier = Modifier.size(16.dp))
-                        Row {
-                            Box(
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                OutlinedTextField(
-                                    label = {
-                                        Text(
-                                            text = stringResource(id = R.string.contrasena_lit),
-                                            color = Color.Black
-                                        )
-                                    },
-                                    isError = usuariosVM.usuariosMtoState.password == "",
-                                    value = password,
-                                    enabled = if (usuariosVM.usuariosMtoState.codUsuario == "0") true else changePassword,
-                                    onValueChange = { password = it },
-                                    modifier = Modifier.fillMaxWidth(),
-                                    colors = OutlinedTextFieldDefaults.colors(
-                                        focusedBorderColor = Color.Blue,
-                                        unfocusedBorderColor = Color.Black,
-                                        focusedLabelColor = Color.Blue,
-                                        unfocusedLabelColor = Color.Black
-                                    ),
-                                    textStyle = TextStyle(color = AppColors.Black)
-                                )
-                                IconButton(
-                                    onClick = {
-                                        changePassword = !changePassword
-                                        if (!changePassword) {
-                                            password = ""
-                                            confirmPassword = ""
-                                        }
-                                    },
-                                    modifier = Modifier.align(Alignment.CenterEnd)
+                        if (!usuariosVM.usuariosBusState.isDetail) {
+                            Row {
+                                Box(
+                                    modifier = Modifier.weight(1f)
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Edit,
-                                        contentDescription = getString(
-                                            contexto,
-                                            R.string.editar_desc
+                                    OutlinedTextField(
+                                        label = {
+                                            Text(
+                                                text = stringResource(id = R.string.contrasena_lit),
+                                                color = Color.Black
+                                            )
+                                        },
+                                        readOnly = usuariosVM.usuariosBusState.isDetail,
+                                        isError = usuariosVM.usuariosMtoState.password == "",
+                                        value = password,
+                                        enabled = if (usuariosVM.usuariosMtoState.codUsuario == "0") true else changePassword,
+                                        onValueChange = { password = it },
+                                        modifier = Modifier.fillMaxWidth(),
+                                        colors = OutlinedTextFieldDefaults.colors(
+                                            focusedBorderColor = Color.Blue,
+                                            unfocusedBorderColor = Color.Black,
+                                            focusedLabelColor = Color.Blue,
+                                            unfocusedLabelColor = Color.Black
                                         ),
-                                        tint = Color.Black
+                                        textStyle = TextStyle(color = AppColors.Black)
                                     )
+                                    IconButton(
+                                        onClick = {
+                                            changePassword = !changePassword
+                                            if (!changePassword) {
+                                                password = ""
+                                                confirmPassword = ""
+                                            }
+                                        },
+                                        modifier = Modifier.align(Alignment.CenterEnd)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Edit,
+                                            contentDescription = getString(
+                                                contexto,
+                                                R.string.editar_desc
+                                            ),
+                                            tint = Color.Black
+                                        )
+                                    }
                                 }
                             }
+                            OutlinedTextField(
+                                label = {
+                                    Text(
+                                        text = stringResource(id = R.string.confirmarContrasena_lit),
+                                        color = Color.Black
+                                    )
+                                },
+                                value = confirmPassword,
+                                isError = usuariosVM.usuariosMtoState.confirmPassword == "",
+                                enabled = if (usuariosVM.usuariosMtoState.codUsuario == "0") true else changePassword,
+                                onValueChange = { confirmPassword = it },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color.Blue,
+                                    unfocusedBorderColor = Color.Black,
+                                    focusedLabelColor = Color.Blue,
+                                    unfocusedLabelColor = Color.Black
+                                ),
+                                textStyle = TextStyle(color = AppColors.Black)
+                            )
                         }
-                        OutlinedTextField(
-                            label = {
-                                Text(
-                                    text = stringResource(id = R.string.confirmarContrasena_lit),
-                                    color = Color.Black
-                                )
-                            },
-                            value = confirmPassword,
-                            isError = usuariosVM.usuariosMtoState.confirmPassword == "",
-                            enabled = if (usuariosVM.usuariosMtoState.codUsuario == "0") true else changePassword,
-                            onValueChange = { confirmPassword = it },
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Color.Blue,
-                                unfocusedBorderColor = Color.Black,
-                                focusedLabelColor = Color.Blue,
-                                unfocusedLabelColor = Color.Black
-                            ),
-                            textStyle = TextStyle(color = AppColors.Black)
-                        )
                         Spacer(modifier = Modifier.size(16.dp))
                         LabelledSwitch(
                             checked = usuariosVM.usuariosMtoState.conductor,
                             label = stringResource(id = R.string.conductor_lit),
                             onCheckedChange = {
-                                usuariosVM.setConductor(it)
+                                if (!usuariosVM.usuariosBusState.isDetail) {
+                                    usuariosVM.setConductor(it)
+                                }
                             },
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.Blue,
@@ -394,8 +433,13 @@ fun UsuariosMto(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 OutlinedTextField(
-                                    label = { Text(text = stringResource(id = R.string.fechaNacimiento_lit),
-                                        color = AppColors.Black) },
+                                    label = {
+                                        Text(
+                                            text = stringResource(id = R.string.fechaNacimiento_lit),
+                                            color = AppColors.Black
+                                        )
+                                    },
+                                    readOnly = usuariosVM.usuariosBusState.isDetail,
                                     isError = usuariosVM.usuariosMtoState.fechaNacimiento == "",
                                     value = FormatVisibleDate.use(usuariosVM.usuariosMtoState.fechaNacimiento),
                                     onValueChange = {},
@@ -408,20 +452,22 @@ fun UsuariosMto(
                                     ),
                                     textStyle = TextStyle(color = AppColors.Black)
                                 )
-                                IconButton(
-                                    onClick = {
-                                        usuariosVM.setShowDlgDate(true)
-                                    },
-                                    modifier = Modifier.align(Alignment.CenterEnd)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.DateRange,
-                                        contentDescription = getString(
-                                            contexto,
-                                            R.string.editar_desc
-                                        ),
-                                        tint = Color.Black
-                                    )
+                                if (!usuariosVM.usuariosBusState.isDetail) {
+                                    IconButton(
+                                        onClick = {
+                                            usuariosVM.setShowDlgDate(true)
+                                        },
+                                        modifier = Modifier.align(Alignment.CenterEnd)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.DateRange,
+                                            contentDescription = getString(
+                                                contexto,
+                                                R.string.editar_desc
+                                            ),
+                                            tint = Color.Black
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -440,54 +486,56 @@ fun UsuariosMto(
                     }
                 }
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Button(
-                    onClick = {
-                        usuariosVM.resetUsuarioMtoState()
-                        activity?.onBackPressed()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
+            if (!usuariosVM.usuariosBusState.isDetail) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = stringResource(id = R.string.opc_cancel))
-                }
-                Spacer(modifier = Modifier.width(100.dp))
-                Button(
-                    colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
+                    Button(
+                        onClick = {
+                            usuariosVM.resetUsuarioMtoState()
+                            activity?.onBackPressed()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
+                    ) {
+                        Text(text = stringResource(id = R.string.opc_cancel))
+                    }
+                    Spacer(modifier = Modifier.width(100.dp))
+                    Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
 
-                    enabled = usuariosVM.usuariosMtoState.datosObligatorios && hayCambios ||
-                            changePassword && password.isNotEmpty() && confirmPassword.isNotEmpty(),
-                    onClick = {
-                        if (!changePassword && usuariosVM.usuariosMtoState.codUsuario != "0") {
-                            if (usuariosVM.usuariosMtoState.codUsuario == "0") {
-                                usuariosVM.setNew()
-                            } else {
-                                usuariosVM.update()
-                            }
-                        } else {
-                            usuariosVM.setPassword(password)
-                            usuariosVM.setConfirmPassword(confirmPassword)
-                            if (usuariosVM.passwordCorrect()) {
+                        enabled = usuariosVM.usuariosMtoState.datosObligatorios && hayCambios ||
+                                changePassword && password.isNotEmpty() && confirmPassword.isNotEmpty(),
+                        onClick = {
+                            if (!changePassword && usuariosVM.usuariosMtoState.codUsuario != "0") {
                                 if (usuariosVM.usuariosMtoState.codUsuario == "0") {
                                     usuariosVM.setNew()
                                 } else {
                                     usuariosVM.update()
                                 }
+                            } else {
+                                usuariosVM.setPassword(password)
+                                usuariosVM.setConfirmPassword(confirmPassword)
+                                if (usuariosVM.passwordCorrect()) {
+                                    if (usuariosVM.usuariosMtoState.codUsuario == "0") {
+                                        usuariosVM.setNew()
+                                    } else {
+                                        usuariosVM.update()
+                                    }
+                                }
                             }
                         }
+                    ) {
+                        Text(
+                            text = if (usuariosVM.usuariosMtoState.codUsuario == "0") {
+                                stringResource(id = R.string.opc_create)
+                            } else {
+                                stringResource(id = R.string.opc_edit)
+                            }
+                        )
                     }
-                ) {
-                    Text(
-                        text = if (usuariosVM.usuariosMtoState.codUsuario == "0") {
-                            stringResource(id = R.string.opc_create)
-                        } else {
-                            stringResource(id = R.string.opc_edit)
-                        }
-                    )
                 }
             }
         }

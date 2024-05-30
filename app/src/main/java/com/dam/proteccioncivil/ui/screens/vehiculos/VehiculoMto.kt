@@ -121,6 +121,7 @@ fun VehiculoMto(
                                 color = Color.Black
                             )
                         },
+                        readOnly = vehiculosVM.vehiculosBusState.isDetail,
                         value = vehiculosVM.vehiculosMtoState.matricula,
                         onValueChange = { vehiculosVM.setMatricula(it) },
                         modifier = Modifier.fillMaxWidth(),
@@ -135,6 +136,7 @@ fun VehiculoMto(
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
+                        readOnly = vehiculosVM.vehiculosBusState.isDetail,
                         label = {
                             Text(
                                 text = stringResource(id = R.string.marca_lit),
@@ -155,6 +157,7 @@ fun VehiculoMto(
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
+                        readOnly = vehiculosVM.vehiculosBusState.isDetail,
                         label = {
                             Text(
                                 text = stringResource(id = R.string.modelo_lit),
@@ -179,6 +182,7 @@ fun VehiculoMto(
                             modifier = Modifier.weight(1f)
                         ) {
                             OutlinedTextField(
+                                readOnly = vehiculosVM.vehiculosBusState.isDetail,
                                 label = {
                                     Text(
                                         text = stringResource(id = R.string.fecha_mantenimiento_lit),
@@ -191,30 +195,36 @@ fun VehiculoMto(
                                 isError = vehiculosVM.vehiculosMtoState.fechaMantenimiento == "",
                                 textStyle = TextStyle(Color.Black)
                             )
-                            IconButton(
-                                onClick = {
-                                    vehiculosVM.setShowDlgDate(true)
-                                },
-                                modifier = Modifier.align(Alignment.CenterEnd)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.DateRange,
-                                    contentDescription = getString(contexto, R.string.fecha_desc),
-                                    tint = Color.Black
-                                )
+                            if (!vehiculosVM.vehiculosBusState.isDetail) {
+                                IconButton(
+                                    onClick = {
+                                        vehiculosVM.setShowDlgDate(true)
+                                    },
+                                    modifier = Modifier.align(Alignment.CenterEnd)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.DateRange,
+                                        contentDescription = getString(
+                                            contexto,
+                                            R.string.fecha_desc
+                                        ),
+                                        tint = Color.Black
+                                    )
+                                }
                             }
                         }
                     }
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
+                        readOnly = vehiculosVM.vehiculosBusState.isDetail,
                         label = {
                             Text(
                                 text = stringResource(id = R.string.descripcion_mantenimiento_lit),
                                 color = Color.Black
                             )
                         },
-                        value = vehiculosVM.vehiculosMtoState.descripcion.let { if (it != "null" && it != null) vehiculosVM.vehiculosMtoState.descripcion else "" }
-                            ?: "",
+                        value = vehiculosVM.vehiculosMtoState.descripcion.let { if (it != "null" && it != null) vehiculosVM.vehiculosMtoState.descripcion else " " }
+                            ?: " ",
                         onValueChange = { vehiculosVM.setDescripcion(it) },
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -228,42 +238,44 @@ fun VehiculoMto(
                 }
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .align(Alignment.BottomCenter),
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = {
-                    vehiculosVM.resetVehiculoMtoState()
-                    activity?.onBackPressed()
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError),
+        if (!vehiculosVM.vehiculosBusState.isDetail) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .align(Alignment.BottomCenter),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(text = stringResource(id = R.string.opc_cancel))
-            }
-            Spacer(modifier = Modifier.width(100.dp))
-            Button(
-                enabled = vehiculosVM.vehiculosMtoState.datosObligatorios,
-                colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
-                onClick = {
-                    if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
-                        vehiculosVM.setNew()
-                    } else {
-                        vehiculosVM.update()
-                    }
+                Button(
+                    onClick = {
+                        vehiculosVM.resetVehiculoMtoState()
+                        activity?.onBackPressed()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError),
+                ) {
+                    Text(text = stringResource(id = R.string.opc_cancel))
                 }
-            ) {
-                Text(
-                    text = if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
-                        stringResource(id = R.string.opc_create)
-                    } else {
-                        stringResource(id = R.string.opc_edit)
+                Spacer(modifier = Modifier.width(100.dp))
+                Button(
+                    enabled = vehiculosVM.vehiculosMtoState.datosObligatorios,
+                    colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
+                    onClick = {
+                        if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
+                            vehiculosVM.setNew()
+                        } else {
+                            vehiculosVM.update()
+                        }
                     }
-                )
+                ) {
+                    Text(
+                        text = if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
+                            stringResource(id = R.string.opc_create)
+                        } else {
+                            stringResource(id = R.string.opc_edit)
+                        }
+                    )
+                }
             }
         }
     }

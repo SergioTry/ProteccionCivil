@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -70,6 +71,7 @@ fun UsuariosBus(
     onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier,
     onNavUp: () -> Unit,
+    onNavDetail: () -> Unit,
     refresh: () -> Unit
 ) {
     val mensage: String
@@ -190,7 +192,8 @@ fun UsuariosBus(
                             onNavUp = { onNavUp() },
                             usuariosVM = usuarioVM,
                             modifier = modifier,
-                            contexto = contexto
+                            contexto = contexto,
+                            onNavDetail = { onNavDetail() }
                         )
                     }
                 }
@@ -267,7 +270,8 @@ fun usuarioCard(
     onNavUp: () -> Unit,
     usuariosVM: UsuariosVM,
     modifier: Modifier,
-    contexto: Context
+    contexto: Context,
+    onNavDetail: () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -296,11 +300,25 @@ fun usuarioCard(
                         modifier = modifier.align(Alignment.CenterVertically),
                         color = Color.Black
                     )
-                    if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-                        Row(
-                            modifier = modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End
-                        ) {
+                    Row(
+                        modifier = modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        IconButton(onClick = {
+                            usuariosVM.resetUsuarioMtoState()
+                            usuariosVM.cloneUsuarioMtoState(usuario)
+                            onNavDetail()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.RemoveRedEye,
+                                contentDescription = getString(
+                                    contexto,
+                                    R.string.detalle_desc
+                                ),
+                                tint = Color.Black
+                            )
+                        }
+                        if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                             IconButton(onClick = {
                                 usuariosVM.resetUsuarioMtoState()
                                 usuariosVM.cloneUsuarioMtoState(usuario)

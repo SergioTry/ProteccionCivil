@@ -556,7 +556,14 @@ private fun NavHostRoutes(
                 usuariosUiState = usuariosVM.usuariosUiState,
                 usuariosVM = usuariosVM,
                 retryAction = { usuariosVM.getAll() },
-                onNavUp = { navController.navigate(AppScreens.UsuariosMto.name) },
+                onNavUp = {
+                    usuariosVM.setIsDetail(false)
+                    navController.navigate(AppScreens.UsuariosMto.name)
+                },
+                onNavDetail = {
+                    usuariosVM.setIsDetail(true)
+                    navController.navigate(AppScreens.UsuariosMto.name)
+                },
                 refresh = {
                     navController.popBackStack()
                     navController.navigate(AppScreens.Usuarios.name)
@@ -606,7 +613,14 @@ private fun NavHostRoutes(
                 vehiculosUiState = vehiculosVM.vehiculosUiState,
                 vehiculosVM = vehiculosVM,
                 retryAction = { vehiculosVM.getAll() },
-                onNavUp = { navController.navigate(AppScreens.VehiculosMto.name) },
+                onNavUp = {
+                    vehiculosVM.setIsDetail(false)
+                    navController.navigate(AppScreens.VehiculosMto.name)
+                },
+                onNavDetail = {
+                    vehiculosVM.setIsDetail(true)
+                    navController.navigate(AppScreens.VehiculosMto.name)
+                },
                 refresh = {
                     navController.popBackStack()
                     navController.navigate(AppScreens.Vehiculos.name)
