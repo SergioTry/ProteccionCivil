@@ -13,6 +13,7 @@ interface PreventivosApiService {
     suspend fun getPreventivos(
         @Header("Authorization") authToken: String,
         @Query("riesgo") riesgo: Boolean?,
+        @Query("mes") mes: Int?,
     ): ApiResponse
 
     @GET("usuarios/{codUsuario}/preventivos")

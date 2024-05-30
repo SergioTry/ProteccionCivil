@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,7 +39,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 //Tiempo máximo de espera
-val timeoutMillis: Long = 3500
+val timeoutMillis: Long = 5000
 
 class ObjectToStringMap {
     companion object {
@@ -216,6 +217,11 @@ fun LabelledSwitch(
     }
 }
 
+val filtrosUsuarios = listOf("+18", "Conductores","Rango")
+val filtrosVehiculos = listOf("Disponibles", "No Disponibles")
+val filtrosPreventivos = listOf("Riesgo", "Sin Riesgo", "Mes")
+val filtrosPreventivosLimitados = listOf("Mes")
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComboBox(
@@ -224,6 +230,7 @@ fun ComboBox(
     expanded: Boolean,
     options: List<String>,
     optionSelected: String?,
+    enabled: Boolean,
     modifier: Modifier = Modifier
 ) {
     ExposedDropdownMenuBox(
@@ -241,6 +248,7 @@ fun ComboBox(
                 unfocusedLabelColor = MaterialTheme.colorScheme.tertiary,
             ),
             readOnly = true,
+            enabled = enabled,
             value = optionSelected ?: "",
             onValueChange = { },
             label = { Text("Filtro") },
@@ -252,6 +260,7 @@ fun ComboBox(
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { onExpandedChange(false) },
+            modifier = Modifier.heightIn(max = 350.dp)
         ) {
             options.forEach { selectionOption ->
                 DropdownMenuItem(
@@ -259,6 +268,7 @@ fun ComboBox(
                         onSelectedChange(selectionOption)
                         onExpandedChange(false)
                     },
+                    enabled = enabled,
                     text = { Text(text = selectionOption) }
                 )
             }
@@ -267,12 +277,9 @@ fun ComboBox(
                     onSelectedChange("")
                     onExpandedChange(false)
                 },
-                text = { Text(text = "BorrarFiltro",color = Color.Red) }
+                enabled = enabled,
+                text = { Text(text = "Borrar Filtro",color = Color.Red) }
             )
         }
     }
 }
-
-val filtrosUsuarios = listOf("+18", "Conductor","Rango")
-val filtrosVehiculos = listOf("Modelo","Marca")
-val filtrosPreventivo = listOf("Fecha")

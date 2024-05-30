@@ -43,14 +43,14 @@ fun DlgRecursos(
             Column(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(8.dp, top = 16.dp)
+                    .padding(8.dp, top = 16.dp,bottom = 8.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.recursos_select), color = Color.Black,
                     modifier = modifier.align(Alignment.CenterHorizontally),
                     textDecoration = TextDecoration.Underline,
                 )
-                Spacer(modifier = modifier.height(32.dp))
+                Spacer(modifier = modifier.height(12.dp))
                 TextButton(
                     modifier = modifier.align(Alignment.CenterHorizontally),
                     onClick = onVoluntariosClick,
@@ -78,7 +78,6 @@ fun DlgRecursos(
                 ) {
                     Text(stringResource(id = R.string.vehiculos))
                 }
-                Spacer(modifier = modifier.height(8.dp))
             }
         }
     }

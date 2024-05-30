@@ -8,10 +8,14 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface VehiculosApiService {
     @GET("vehiculos")
-    suspend fun getVehiculos(@Header("Authorization") authToken: String): ApiResponse
+    suspend fun getVehiculos(
+        @Header("Authorization") authToken: String,
+        @Query("disponible") disponible: Boolean?,
+    ): ApiResponse
 
     @GET("preventivos/{codPreventivo}/vehiculos")
     suspend fun getVehiculosPreventivo(

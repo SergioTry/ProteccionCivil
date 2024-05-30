@@ -8,7 +8,12 @@ import kotlinx.serialization.json.decodeFromJsonElement
 
 interface UsuariosRepository {
     suspend fun updateUsuario(codUsuario: Int, usuarioData: Map<String, String>)
-    suspend fun getUsuarios(): List<Usuario>
+    suspend fun getUsuarios(
+        conductores: Boolean? = null,
+        mayores: Boolean? = null,
+        rango: String? = null
+    ): List<Usuario>
+
     suspend fun getUsuarioById(codUsuario: Int): Usuario?
     suspend fun getUsuariosPreventivo(codPreventivo: Int): List<Usuario>
     suspend fun deleteUsuario(id: Int)
@@ -23,13 +28,19 @@ class NetworkUsuariosRepository(
         usuariosApiService.updateUsuario("Bearer ${Token.token}", codUsuario, usuarioData)
     }
 
-    override suspend fun getUsuarios(): List<Usuario> {
-        val apiResponse = usuariosApiService.getUsuarios("Bearer ${Token.token}")
+    override suspend fun getUsuarios(
+        conductores: Boolean?,
+        mayores: Boolean?,
+        rango: String?
+    ): List<Usuario> {
+        val apiResponse =
+            usuariosApiService.getUsuarios("Bearer ${Token.token}", conductores, mayores, rango)
         return Json.decodeFromJsonElement<List<Usuario>>(apiResponse.body)
     }
 
     override suspend fun getUsuarioById(codUsuario: Int): Usuario? {
-        val apiResponse = usuariosApiService.getUsuarioByCodUsuario("Bearer ${Token.token}",codUsuario)
+        val apiResponse =
+            usuariosApiService.getUsuarioByCodUsuario("Bearer ${Token.token}", codUsuario)
         return Json.decodeFromJsonElement<Usuario?>(apiResponse.body)
     }
 

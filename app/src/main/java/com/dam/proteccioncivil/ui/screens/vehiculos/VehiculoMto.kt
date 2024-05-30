@@ -132,7 +132,8 @@ fun VehiculoMto(
                             unfocusedLabelColor = Color.Black
                         ),
                         isError = vehiculosVM.vehiculosMtoState.matricula == "",
-                        textStyle = TextStyle(Color.Black)
+                        textStyle = TextStyle(Color.Black),
+                        enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
@@ -174,7 +175,8 @@ fun VehiculoMto(
                             unfocusedLabelColor = Color.Black
                         ),
                         isError = vehiculosVM.vehiculosMtoState.marca == "",
-                        textStyle = TextStyle(Color.Black)
+                        textStyle = TextStyle(Color.Black),
+                        enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
@@ -195,7 +197,8 @@ fun VehiculoMto(
                             unfocusedLabelColor = Color.Black
                         ),
                         isError = vehiculosVM.vehiculosMtoState.modelo == "",
-                        textStyle = TextStyle(Color.Black)
+                        textStyle = TextStyle(Color.Black),
+                        enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     Row {
@@ -214,13 +217,15 @@ fun VehiculoMto(
                                 onValueChange = {},
                                 modifier = Modifier.fillMaxWidth(),
                                 isError = vehiculosVM.vehiculosMtoState.fechaMantenimiento == "",
-                                textStyle = TextStyle(Color.Black)
+                                textStyle = TextStyle(Color.Black),
+                                enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                             )
                             if (!vehiculosVM.vehiculosBusState.isDetail) {
                                 IconButton(
                                     onClick = {
                                         vehiculosVM.setShowDlgDate(true)
                                     },
+                                    enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                                     modifier = Modifier.align(Alignment.CenterEnd)
                                 ) {
                                     Icon(
@@ -254,7 +259,8 @@ fun VehiculoMto(
                             focusedLabelColor = Color.Blue,
                             unfocusedLabelColor = Color.Black
                         ),
-                        isError = vehiculosVM.vehiculosMtoState.descripcion == ""
+                        isError = vehiculosVM.vehiculosMtoState.descripcion == "",
+                        enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                     )
                 }
             }
@@ -273,13 +279,14 @@ fun VehiculoMto(
                         vehiculosVM.resetVehiculoMtoState()
                         activity?.onBackPressed()
                     },
+                    enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                     colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError),
                 ) {
                     Text(text = stringResource(id = R.string.opc_cancel))
                 }
                 Spacer(modifier = Modifier.width(100.dp))
                 Button(
-                    enabled = vehiculosVM.vehiculosMtoState.datosObligatorios,
+                    enabled = vehiculosVM.vehiculosMtoState.datosObligatorios &&  vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                     colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
                     onClick = {
                         if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
@@ -287,7 +294,7 @@ fun VehiculoMto(
                         } else {
                             vehiculosVM.update()
                         }
-                    }
+                    },
                 ) {
                     Text(
                         text = if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
@@ -304,8 +311,10 @@ fun VehiculoMto(
         DlgSeleccionFecha(
             modifier = Modifier,
             onClick = {
-                vehiculosVM.setShowDlgDate(false)
-                vehiculosVM.setFechaMantenimiento(it)
+                if ( vehiculosVM.vehiculosUiState != VehiculosUiState.Loading ) {
+                    vehiculosVM.setShowDlgDate(false)
+                    vehiculosVM.setFechaMantenimiento(it)
+                }
             },
             onDismiss = {
                 vehiculosVM.setShowDlgDate(false)

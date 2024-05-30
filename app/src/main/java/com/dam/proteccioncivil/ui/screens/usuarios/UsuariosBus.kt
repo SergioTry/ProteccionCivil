@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -49,9 +51,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
@@ -68,7 +72,7 @@ import com.dam.proteccioncivil.ui.theme.AppColors
 @Composable
 fun UsuariosBus(
     usuarios: List<Usuario>,
-    usuarioVM: UsuariosVM,
+    usuariosVM: UsuariosVM,
     onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier,
     onNavUp: () -> Unit,
@@ -77,22 +81,25 @@ fun UsuariosBus(
 ) {
     val mensage: String
     val contexto = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     var exposed by remember { mutableStateOf(false) }
     var usuariosFiltrados by remember { mutableStateOf(usuarios) }
 
-    if (usuarioVM.usuariosBusState.textoBusqueda != "" && usuarioVM.usuariosBusState.lanzarBusqueda) {
+    if (usuariosVM.usuariosBusState.textoBusqueda != "" && usuariosVM.usuariosBusState.lanzarBusqueda) {
         usuariosFiltrados = usuarios.filter {
-            it.username.lowercase().contains(usuarioVM.usuariosBusState.textoBusqueda.lowercase())
+            it.username.lowercase().contains(usuariosVM.usuariosBusState.textoBusqueda.lowercase())
                     || it.nombre.lowercase()
-                .contains(usuarioVM.usuariosBusState.textoBusqueda.lowercase())
+                .contains(usuariosVM.usuariosBusState.textoBusqueda.lowercase())
                     || it.apellidos.lowercase()
-                .contains(usuarioVM.usuariosBusState.textoBusqueda.lowercase())
+                .contains(usuariosVM.usuariosBusState.textoBusqueda.lowercase())
         }
-        usuarioVM.setLanzarBusqueda(false)
+        usuariosVM.setLanzarBusqueda(false)
+    } else if (usuariosVM.usuariosBusState.lanzarBusqueda) {
+        usuariosFiltrados = usuarios
+        usuariosVM.setLanzarBusqueda(false)
     }
 
-
-    when (usuarioVM.usuariosMessageState) {
+    when (usuariosVM.usuariosMessageState) {
         is UsuariosMessageState.Loading -> {
         }
 
@@ -102,9 +109,9 @@ fun UsuariosBus(
                 R.string.usuario_delete_success
             )
             onShowSnackBar(mensage, true)
-            usuarioVM.resetUsuarioMtoState()
-            usuarioVM.resetInfoState()
-            usuarioVM.getAll()
+            usuariosVM.resetUsuarioMtoState()
+            usuariosVM.resetInfoState()
+            usuariosVM.getAll()
             refresh()
         }
 
@@ -114,7 +121,7 @@ fun UsuariosBus(
                 R.string.usuario_delete_failure
             )
             onShowSnackBar(mensage, false)
-            usuarioVM.resetInfoState()
+            usuariosVM.resetInfoState()
         }
     }
 
@@ -131,8 +138,7 @@ fun UsuariosBus(
         )
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -145,22 +151,26 @@ fun UsuariosBus(
             ) {
                 ComboBox(
                     onSelectedChange = {
-                        usuarioVM.setComboBoxOptionSelected(it)
+                        usuariosVM.setComboBoxOptionSelected(it)
                         exposed = false
-                        if (usuarioVM.usuariosBusState.comboBoxOptionSelected == "Rango") {
-                            usuarioVM.setShowDlgRango(true)
+                        if (usuariosVM.usuariosBusState.comboBoxOptionSelected == "Rango") {
+                            usuariosVM.setShowDlgRango(true)
+                        } else {
+                            usuariosVM.getAll()
+                            refresh()
                         }
                     },
                     onExpandedChange = { exposed = it },
                     expanded = exposed,
                     options = filtrosUsuarios,
-                    optionSelected = usuarioVM.usuariosBusState.comboBoxOptionSelected,
+                    optionSelected = usuariosVM.usuariosBusState.comboBoxOptionSelected,
+                    enabled = usuariosVM.usuariosUiState != UsuariosUiState.Loading,
                     modifier = Modifier
                         .weight(4f)
                 )
                 OutlinedTextField(
-                    value = usuarioVM.usuariosBusState.textoBusqueda,
-                    onValueChange = { usuarioVM.setTextoBusqueda(it) },
+                    value = usuariosVM.usuariosBusState.textoBusqueda,
+                    onValueChange = { usuariosVM.setTextoBusqueda(it) },
                     label = {
                         Text(
                             stringResource(id = R.string.buscar_lit),
@@ -176,15 +186,32 @@ fun UsuariosBus(
                         focusedLabelColor = MaterialTheme.colorScheme.tertiary,
                         unfocusedLabelColor = MaterialTheme.colorScheme.tertiary,
                     ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                            usuariosVM.setLanzarBusqueda(true)
+                        }
+                    ),
+                    enabled = usuariosVM.usuariosUiState != UsuariosUiState.Loading,
                     textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary),
                     trailingIcon = {
-                        Row {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
                             Box(
                                 modifier = Modifier
-                                    .size(24.dp)
+                                    .size(28.dp)
                                     .clip(CircleShape)
                                     .background(Color.Blue)
-                                    .clickable { usuarioVM.setLanzarBusqueda(true) }
+                                    .clickable {
+                                        if (usuariosVM.usuariosUiState != UsuariosUiState.Loading) {
+                                            usuariosVM.setLanzarBusqueda(true)
+                                        }
+                                    }
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Search,
@@ -196,14 +223,16 @@ fun UsuariosBus(
                             Spacer(modifier = Modifier.width(8.dp))
                             Box(
                                 modifier = Modifier
-                                    .size(24.dp)
+                                    .size(28.dp)
                                     .clip(CircleShape)
                                     .background(Color.Red)
                                     .clickable {
-                                        usuarioVM.setLanzarBusqueda(false)
-                                        usuarioVM.setTextoBusqueda("")
-                                        usuariosFiltrados = usuarios
-                                    }
+                                        if (usuariosVM.usuariosUiState != UsuariosUiState.Loading) {
+                                            usuariosVM.setLanzarBusqueda(false)
+                                            usuariosVM.setTextoBusqueda("")
+                                            usuariosFiltrados = usuarios
+                                        }
+                                    },
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Close,
@@ -212,6 +241,7 @@ fun UsuariosBus(
                                     modifier = Modifier.align(Alignment.Center)
                                 )
                             }
+                            Spacer(modifier = Modifier.width(4.dp))
                         }
                     }
                 )
@@ -223,10 +253,11 @@ fun UsuariosBus(
                         usuarioCard(
                             usuario = it,
                             onNavUp = { onNavUp() },
-                            usuariosVM = usuarioVM,
+                            usuariosVM = usuariosVM,
                             modifier = modifier,
                             contexto = contexto,
-                            onNavDetail = { onNavDetail() }
+                            onNavDetail = { onNavDetail() },
+                            enabled = usuariosVM.usuariosUiState != UsuariosUiState.Loading
                         )
                     }
                 }
@@ -242,7 +273,9 @@ fun UsuariosBus(
         ) {
             FloatingActionButton(
                 onClick = {
-                    refresh()
+                    if (usuariosVM.usuariosUiState != UsuariosUiState.Loading) {
+                        refresh()
+                    }
                 },
                 contentColor = Color.White,
                 elevation = FloatingActionButtonDefaults.elevation(8.dp),
@@ -258,8 +291,10 @@ fun UsuariosBus(
             if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 FloatingActionButton(
                     onClick = {
-                        usuarioVM.resetUsuarioMtoState()
-                        onNavUp()
+                        if (usuariosVM.usuariosUiState != UsuariosUiState.Loading) {
+                            usuariosVM.resetUsuarioMtoState()
+                            onNavUp()
+                        }
                     },
                     contentColor = Color.White,
                     elevation = FloatingActionButtonDefaults.elevation(8.dp),
@@ -274,24 +309,27 @@ fun UsuariosBus(
             }
         }
     }
-    if (usuarioVM.usuariosBusState.showDlgConfirmation) {
+    if (usuariosVM.usuariosBusState.showDlgConfirmation) {
         DlgConfirmacion(
             mensaje = R.string.guardia_delete_confirmation,
             onCancelarClick = {
-                usuarioVM.setShowDlgBorrar(false)
+                usuariosVM.setShowDlgBorrar(false)
             },
             onAceptarClick = {
-                usuarioVM.setShowDlgBorrar(false)
-                usuarioVM.deleteBy()
+                usuariosVM.setShowDlgBorrar(false)
+                usuariosVM.deleteBy()
             }
         )
     }
 
-    if (usuarioVM.usuariosBusState.showDlgRango) {
+    if (usuariosVM.usuariosBusState.showDlgRango) {
         DlgRangos(
-            onCancelarClick = { usuarioVM.setShowDlgRango(false) },
-            onAplicarClick = { rango -> //TODO
-                usuarioVM.setShowDlgRango(false)
+            onCancelarClick = { usuariosVM.setShowDlgRango(false) },
+            onAplicarClick = { rango ->
+                usuariosVM.setComboBoxOptionSelected(rango)
+                usuariosVM.setShowDlgRango(false)
+                usuariosVM.getAll()
+                refresh()
             }
         )
     }
@@ -304,6 +342,7 @@ fun usuarioCard(
     usuariosVM: UsuariosVM,
     modifier: Modifier,
     contexto: Context,
+    enabled: Boolean,
     onNavDetail: () -> Unit
 ) {
     Card(
@@ -337,11 +376,13 @@ fun usuarioCard(
                         modifier = modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        IconButton(onClick = {
-                            usuariosVM.resetUsuarioMtoState()
-                            usuariosVM.cloneUsuarioMtoState(usuario)
-                            onNavDetail()
-                        }) {
+                        IconButton(
+                            onClick = {
+                                usuariosVM.resetUsuarioMtoState()
+                                usuariosVM.cloneUsuarioMtoState(usuario)
+                                onNavDetail()
+                            }, enabled = enabled
+                        ) {
                             Icon(
                                 imageVector = Icons.Filled.RemoveRedEye,
                                 contentDescription = getString(
@@ -352,11 +393,13 @@ fun usuarioCard(
                             )
                         }
                         if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-                            IconButton(onClick = {
-                                usuariosVM.resetUsuarioMtoState()
-                                usuariosVM.cloneUsuarioMtoState(usuario)
-                                usuariosVM.setShowDlgBorrar(true)
-                            }) {
+                            IconButton(
+                                onClick = {
+                                    usuariosVM.resetUsuarioMtoState()
+                                    usuariosVM.cloneUsuarioMtoState(usuario)
+                                    usuariosVM.setShowDlgBorrar(true)
+                                }, enabled = enabled
+                            ) {
                                 Icon(
                                     imageVector = Icons.Filled.Delete,
                                     contentDescription = getString(
@@ -366,12 +409,14 @@ fun usuarioCard(
                                     tint = Color.Black
                                 )
                             }
-                            IconButton(onClick = {
-                                usuariosVM.resetUsuarioMtoState()
-                                usuariosVM.cloneUsuarioMtoState(usuario)
-                                usuariosVM.setPassword("")
-                                onNavUp()
-                            }) {
+                            IconButton(
+                                onClick = {
+                                    usuariosVM.resetUsuarioMtoState()
+                                    usuariosVM.cloneUsuarioMtoState(usuario)
+                                    usuariosVM.setPassword("")
+                                    onNavUp()
+                                }, enabled = enabled
+                            ) {
                                 Icon(
                                     imageVector = Icons.Filled.Edit,
                                     contentDescription = getString(contexto, R.string.editar_desc),
@@ -390,7 +435,7 @@ fun usuarioCard(
     }
 }
 
-fun formatApellidos(apellidos: String): String {
+private fun formatApellidos(apellidos: String): String {
     val position = apellidos.indexOfFirst { it.isUpperCase() && apellidos.indexOf(it) != 0 }
     return if (position != -1) {
         apellidos.substring(0, position) + " " + apellidos.substring(position)

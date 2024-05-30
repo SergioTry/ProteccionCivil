@@ -8,10 +8,19 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface UsuariosApiService {
+
+    // El parámetro conductores solo admite el valor true
+    // El parámetro mayores solo admite el valor true
     @GET("usuarios")
-    suspend fun getUsuarios(@Header("Authorization") authToken: String): ApiResponse
+    suspend fun getUsuarios(
+        @Header("Authorization") authToken: String,
+        @Query("conductores") conductores: Boolean?,
+        @Query("mayores") mayores: Boolean?,
+        @Query("rango") rango: String?,
+    ): ApiResponse
 
     @GET("usuarios/{codUsuario}")
     suspend fun getUsuarioByCodUsuario(

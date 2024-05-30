@@ -22,7 +22,7 @@ data class UsuariosBusState(
     val showDlgDate: Boolean = false,
     val showDlgConfirmation: Boolean = false,
     val showDlgRango: Boolean = false,
-    val comboBoxOptionSelected: String = ""
+    val comboBoxOptionSelected: String = "",
 )
 
 data class UsuariosMtoState(

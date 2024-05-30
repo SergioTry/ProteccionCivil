@@ -24,6 +24,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -35,7 +37,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -52,14 +53,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -70,10 +72,12 @@ import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.HasNonNullElement
 import com.dam.proteccioncivil.data.model.Preventivo
 import com.dam.proteccioncivil.data.model.Token
-import com.dam.proteccioncivil.data.model.filtrosPreventivo
+import com.dam.proteccioncivil.data.model.esMayorDeEdad
+import com.dam.proteccioncivil.data.model.filtrosPreventivos
+import com.dam.proteccioncivil.data.model.filtrosPreventivosLimitados
+import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionMes
 import com.dam.proteccioncivil.ui.theme.AppColors
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PreventivosBus(
@@ -86,8 +90,8 @@ fun PreventivosBus(
 ) {
     val mensage: String
     val contexto = LocalContext.current
-    val options = listOf("Opción 1", "Opción 2", "Opción 3")
-    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    var exposed by remember { mutableStateOf(false) }
 
     var preventivosFiltrados by remember { mutableStateOf(preventivos) }
 
@@ -96,6 +100,9 @@ fun PreventivosBus(
             it.titulo.lowercase()
                 .contains(preventivosVM.preventivoBusState.textoBusqueda.lowercase())
         }
+        preventivosVM.setLanzarBusqueda(false)
+    } else if (preventivosVM.preventivoBusState.lanzarBusqueda) {
+        preventivosFiltrados = preventivos
         preventivosVM.setLanzarBusqueda(false)
     }
 
@@ -128,7 +135,7 @@ fun PreventivosBus(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Image(
             contentScale = ContentScale.FillHeight,
@@ -136,94 +143,115 @@ fun PreventivosBus(
             contentDescription = getString(contexto, R.string.fondo_desc),
             modifier = modifier.fillMaxSize(),
         )
-        Column {
-            Box(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(2.dp)
                     .border(BorderStroke(1.dp, Color.Black))
                     .height(75.dp)
-                    .background(Color.White)
+                    .padding(top = 4.dp, start = 4.dp, end = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    ComboBox(
-                        onSelectedChange = {
-                        },
-                        onExpandedChange = { },
-                        expanded = false,
-                        options = filtrosPreventivo,
-                        optionSelected = "",
-                        modifier = Modifier
-                            .weight(4f)
-                    )
-                    OutlinedTextField(
-                        value = preventivosVM.preventivoBusState.textoBusqueda,
-                        onValueChange = { preventivosVM.setTextoBusqueda(it) },
-                        label = {
-                            Text(
-                                stringResource(id = R.string.buscar_lit),
-                            )
-                        },
-                        modifier = Modifier
-                            .weight(6f),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                            focusedContainerColor = MaterialTheme.colorScheme.background,
-                            focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
-                            focusedLabelColor = MaterialTheme.colorScheme.tertiary,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.tertiary,
-                        ),
-                        textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary),
-                        trailingIcon = {
-                            Row {
-                                Box(
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .clip(CircleShape)
-                                        .background(Color.Blue)
-                                        .clickable { preventivosVM.setLanzarBusqueda(true) }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Search,
-                                        contentDescription = getString(
-                                            contexto,
-                                            R.string.buscar_desc
-                                        ),
-                                        tint = Color.White,
-                                        modifier = Modifier.align(Alignment.Center)
-                                    )
-                                }
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Box(
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .clip(CircleShape)
-                                        .background(Color.Red)
-                                        .clickable {
-                                            preventivosVM.setLanzarBusqueda(false)
-                                            preventivosVM.setTextoBusqueda("")
-                                            preventivosFiltrados = preventivos
-                                        }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Close,
-                                        contentDescription = getString(
-                                            contexto,
-                                            R.string.buscar_desc
-                                        ),
-                                        tint = Color.White,
-                                        modifier = Modifier.align(Alignment.Center)
-                                    )
-                                }
-                            }
+                ComboBox(
+                    onSelectedChange = {
+                        preventivosVM.setComboBoxOptionSelected(it)
+                        exposed = false
+                        if (preventivosVM.preventivoBusState.comboBoxOptionSelected == "Mes") {
+                            preventivosVM.setShowDlgSeleccionMes(true)
+                        } else {
+                            preventivosVM.getAll()
+                            refresh()
                         }
-                    )
-                }
+                    },
+                    onExpandedChange = { exposed = it },
+                    expanded = exposed,
+                    options = if (esMayorDeEdad(Token.fechaNacimiento!!)) filtrosPreventivos else filtrosPreventivosLimitados,
+                    optionSelected = preventivosVM.preventivoBusState.comboBoxOptionSelected,
+                    enabled = preventivosVM.preventivosUiState != PreventivosUiState.Loading,
+                    modifier = Modifier
+                        .weight(4f)
+                )
+                OutlinedTextField(
+                    value = preventivosVM.preventivoBusState.textoBusqueda,
+                    onValueChange = { preventivosVM.setTextoBusqueda(it) },
+                    label = {
+                        Text(
+                            stringResource(id = R.string.buscar_lit),
+                        )
+                    },
+                    modifier = Modifier
+                        .weight(6f),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                        focusedContainerColor = MaterialTheme.colorScheme.background,
+                        focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
+                        focusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                            preventivosVM.setLanzarBusqueda(true)
+                        }
+                    ),
+                    enabled = preventivosVM.preventivosUiState != PreventivosUiState.Loading,
+                    textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary),
+                    trailingIcon = {
+                        Row {
+                            Box(
+                                modifier = Modifier
+                                    .size(28.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Blue)
+                                    .clickable { preventivosVM.setLanzarBusqueda(true) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Search,
+                                    contentDescription = getString(
+                                        contexto,
+                                        R.string.buscar_desc
+                                    ),
+                                    tint = Color.White,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Box(
+                                modifier = Modifier
+                                    .size(28.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Red)
+                                    .clickable {
+                                        preventivosVM.setLanzarBusqueda(false)
+                                        preventivosVM.setTextoBusqueda("")
+                                        preventivosFiltrados = preventivos
+                                    }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = getString(
+                                        contexto,
+                                        R.string.buscar_desc
+                                    ),
+                                    tint = Color.White,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(4.dp))
+                        }
+                    }
+                )
             }
             LazyColumn(
                 modifier = modifier.fillMaxSize(),
@@ -277,6 +305,17 @@ fun PreventivosBus(
                 }
             }
         }
+    }
+    if (preventivosVM.preventivoBusState.showDlgSeleccionMes) {
+        DlgSeleccionMes(
+            onCancelarClick = { preventivosVM.setShowDlgSeleccionMes(false) },
+            onAplicarClick = { numeroMes ->
+                preventivosVM.setComboBoxOptionSelected(numeroMes.toString())
+                preventivosVM.setShowDlgSeleccionMes(false)
+                preventivosVM.getAll()
+                refresh()
+            }
+        )
     }
 }
 

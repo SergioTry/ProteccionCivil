@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.Locale
 
 class PreventivosVM(
     private val preventivoRepository: PreventivosRepository,
@@ -57,91 +58,38 @@ class PreventivosVM(
 
     fun setTextoBusqueda(texto: String) {
         preventivoBusState = preventivoBusState.copy(
-            lanzarBusqueda = preventivoBusState.lanzarBusqueda,
-            textoBusqueda = texto,
-            isDetail = preventivoBusState.isDetail,
-            showDlgBorrar = preventivoBusState.showDlgBorrar,
-            showDlgDate = preventivoBusState.showDlgDate
-        )
-    }
-
-    fun setExpanded(expanded: Boolean) {
-        preventivoBusState = preventivoBusState.copy(
-            lanzarBusqueda = preventivoBusState.lanzarBusqueda,
-            textoBusqueda = preventivoBusState.textoBusqueda,
-            isDetail = preventivoBusState.isDetail,
-            expanded = expanded,
-            showDlgBorrar = preventivoBusState.showDlgBorrar,
-            showDlgDate = preventivoBusState.showDlgDate
+            textoBusqueda = texto
         )
     }
 
     fun setShowDlgBorrar(showDlgBorrar: Boolean) {
         preventivoBusState = preventivoBusState.copy(
-            lanzarBusqueda = preventivoBusState.lanzarBusqueda,
-            textoBusqueda = preventivoBusState.textoBusqueda,
-            isDetail = preventivoBusState.isDetail,
-            expanded = preventivoBusState.expanded,
-            showDlgBorrar = showDlgBorrar,
-            showDlgDate = preventivoBusState.showDlgDate
+            showDlgBorrar = showDlgBorrar
         )
     }
 
     fun setShowDlgDate(showDlgDate: Boolean) {
         preventivoBusState = preventivoBusState.copy(
-            lanzarBusqueda = preventivoBusState.lanzarBusqueda,
-            textoBusqueda = preventivoBusState.textoBusqueda,
-            isDetail = preventivoBusState.isDetail,
-            expanded = preventivoBusState.expanded,
-            showDlgBorrar = preventivoBusState.showDlgBorrar,
             showDlgDate = showDlgDate
         )
     }
 
-    // var selectedOption by mutableStateOf("")
-
-//    fun obtenerPreventivos() {
-//        viewModelScope.launch {
-//            uiPreventivoState = preventivoRepository.getAllPreventivos()
-//                .map { PrevState(it) }
-//                .stateIn(
-//                    scope = viewModelScope,
-//                    started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-//                    initialValue = PrevState()
-//                )
-//        }
-//    }
-
-    fun filtrarPreventivos() {
-//        viewModelScope.launch {
-//            val filtro = uiPreventivoState.value.uiFiltroState
-//            if (filtro.codPreventivo.isEmpty() && filtro.fechaIni == null && filtro.fechaFin == null) {
-//                obtenerPreventivos()
-//            } else {
-//                uiPreventivoState = preventivoRepository.getAllPreventivosByFiltro(
-//                    filtro.codPreventivo,
-//                    filtro.fechaIni,
-//                    filtro.fechaFin
-//                )
-//                    .map { PreventivoState(it) }
-//                    .stateIn(
-//                        scope = viewModelScope,
-//                        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-//                        initialValue = PreventivoState()
-//                    )
-//            }
-//        }
+    fun setComboBoxOptionSelected(option: String) {
+        preventivoBusState = preventivoBusState.copy(
+            comboBoxOptionSelected = option
+        )
     }
 
-//    fun setFiltroPreventivo(codPreventivo: String, fechaIni: LocalDate?, fechaFin: LocalDate?) {
-//    }
-
-    fun resetFiltroPreventivo() {
-        //obtenerPreventivos()
+    fun setShowDlgSeleccionMes(show: Boolean) {
+        preventivoBusState = preventivoBusState.copy(
+            showDlgSeleccionMes = show
+        )
     }
 
-    fun setPreventivoSelected(pos: Int) {
-        val selectedPreventivo = uiPreventivoState.value.preventivos[pos]
+    fun resetFilter() {
+        preventivoBusState = preventivoBusState.copy(
+            comboBoxOptionSelected = ""
+        )
     }
 
     fun resetPreventivoState() {
@@ -214,16 +162,34 @@ class PreventivosVM(
             preventivosUiState = try {
                 var preventivos: List<Preventivo>?
                 withTimeout(timeoutMillis * 2) {
-                    preventivos = preventivoRepository.getPreventivos(
-                        riesgo = if (esMayorDeEdad(Token.fechaNacimiento!!))
-                            true
-                        else
-                            null
-                    )
+                    val opcionSeleccionada = preventivoBusState.comboBoxOptionSelected
+
+                    preventivos = when (opcionSeleccionada.lowercase(Locale.getDefault())) {
+                        "riesgo" -> preventivoRepository.getPreventivos(riesgo = true)
+                        "sin riesgo" -> preventivoRepository.getPreventivos(riesgo = false)
+                        "" -> preventivoRepository.getPreventivos(
+                            riesgo =
+                            if (!esMayorDeEdad(Token.fechaNacimiento!!))
+                                false
+                            else
+                                null
+                        )
+
+                        else -> preventivoRepository.getPreventivos(
+                            riesgo =
+                            if (!esMayorDeEdad(Token.fechaNacimiento!!))
+                                false
+                            else
+                                null,
+                            mes = opcionSeleccionada.toInt()
+                        )
+                    }
                     if (preventivos!!.isNotEmpty()) {
                         preventivos!!.forEach {
-                            val usuarios = usuariosRepository.getUsuariosPreventivo(it.codPreventivo)
-                            val vehiculos = vehiculosRepository.getVehiculosPreventivo(it.codPreventivo)
+                            val usuarios =
+                                usuariosRepository.getUsuariosPreventivo(it.codPreventivo)
+                            val vehiculos =
+                                vehiculosRepository.getVehiculosPreventivo(it.codPreventivo)
                             it.usuarios = usuarios
                             it.vehiculos = vehiculos
                         }

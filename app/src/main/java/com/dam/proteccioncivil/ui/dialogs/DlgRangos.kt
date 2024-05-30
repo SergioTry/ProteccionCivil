@@ -54,37 +54,40 @@ fun DlgRangos(
             ) {
                 Text(
                     text = stringResource(id = R.string.range_select), color = Color.Black,
-                    modifier = modifier.align(Alignment.CenterHorizontally),
+                    modifier = modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 8.dp),
                     textDecoration = TextDecoration.Underline,
                 )
-                Spacer(modifier = modifier.height(32.dp))
+                Spacer(modifier = modifier.height(28.dp))
                 LabelledSwitch(
                     checked = rango == stringResource(id = R.string.range_vol),
                     label = stringResource(id = R.string.range_vol),
                     onCheckedChange = { rango = "Voluntario" },
-                    roundedInt = 16,
+                    roundedInt = 12,
                     color = Color.Cyan
                 )
                 LabelledSwitch(
                     checked = rango == stringResource(id = R.string.range_jef_db),
                     label = stringResource(id = R.string.range_jef),
                     onCheckedChange = { rango = "JefeServicio" },
-                    roundedInt = 16,
-                    color = Color.Cyan
-
+                    roundedInt = 12,
+                    color = Color.Cyan,
+                    modifier = modifier.padding(top = 8.dp)
                 )
                 LabelledSwitch(
                     checked = rango == stringResource(id = R.string.range_adm),
                     label = stringResource(id = R.string.range_adm),
-                    onCheckedChange = { rango = "Administrador" },
-                    roundedInt = 16,
-                    color = Color.Cyan
+                    onCheckedChange = { rango = "Admin" },
+                    roundedInt = 12,
+                    color = Color.Cyan,
+                    modifier = modifier.padding(top = 8.dp)
                 )
-                Spacer(modifier = modifier.height(24.dp))
+                Spacer(modifier = modifier.height(16.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.SpaceAround,
                 ) {
                     TextButton(
                         onClick = onCancelarClick,
@@ -107,7 +110,8 @@ fun DlgRangos(
                             AppColors.White,
                             AppColors.GreyDisabled,
                             AppColors.White
-                        )
+                        ),
+                        enabled = rango.isNotEmpty()
                     ) {
                         Text(stringResource(id = R.string.opc_accept))
                     }

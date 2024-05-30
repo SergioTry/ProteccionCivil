@@ -31,10 +31,12 @@ fun UsuariosScreen(
             )
         }
 
-        is UsuariosUiState.Error -> ErrorScreen(
-            retryAction,
-            usuariosUiState.err,
-            modifier = modifier.fillMaxSize()
-        )
+        is UsuariosUiState.Error -> {
+            ErrorScreen(
+                retryAction,
+                usuariosUiState.err,
+                modifier = modifier.fillMaxSize()
+            )
+        }
     }
 }

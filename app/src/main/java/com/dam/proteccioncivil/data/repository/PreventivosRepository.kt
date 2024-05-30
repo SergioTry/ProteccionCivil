@@ -7,16 +7,20 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
 
 interface PreventivosRepository {
-    suspend fun getPreventivos(riesgo: Boolean? = null): List<Preventivo>
+    suspend fun getPreventivos(riesgo: Boolean? = null, mes: Int? = null): List<Preventivo>
     suspend fun getPreventivosUsuario(codPreventivo: Int): List<Preventivo>
 }
 
 class NetworkPreventivosRepository(
     private val preventivosApiService: PreventivosApiService
 ) : PreventivosRepository {
-    override suspend fun getPreventivos(riesgo: Boolean?): List<Preventivo> {
+    override suspend fun getPreventivos(riesgo: Boolean?, mes: Int?): List<Preventivo> {
         val apiResponse =
-            preventivosApiService.getPreventivos("Bearer ${Token.token}", riesgo = riesgo)
+            preventivosApiService.getPreventivos(
+                "Bearer ${Token.token}",
+                riesgo = riesgo,
+                mes = mes
+            )
         return Json.decodeFromJsonElement<List<Preventivo>>(apiResponse.body)
     }
 

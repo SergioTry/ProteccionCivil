@@ -1,7 +1,9 @@
 package com.dam.proteccioncivil.ui.dialogs
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,7 +44,7 @@ fun DlgServicios(
             Column(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(8.dp, top = 16.dp)
+                    .padding(8.dp, top = 16.dp, bottom = 8.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.servicios),
@@ -50,6 +52,7 @@ fun DlgServicios(
                     textDecoration = TextDecoration.Underline,
                     color = AppColors.Black
                 )
+                Spacer(modifier = modifier.height(12.dp))
                 TextButton(
                     modifier = modifier.align(Alignment.CenterHorizontally),
                     onClick = onPreventivosClick,

@@ -2,8 +2,10 @@ package com.dam.proteccioncivil.ui.screens.vehiculos
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +22,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -47,14 +51,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -81,9 +86,9 @@ fun VehiculosBus(
 ) {
     val mensage: String
     val contexto = LocalContext.current
-    val options = listOf("Opción 1", "Opción 2", "Opción 3")
-    val focusRequester = remember { FocusRequester() }
-    var expanded = false
+    val keyboardController = LocalSoftwareKeyboardController.current
+    var exposed by remember { mutableStateOf(false) }
+
     var vehiculosFiltrados by remember { mutableStateOf(vehiculos) }
 
     if (vehiculosVM.vehiculosBusState.textoBusqueda != "" && vehiculosVM.vehiculosBusState.lanzarBusqueda) {
@@ -94,6 +99,9 @@ fun VehiculosBus(
                     || it.matricula.lowercase()
                 .contains(vehiculosVM.vehiculosBusState.textoBusqueda.lowercase())
         }
+        vehiculosVM.setLanzarBusqueda(false)
+    } else if (vehiculosVM.vehiculosBusState.lanzarBusqueda) {
+        vehiculosFiltrados = vehiculos
         vehiculosVM.setLanzarBusqueda(false)
     }
 
@@ -134,10 +142,16 @@ fun VehiculosBus(
             contentDescription = getString(contexto, R.string.fondo_desc),
             modifier = Modifier.fillMaxSize(),
         )
-        Column {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(2.dp)
+                    .border(BorderStroke(1.dp, Color.Black))
                     .height(75.dp)
                     .padding(top = 4.dp, start = 4.dp, end = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -145,11 +159,16 @@ fun VehiculosBus(
             ) {
                 ComboBox(
                     onSelectedChange = {
+                        vehiculosVM.setComboBoxOptionSelected(it)
+                        exposed = false
+                        vehiculosVM.getAll()
+                        refresh()
                     },
-                    onExpandedChange = { },
-                    expanded = false,
+                    onExpandedChange = { exposed = it },
+                    expanded = exposed,
                     options = filtrosVehiculos,
-                    optionSelected = "Todos",
+                    optionSelected = vehiculosVM.vehiculosBusState.comboBoxOptionSelected,
+                    enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                     modifier = Modifier
                         .weight(4f)
                 )
@@ -171,12 +190,22 @@ fun VehiculosBus(
                         focusedLabelColor = MaterialTheme.colorScheme.tertiary,
                         unfocusedLabelColor = MaterialTheme.colorScheme.tertiary,
                     ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                            vehiculosVM.setLanzarBusqueda(true)
+                        }
+                    ),
+                    enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                     textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary),
                     trailingIcon = {
                         Row {
                             Box(
                                 modifier = Modifier
-                                    .size(24.dp)
+                                    .size(28.dp)
                                     .clip(CircleShape)
                                     .background(Color.Blue)
                                     .clickable { vehiculosVM.setLanzarBusqueda(true) }
@@ -191,7 +220,7 @@ fun VehiculosBus(
                             Spacer(modifier = Modifier.width(8.dp))
                             Box(
                                 modifier = Modifier
-                                    .size(24.dp)
+                                    .size(28.dp)
                                     .clip(CircleShape)
                                     .background(Color.Red)
                                     .clickable {
@@ -207,6 +236,7 @@ fun VehiculosBus(
                                     modifier = Modifier.align(Alignment.Center)
                                 )
                             }
+                            Spacer(modifier = Modifier.width(4.dp))
                         }
                     }
                 )
@@ -221,7 +251,8 @@ fun VehiculosBus(
                             vehiculosVM = vehiculosVM,
                             modifier = modifier,
                             contexto = contexto,
-                            onNavDetail = { onNavDetail() }
+                            onNavDetail = { onNavDetail() },
+                            enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading
                         )
                     }
                 }
@@ -237,7 +268,9 @@ fun VehiculosBus(
         ) {
             FloatingActionButton(
                 onClick = {
-                    refresh()
+                    if (vehiculosVM.vehiculosUiState != VehiculosUiState.Loading) {
+                        refresh()
+                    }
                 },
                 contentColor = Color.White,
                 elevation = FloatingActionButtonDefaults.elevation(8.dp),
@@ -253,8 +286,10 @@ fun VehiculosBus(
             if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 FloatingActionButton(
                     onClick = {
-                        vehiculosVM.resetVehiculoMtoState()
-                        onNavUp()
+                        if (vehiculosVM.vehiculosUiState != VehiculosUiState.Loading) {
+                            vehiculosVM.resetVehiculoMtoState()
+                            onNavUp()
+                        }
                     },
                     contentColor = Color.White,
                     elevation = FloatingActionButtonDefaults.elevation(8.dp),
@@ -290,7 +325,8 @@ fun vehiculoCard(
     vehiculosVM: VehiculosVM,
     modifier: Modifier,
     contexto: Context,
-    onNavDetail: () -> Unit
+    onNavDetail: () -> Unit,
+    enabled: Boolean
 ) {
     Card(
         modifier = modifier
@@ -331,11 +367,13 @@ fun vehiculoCard(
                         )
                     }
                     Spacer(modifier = modifier.width(45.dp))
-                    IconButton(onClick = {
-                        vehiculosVM.resetVehiculoMtoState()
-                        vehiculosVM.cloneVehiculoMtoState(vehiculo)
-                        onNavDetail()
-                    }) {
+                    IconButton(
+                        onClick = {
+                            vehiculosVM.resetVehiculoMtoState()
+                            vehiculosVM.cloneVehiculoMtoState(vehiculo)
+                            onNavDetail()
+                        }, enabled = enabled
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.RemoveRedEye,
                             contentDescription = getString(contexto, R.string.detalle_desc),
@@ -343,11 +381,13 @@ fun vehiculoCard(
                         )
                     }
                     if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-                        IconButton(onClick = {
-                            vehiculosVM.resetVehiculoMtoState()
-                            vehiculosVM.cloneVehiculoMtoState(vehiculo)
-                            vehiculosVM.setShowDlgBorrar(true)
-                        }) {
+                        IconButton(
+                            onClick = {
+                                vehiculosVM.resetVehiculoMtoState()
+                                vehiculosVM.cloneVehiculoMtoState(vehiculo)
+                                vehiculosVM.setShowDlgBorrar(true)
+                            }, enabled = enabled
+                        ) {
                             Icon(
                                 imageVector = Icons.Filled.Delete,
                                 contentDescription = getString(
@@ -358,11 +398,13 @@ fun vehiculoCard(
                             )
                         }
                         Spacer(modifier = modifier.height(28.dp))
-                        IconButton(onClick = {
-                            vehiculosVM.resetVehiculoMtoState()
-                            vehiculosVM.cloneVehiculoMtoState(vehiculo)
-                            onNavUp()
-                        }) {
+                        IconButton(
+                            onClick = {
+                                vehiculosVM.resetVehiculoMtoState()
+                                vehiculosVM.cloneVehiculoMtoState(vehiculo)
+                                onNavUp()
+                            }, enabled = enabled
+                        ) {
                             Icon(
                                 imageVector = Icons.Filled.Edit,
                                 contentDescription = getString(
@@ -395,6 +437,7 @@ fun vehiculoCard(
                 ) {
                     Button(
                         onClick = { /*TODO*/ },
+                        enabled = enabled,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(stringResource(id = R.string.asignar_lit))

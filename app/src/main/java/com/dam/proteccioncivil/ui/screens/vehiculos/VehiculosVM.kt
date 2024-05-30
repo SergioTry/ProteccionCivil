@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.Locale
 
 class VehiculosVM(private val vehiculosRepository: VehiculosRepository) : CRUD<Vehiculo>,
     ViewModel() {
@@ -85,6 +86,12 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepository) : CRUD<V
         )
     }
 
+    fun setComboBoxOptionSelected(option: String) {
+        vehiculosBusState = vehiculosBusState.copy(
+            comboBoxOptionSelected = option
+        )
+    }
+
     fun resetInfoState() {
         vehiculosMessageState = VehiculoMessageState.Loading
     }
@@ -95,7 +102,13 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepository) : CRUD<V
             vehiculosUiState = try {
                 var vehiculos: List<Vehiculo>?
                 withTimeout(timeoutMillis) {
-                    vehiculos = vehiculosRepository.getVehiculos()
+                    val opcionSeleccionada = vehiculosBusState.comboBoxOptionSelected
+
+                    vehiculos = when (opcionSeleccionada.lowercase(Locale.getDefault())) {
+                        "disponibles" -> vehiculosRepository.getVehiculos(disponible = true)
+                        "no disponibles" -> vehiculosRepository.getVehiculos(disponible = false)
+                        else -> vehiculosRepository.getVehiculos()
+                    }
                 }
                 if (vehiculos != null) {
                     VehiculosUiState.Success(vehiculos!!)
@@ -379,6 +392,12 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepository) : CRUD<V
                     vehiculosMtoState.km != "" &&
                     vehiculosMtoState.fechaMantenimiento != "" &&
                     descripcion != "")
+        )
+    }
+
+    fun resetFilter() {
+        vehiculosBusState = vehiculosBusState.copy(
+            comboBoxOptionSelected = ""
         )
     }
 

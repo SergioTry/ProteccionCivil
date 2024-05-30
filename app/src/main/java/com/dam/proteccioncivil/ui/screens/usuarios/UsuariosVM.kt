@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.Locale
 
 class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usuario>, ViewModel() {
 
@@ -145,7 +146,14 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             usuariosUiState = try {
                 var usuarios: List<Usuario>?
                 withTimeout(timeoutMillis) {
-                    usuarios = usuariosRepository.getUsuarios()
+                    val opcionSeleccionada = usuariosBusState.comboBoxOptionSelected
+
+                    usuarios = when (opcionSeleccionada.lowercase(Locale.getDefault())) {
+                        "conductores" -> usuariosRepository.getUsuarios(conductores = true)
+                        "+18" -> usuariosRepository.getUsuarios(mayores = true)
+                        "" -> usuariosRepository.getUsuarios()
+                        else -> usuariosRepository.getUsuarios(rango = opcionSeleccionada)
+                    }
                 }
                 if (usuarios != null) {
                     UsuariosUiState.Success(usuarios!!)
@@ -418,6 +426,12 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
     fun setShowDlgRango(show: Boolean) {
         usuariosBusState = usuariosBusState.copy(
             showDlgRango = show
+        )
+    }
+
+    fun resetFilter() {
+        usuariosBusState = usuariosBusState.copy(
+            comboBoxOptionSelected = ""
         )
     }
 

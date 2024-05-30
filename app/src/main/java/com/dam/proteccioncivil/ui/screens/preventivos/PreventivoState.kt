@@ -13,9 +13,10 @@ data class PreventivoBusState(
     val isDetail: Boolean = false,
     val textoBusqueda: String = "",
     val lanzarBusqueda: Boolean = false,
-    val expanded: Boolean = false,
     val showDlgDate: Boolean = false,
-    val showDlgBorrar: Boolean = false
+    val showDlgBorrar: Boolean = false,
+    val showDlgSeleccionMes: Boolean = false,
+    val comboBoxOptionSelected: String = "",
 )
 
 data class PreventivoMtoState(

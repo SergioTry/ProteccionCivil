@@ -163,14 +163,17 @@
     <string name="refresh_desc">Icono asociado a recargar la pantalla</string>
     <string name="fecha_preventivo_lit">"Fecha del preventivo: "</string>
     <string name="fechas_preventivo_lit">Fechas del preventivo:</string>
-    <string name="range_lit">rango</string>
 
     <!-- Rangos de usuario -->
     <string name="range_select">Seleccione un rango</string>
     <string name="range_vol">Voluntario</string>
     <string name="range_jef">Jefe de Servicio</string>
     <string name="range_jef_db">JefeServicio</string>
-    <string name="range_adm">Administrador</string>
+    <string name="range_adm">Admin</string>
+    <string name="range">rango</string>
+
+    <string name="month_select">Seleccione un mes</string>
+
     <string name="kilometros_lit">Kilometros</string>
 
 </resources>
