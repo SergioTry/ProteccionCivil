@@ -378,9 +378,15 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
         )
     }
 
-    fun comboBoxOptionSelected(option: String) {
+    fun setComboBoxOptionSelected(option: String) {
         usuariosBusState = usuariosBusState.copy(
             comboBoxOptionSelected = option
+        )
+    }
+
+    fun setShowDlgRango(show: Boolean) {
+        usuariosBusState = usuariosBusState.copy(
+            showDlgRango = show
         )
     }
 

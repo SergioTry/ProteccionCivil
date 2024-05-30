@@ -59,6 +59,7 @@ import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.data.model.filtrosUsuarios
 import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
+import com.dam.proteccioncivil.ui.dialogs.DlgRangos
 import com.dam.proteccioncivil.ui.theme.AppColors
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -129,8 +130,11 @@ fun UsuariosBus(
             ) {
                 ComboBox(
                     onSelectedChange = {
-                        usuarioVM.comboBoxOptionSelected(it)
+                        usuarioVM.setComboBoxOptionSelected(it)
                         exposed = false
+                        if (usuarioVM.usuariosBusState.comboBoxOptionSelected == "Rango") {
+                            usuarioVM.setShowDlgRango(true)
+                        }
                     },
                     onExpandedChange = { exposed = it },
                     expanded = exposed,
@@ -243,6 +247,15 @@ fun UsuariosBus(
             onAceptarClick = {
                 usuarioVM.setShowDlgBorrar(false)
                 usuarioVM.deleteBy()
+            }
+        )
+    }
+
+    if (usuarioVM.usuariosBusState.showDlgRango) {
+        DlgRangos(
+            onCancelarClick = { usuarioVM.setShowDlgRango(false) },
+            onAplicarClick = { rango -> //TODO
+                usuarioVM.setShowDlgRango(false)
             }
         )
     }

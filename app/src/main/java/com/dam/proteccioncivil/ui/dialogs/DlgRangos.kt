@@ -1,14 +1,18 @@
 package com.dam.proteccioncivil.ui.dialogs
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +50,7 @@ fun DlgRangos(
             Column(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(8.dp, top = 16.dp)
+                    .padding(8.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.range_select), color = Color.Black,
@@ -55,28 +59,60 @@ fun DlgRangos(
                 )
                 Spacer(modifier = modifier.height(32.dp))
                 LabelledSwitch(
-                    checked = rango == "Voluntario",
-                    label = "Voluntario",
+                    checked = rango == stringResource(id = R.string.range_vol),
+                    label = stringResource(id = R.string.range_vol),
                     onCheckedChange = { rango = "Voluntario" },
                     roundedInt = 16,
                     color = Color.Cyan
                 )
                 LabelledSwitch(
-                    checked = rango == "Voluntario",
-                    label = "Voluntario",
-                    onCheckedChange = { rango = "Voluntario" },
+                    checked = rango == stringResource(id = R.string.range_jef_db),
+                    label = stringResource(id = R.string.range_jef),
+                    onCheckedChange = { rango = "JefeServicio" },
                     roundedInt = 16,
                     color = Color.Cyan
 
                 )
                 LabelledSwitch(
-                    checked = rango == "Voluntario",
-                    label = "Voluntario",
-                    onCheckedChange = { rango = "Voluntario" },
+                    checked = rango == stringResource(id = R.string.range_adm),
+                    label = stringResource(id = R.string.range_adm),
+                    onCheckedChange = { rango = "Administrador" },
                     roundedInt = 16,
                     color = Color.Cyan
                 )
                 Spacer(modifier = modifier.height(24.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    TextButton(
+                        onClick = onCancelarClick,
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonColors(
+                            AppColors.RojoError,
+                            AppColors.White,
+                            AppColors.GreyDisabled,
+                            AppColors.White
+                        )
+                    ) {
+                        Text(stringResource(id = R.string.opc_cancel))
+                    }
+
+                    TextButton(
+                        onClick = { onAplicarClick(rango) },
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonColors(
+                            AppColors.Blue,
+                            AppColors.White,
+                            AppColors.GreyDisabled,
+                            AppColors.White
+                        )
+                    ) {
+                        Text(stringResource(id = R.string.opc_accept))
+                    }
+
+                }
             }
         }
     }

@@ -199,7 +199,7 @@ fun LabelledSwitch(
                 onValueChange = onCheckedChange,
                 role = Role.Switch
             )
-            .background(color)
+            .background(color, shape = RoundedCornerShape(roundedInt.dp))
             .padding(8.dp)
     )
     {

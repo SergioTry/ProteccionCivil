@@ -19,6 +19,7 @@ data class UsuariosBusState(
     val expanded: Boolean = false,
     val showDlgDate: Boolean = false,
     val showDlgConfirmation: Boolean = false,
+    val showDlgRango: Boolean = false,
     val comboBoxOptionSelected: String = ""
 )
 
