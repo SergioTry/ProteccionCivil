@@ -111,24 +111,24 @@ fun PreventivosBus(
         }
 
         is PreventivosMessageState.Success -> {
-            mensage = ContextCompat.getString(
+            mensage = getString(
                 contexto,
                 R.string.usuario_delete_success
             )
             onShowSnackBar(mensage, true)
             preventivosVM.resetPreventivoState()
-            // preventivosVM.resetInfoState()
+            preventivosVM.resetInfoState()
             preventivosVM.getAll()
             refresh()
         }
 
         is PreventivosMessageState.Error -> {
-            mensage = ContextCompat.getString(
+            mensage = getString(
                 contexto,
                 R.string.usuario_delete_failure
-            )
+            ) + ": \n" + (preventivosVM.preventivosMessageState as PreventivosMessageState.Error).err
             onShowSnackBar(mensage, false)
-            //preventivosVM.resetInfoState()
+            preventivosVM.resetInfoState()
         }
     }
 
@@ -262,7 +262,19 @@ fun PreventivosBus(
                             onNavUp = onNavUp,
                             modifier = modifier,
                             preventivosVM = preventivosVM,
-                            contexto = contexto
+                            contexto = contexto,
+                            action = {
+                                preventivosVM.setAction(
+                                    if (it.usuarios?.firstOrNull { usuario -> usuario.codUsuario == Token.codUsuario } != null)
+                                        "delete"
+                                    else
+                                        "add"
+                                )
+                                preventivosVM.setCodPreventivo(it.codPreventivo)
+                                preventivosVM.update()
+                                preventivosVM.setAction(null)
+                            },
+                            apuntado = it.usuarios?.firstOrNull { it.codUsuario == Token.codUsuario } != null
                         )
                     }
                 }
@@ -325,7 +337,9 @@ fun PreventivoCard(
     preventivosVM: PreventivosVM,
     onNavUp: () -> Unit,
     modifier: Modifier,
-    contexto: Context
+    contexto: Context,
+    action: () -> Unit,
+    apuntado: Boolean
 ) {
     Card(
         modifier = modifier
@@ -393,12 +407,16 @@ fun PreventivoCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { action() },
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(8.dp)
                 ) {
-                    Text("Asignar")
+                    Text(
+                        text = if (!apuntado) stringResource(id = R.string.apuntar_lit) else stringResource(
+                            id = R.string.desapuntar_lit
+                        )
+                    )
                 }
                 if (!HasNonNullElement.use(
                         listOf(

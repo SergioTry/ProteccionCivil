@@ -10,6 +10,7 @@ data class PrevState(
 )
 
 data class PreventivoBusState(
+    val action: String? = null,
     val isDetail: Boolean = false,
     val textoBusqueda: String = "",
     val lanzarBusqueda: Boolean = false,
@@ -34,32 +35,6 @@ data class PreventivoMtoState(
     val usuarios: List<Usuario>? = null,
     var vehiculos: List<Vehiculo>? = null
 )
-
-//data class IncsFilterState(
-//    val idDpto: String = "-1",
-//    val fecha: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
-//    val estado: String = "%",
-//    val showDlgDate: Boolean = false
-//)
-//
-//fun PreventivoMtoState.toInc(): Preventivo = Preventivo(
-//    titulo = titulo,
-//    riesgo = riesgo,
-//    usuarios = usuarios,
-//    vehiculos = vehiculos,
-//    codPreventivo = codPreventivo
-//)
-//
-//fun Preventivo.PreventivoMtoState(): PreventivoMtoState = PreventivoMtoState(
-//    titulo = titulo,
-//    riesgo = riesgo,
-//    fechaIni = fechaIni,
-//    fechaFin = fechaFin,
-//    dias = dias,
-//    usuarios = usuarios,
-//    vehiculos = vehiculos,
-//    codPreventivo = codPreventivo
-//)
 
 fun PreventivoMtoState.toPreventivo(preventivoMtoState: PreventivoMtoState): Preventivo {
     return Preventivo(

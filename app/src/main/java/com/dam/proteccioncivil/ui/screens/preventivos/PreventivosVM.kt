@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.CRUD
+import com.dam.proteccioncivil.data.model.ObjectToStringMap
 import com.dam.proteccioncivil.data.model.Preventivo
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.esMayorDeEdad
@@ -45,6 +46,22 @@ class PreventivosVM(
     var preventivoMtoState: PreventivoMtoState by mutableStateOf(PreventivoMtoState())
 
     var preventivoBusState: PreventivoBusState by mutableStateOf(PreventivoBusState())
+
+    fun resetInfoState() {
+        preventivosMessageState = PreventivosMessageState.Loading
+    }
+
+    fun setCodPreventivo(codPreventivo: Int) {
+        preventivoMtoState = preventivoMtoState.copy(
+            codPreventivo = codPreventivo
+        )
+    }
+
+    fun setAction(action: String?) {
+        preventivoBusState = preventivoBusState.copy(
+            action = action
+        )
+    }
 
     fun setLanzarBusqueda(lanzar: Boolean) {
         preventivoBusState = preventivoBusState.copy(
@@ -93,68 +110,12 @@ class PreventivosVM(
     }
 
     fun resetPreventivoState() {
+        preventivoMtoState = PreventivoMtoState()
     }
 
-    fun clonePreventivoState(preventivo: Preventivo) {}
-
-//    fun altaPreventivo(preventivo: Preventivo) {
-//        viewModelScope.launch {
-//            try {
-//                preventivoRepository.insertPreventivo(preventivo)
-//            } catch (e: Exception) {
-//            }
-//        }
-//    }
-//
-//    fun editarPreventivo(preventivo: Preventivo) {
-//        viewModelScope.launch {
-//            try {
-//                preventivoRepository.updatePreventivo(preventivo)
-//            } catch (e: Exception) {
-//            }
-//        }
-//    }
-//
-//    fun eliminarPreventivo(preventivo: Preventivo) {
-//        viewModelScope.launch {
-//            try {
-//                preventivoRepository.deletePreventivo(preventivo)
-//            } catch (e: Exception) {
-//            }
-//        }
-//    }
-
-//    fun asignarPersona(usuario: Usuario, posPreventivo: Int) {
-//        val preventivo = uiPreventivoState.value.preventivos[posPreventivo]
-//        val nuevaListaUsuarios = preventivo.usuarios?.toMutableList() ?: mutableListOf()
-//        nuevaListaUsuarios.add(usuario)
-//        val nuevoPreventivo = preventivo.copy(usuarios = nuevaListaUsuarios)
-//        editarPreventivo(nuevoPreventivo)
-//    }
-//
-//    fun desasignarPersona(usuario: Usuario, posPreventivo: Int) {
-//        val preventivo = uiPreventivoState.value.preventivos[posPreventivo]
-//        val nuevaListaUsuarios = preventivo.usuarios?.toMutableList() ?: mutableListOf()
-//        nuevaListaUsuarios.remove(usuario)
-//        val nuevoPreventivo = preventivo.copy(usuarios = nuevaListaUsuarios)
-//        editarPreventivo(nuevoPreventivo)
-//    }
-//
-//    fun asignarVehiculo(vehiculo: Vehiculo, posPreventivo: Int) {
-//        val preventivo = uiPreventivoState.value.preventivos[posPreventivo]
-//        val nuevaListaVehiculos = preventivo.vehiculos?.toMutableList() ?: mutableListOf()
-//        nuevaListaVehiculos.add(vehiculo)
-//        val nuevoPreventivo = preventivo.copy(vehiculos = nuevaListaVehiculos)
-//        editarPreventivo(nuevoPreventivo)
-//    }
-//
-//    fun desasignarVehiculo(vehiculo: Vehiculo, posPreventivo: Int) {
-//        val preventivo = uiPreventivoState.value.preventivos[posPreventivo]
-//        val nuevaListaVehiculos = preventivo.vehiculos?.toMutableList() ?: mutableListOf()
-//        nuevaListaVehiculos.remove(vehiculo)
-//        val nuevoPreventivo = preventivo.copy(vehiculos = nuevaListaVehiculos)
-//        editarPreventivo(nuevoPreventivo)
-//    }
+    fun clonePreventivoState(preventivo: Preventivo) {
+        //preventivoMtoState =
+    }
 
     override fun getAll() {
         viewModelScope.launch {
@@ -220,15 +181,99 @@ class PreventivosVM(
     }
 
     override fun deleteBy() {
-        TODO("Not yet implemented")
+        viewModelScope.launch {
+            preventivosMessageState = PreventivosMessageState.Loading
+            preventivosMessageState = try {
+                preventivoRepository.deletePreventivo(preventivoMtoState.codPreventivo)
+                PreventivosMessageState.Success
+            } catch (e: IOException) {
+                PreventivosMessageState.Error("e1")
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()
+                val errorBodyString = errorBody?.string()
+                if (errorBodyString != null) {
+                    val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
+                    val error = jsonObject["body"]?.asString ?: ""
+                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    PreventivosMessageState.Error(error)
+                } else {
+                    PreventivosMessageState.Error("Error")
+                }
+            } catch (e: KotlinNullPointerException) {
+                PreventivosMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                PreventivosMessageState.Error("Error, no se ha recibido respuesta del servidor")
+            }
+        }
     }
 
     override fun setNew() {
-        TODO("Not yet implemented")
+        viewModelScope.launch {
+            preventivosMessageState = PreventivosMessageState.Loading
+            preventivosMessageState = try {
+                preventivoRepository.setPreventivo(
+                    ObjectToStringMap.use(
+                        preventivoMtoState.toPreventivo(
+                            preventivoMtoState
+                        )
+                    )
+                )
+                PreventivosMessageState.Success
+            } catch (e: IOException) {
+                PreventivosMessageState.Error("e1")
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()
+                val errorBodyString = errorBody?.string()
+                if (errorBodyString != null) {
+                    val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
+                    val error = jsonObject["body"]?.asString ?: ""
+                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    PreventivosMessageState.Error(error)
+                } else {
+                    PreventivosMessageState.Error("Error")
+                }
+            } catch (e: KotlinNullPointerException) {
+                PreventivosMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                PreventivosMessageState.Error("Error, no se ha recibido respuesta del servidor")
+            }
+        }
     }
 
     override fun update() {
-        TODO("Not yet implemented")
+        viewModelScope.launch {
+            preventivosMessageState = PreventivosMessageState.Loading
+            preventivosMessageState = try {
+                val params = if (preventivoBusState.action.isNullOrEmpty()) {
+                    ObjectToStringMap.use(preventivoMtoState.toPreventivo(preventivoMtoState))
+                } else {
+                    mapOf("CodUsuario" to Token.codUsuario.toString())
+                }
+                preventivoRepository.updPreventivo(
+                    preventivoMtoState.codPreventivo,
+                    params,
+                    preventivoBusState.action
+                )
+                PreventivosMessageState.Success
+            } catch (e: IOException) {
+                PreventivosMessageState.Error("e1")
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()
+                val errorBodyString = errorBody?.string()
+                if (errorBodyString != null) {
+                    val jsonObject = JsonParser.parseString(errorBodyString).asJsonObject
+                    val error = jsonObject["body"]?.asString ?: ""
+                    Log.e("AnunciosVM (delete) ", errorBodyString)
+                    PreventivosMessageState.Error(error)
+                } else {
+                    PreventivosMessageState.Error("Error")
+                }
+            } catch (e: KotlinNullPointerException) {
+                PreventivosMessageState.Success
+            } catch (ex: TimeoutCancellationException) {
+                PreventivosMessageState.Error("Error, no se ha recibido respuesta del servidor")
+            }
+        }
     }
 
     companion object {

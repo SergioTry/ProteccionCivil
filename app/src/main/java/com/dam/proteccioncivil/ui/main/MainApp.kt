@@ -694,7 +694,10 @@ private fun NavHostRoutes(
                 preventivosVM = preventivosVM,
                 retryAction = { usuariosVM.getAll() },
                 onNavUp = { },
-                refresh = { navController.navigate(AppScreens.Preventivos.name) },
+                refresh = {
+                    navController.popBackStack()
+                    navController.navigate(AppScreens.Preventivos.name)
+                },
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
                         if (isSuccess) {
