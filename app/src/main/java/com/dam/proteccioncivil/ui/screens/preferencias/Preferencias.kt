@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
@@ -13,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.LabelledSwitch
 import com.dam.proteccioncivil.data.model.Token
@@ -20,7 +22,7 @@ import com.dam.proteccioncivil.ui.main.MainVM
 
 
 @Composable
-fun PrefScreen(
+fun Preferencias(
     mainVM: MainVM,
     modifier: Modifier = Modifier
 ) {
@@ -36,7 +38,7 @@ fun PrefScreen(
             modifier = Modifier.fillMaxSize()
         )
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().padding(4.dp)
         ) {
             LabelledSwitch(
                 checked = mainVM.uiPrefState.username.isNotEmpty() || mainVM.uiPrefState.password.isNotEmpty(),
@@ -60,8 +62,9 @@ fun PrefScreen(
                     uncheckedBorderColor = MaterialTheme.colorScheme.secondary,
                     checkedBorderColor = MaterialTheme.colorScheme.secondary
                 ),
-                roundedInt = 4,
-                color = Color.White
+                roundedInt = 12,
+                backgroundColor = MaterialTheme.colorScheme.background,
+                textColor = MaterialTheme.colorScheme.tertiary
             )
         }
     }

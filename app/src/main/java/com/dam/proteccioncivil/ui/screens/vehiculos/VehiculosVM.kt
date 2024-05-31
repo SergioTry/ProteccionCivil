@@ -397,7 +397,9 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepository) : CRUD<V
 
     fun resetFilter() {
         vehiculosBusState = vehiculosBusState.copy(
-            comboBoxOptionSelected = ""
+            comboBoxOptionSelected = "",
+            textoBusqueda = "",
+            lanzarBusqueda = false,
         )
     }
 

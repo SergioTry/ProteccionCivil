@@ -15,6 +15,7 @@ import com.dam.proteccioncivil.data.model.ObjectToStringMap
 import com.dam.proteccioncivil.data.model.Preventivo
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.esMayorDeEdad
+import com.dam.proteccioncivil.data.model.meses
 import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.PreventivosRepository
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
@@ -105,7 +106,9 @@ class PreventivosVM(
 
     fun resetFilter() {
         preventivoBusState = preventivoBusState.copy(
-            comboBoxOptionSelected = ""
+            comboBoxOptionSelected = "",
+            textoBusqueda = "",
+            lanzarBusqueda = false,
         )
     }
 
@@ -142,17 +145,17 @@ class PreventivosVM(
                                 false
                             else
                                 null,
-                            mes = opcionSeleccionada.toInt()
+                            mes = meses.indexOf(opcionSeleccionada) + 1
                         )
                     }
                     if (preventivos!!.isNotEmpty()) {
                         preventivos!!.forEach {
                             val usuarios =
                                 usuariosRepository.getUsuariosPreventivo(it.codPreventivo)
-                            val vehiculos =
-                                vehiculosRepository.getVehiculosPreventivo(it.codPreventivo)
+//                            val vehiculos =
+//                                vehiculosRepository.getVehiculosPreventivo(it.codPreventivo)
                             it.usuarios = usuarios
-                            it.vehiculos = vehiculos
+                            //it.vehiculos = vehiculos
                         }
                     }
                 }

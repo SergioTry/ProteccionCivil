@@ -333,7 +333,8 @@ fun DatosPersonales(
                                 uncheckedThumbColor = Color.Gray
                             ),
                             roundedInt = 4,
-                            color = Color.White
+                            backgroundColor = Color.White,
+                            textColor = Color.Black
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(

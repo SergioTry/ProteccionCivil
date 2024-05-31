@@ -425,7 +425,8 @@ fun UsuariosMto(
                                 uncheckedThumbColor = Color.Gray
                             ),
                             roundedInt = 4,
-                            color = AppColors.Posit
+                            backgroundColor = AppColors.Posit,
+                            textColor = AppColors.Black
                         )
                         Spacer(modifier = Modifier.size(16.dp))
                         Row {

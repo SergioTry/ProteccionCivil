@@ -150,8 +150,6 @@ fun VehiculosBus(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(2.dp)
-                    .border(BorderStroke(1.dp, Color.Black))
                     .height(75.dp)
                     .padding(top = 4.dp, start = 4.dp, end = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,

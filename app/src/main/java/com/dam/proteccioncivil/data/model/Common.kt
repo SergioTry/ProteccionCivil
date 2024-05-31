@@ -33,13 +33,32 @@ import androidx.compose.ui.zIndex
 import com.spr.jetpack_loading.components.indicators.BallClipRotateMultipleIndicator
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.Month
 import java.time.Period
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.util.Locale
 
 //Tiempo máximo de espera
 val timeoutMillis: Long = 5000
+
+val filtrosUsuarios = listOf("+18", "Conductores","Rango")
+val filtrosVehiculos = listOf("Disponibles", "No Disponibles")
+val filtrosPreventivos = listOf("Riesgo", "Sin Riesgo", "Mes")
+val filtrosPreventivosLimitados = listOf("Mes")
+
+val meses =
+    Month.entries.map {
+        it.getDisplayName(java.time.format.TextStyle.FULL, Locale("es", "ES")).replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale(
+                    "es",
+                    "ES"
+                )
+            ) else it.toString()
+        }
+    }
 
 class ObjectToStringMap {
     companion object {
@@ -180,7 +199,8 @@ fun LabelledSwitch(
     onCheckedChange: ((Boolean) -> Unit),
     colors: SwitchColors = SwitchDefaults.colors(),
     roundedInt: Int,
-    color: Color
+    backgroundColor: Color,
+    textColor: Color
 ) {
     Box(
         modifier = modifier
@@ -195,7 +215,7 @@ fun LabelledSwitch(
                 onValueChange = onCheckedChange,
                 role = Role.Switch
             )
-            .background(color, shape = RoundedCornerShape(roundedInt.dp))
+            .background(backgroundColor, shape = RoundedCornerShape(roundedInt.dp))
             .padding(8.dp)
     )
     {
@@ -204,7 +224,7 @@ fun LabelledSwitch(
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .padding(start = 8.dp, end = 16.dp),
-            style = TextStyle(Color.Black)
+            color = textColor
         )
         Switch(
             checked = checked,
@@ -216,11 +236,6 @@ fun LabelledSwitch(
         )
     }
 }
-
-val filtrosUsuarios = listOf("+18", "Conductores","Rango")
-val filtrosVehiculos = listOf("Disponibles", "No Disponibles")
-val filtrosPreventivos = listOf("Riesgo", "Sin Riesgo", "Mes")
-val filtrosPreventivosLimitados = listOf("Mes")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

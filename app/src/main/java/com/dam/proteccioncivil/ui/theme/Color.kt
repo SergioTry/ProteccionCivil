@@ -12,4 +12,5 @@ object AppColors {
     val Posit = Color(0xFFF5E876)
     val DialogColors = Color(0xFFF8E7BD)
     val Green = Color(0xFF097709)
+    val DarkBlue = Color(0, 7, 105)
 }

@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.meses
 import com.dam.proteccioncivil.ui.theme.AppColors
 import java.time.Month
 import java.time.format.TextStyle
@@ -46,20 +48,9 @@ fun DlgSeleccionMes(
     onAplicarClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val meses = remember {
-        Month.entries.map {
-            it.getDisplayName(TextStyle.FULL, Locale("es", "ES")).replaceFirstChar {
-                if (it.isLowerCase()) it.titlecase(
-                    Locale(
-                        "es",
-                        "ES"
-                    )
-                ) else it.toString()
-            }
-        }
-    }
+
     var mesSeleccionado by remember { mutableStateOf(meses[0]) }
-    var numeroMes by remember { mutableStateOf(1) }
+    var numeroMes by remember { mutableIntStateOf(1) }
 
     var expanded by remember { mutableStateOf(false) }
 
@@ -95,14 +86,14 @@ fun DlgSeleccionMes(
                 ) {
                     OutlinedTextField(
                         colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedContainerColor = Color.LightGray,
-                            focusedContainerColor = Color.LightGray,
-                            focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
-                            focusedLabelColor = Color.Black,
-                            unfocusedLabelColor = Color.Black,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black
+                            unfocusedContainerColor = AppColors.DarkBlue,
+                            focusedContainerColor =  AppColors.DarkBlue,
+                            focusedBorderColor = Color.Black,
+                            unfocusedBorderColor = Color.Black,
+                            focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.secondary,
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White
                         ),
                         readOnly = true,
                         value = mesSeleccionado,

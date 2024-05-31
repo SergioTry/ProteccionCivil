@@ -52,7 +52,7 @@ import com.dam.proteccioncivil.ui.screens.infomur.InfomursScreen
 import com.dam.proteccioncivil.ui.screens.infomur.InfomursVM
 import com.dam.proteccioncivil.ui.screens.login.LoginScreen
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
-import com.dam.proteccioncivil.ui.screens.preferencias.PrefScreen
+import com.dam.proteccioncivil.ui.screens.preferencias.Preferencias
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosScreen
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosVM
 import com.dam.proteccioncivil.ui.screens.sobre.SobreScreen
@@ -179,7 +179,10 @@ fun MainApp(
                     MainBottomBar(
                         menuOptions = menuOptions,
                         navController = navController,
-                        mainVM = mainVM
+                        mainVM = mainVM,
+                        resetFilters = {
+                            resetFilters(usuariosVM, vehiculosVM, preventivosVM)
+                        }
                     )
                 }
             },
@@ -329,6 +332,9 @@ private fun NavHostRoutes(
                         clave = Icons.Default.Home,
                         navController = navController,
                         mainVM = mainVM,
+                        resetFilters = {
+                            resetFilters(usuariosVM, vehiculosVM, preventivosVM)
+                        }
                     )
                 },
                 savedToken = loginVM.uiLoginState.username.isNotEmpty() && loginVM.uiLoginState.password.isNotEmpty(),
@@ -372,7 +378,7 @@ private fun NavHostRoutes(
                 })
         }
         composable(route = AppScreens.Preferences.name) {
-            PrefScreen(
+            Preferencias(
                 mainVM = mainVM
             )
         }
@@ -730,8 +736,10 @@ private fun NavHostRoutes(
 fun selectOption(
     clave: ImageVector,
     navController: NavHostController,
-    mainVM: MainVM
+    mainVM: MainVM,
+    resetFilters: () -> Unit
 ) {
+    resetFilters()
     navController.popBackStack(AppScreens.Home.name, false)
     when (clave.name) {
         Icons.Default.Home.name -> {
@@ -777,4 +785,14 @@ private fun backButtonNavigation(
 
         else -> navController.navigateUp()
     }
+}
+
+private fun resetFilters(
+    usuariosVM: UsuariosVM,
+    vehiculosVM: VehiculosVM,
+    preventivosVM: PreventivosVM
+) {
+    usuariosVM.resetFilter()
+    vehiculosVM.resetFilter()
+    preventivosVM.resetFilter()
 }
