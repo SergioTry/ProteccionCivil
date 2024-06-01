@@ -72,7 +72,7 @@ fun GuardiasBus(
         }
 
         is GuardiasMessageState.Success -> {
-            mensage = ContextCompat.getString(
+            mensage = getString(
                 contexto,
                 R.string.guardia_delete_success
             )
@@ -84,10 +84,10 @@ fun GuardiasBus(
         }
 
         is GuardiasMessageState.Error -> {
-            mensage = ContextCompat.getString(
+            mensage = getString(
                 contexto,
                 R.string.guardia_delete_failure
-            )
+            ) + ": " + (guardiasVM.guardiasMessageState as GuardiasMessageState.Error).err
             onShowSnackBar(mensage, false)
             guardiasVM.resetInfoState()
         }
@@ -241,6 +241,7 @@ fun GuardiaCard(
                             IconButton(onClick = {
                                 guardiasVM.resetGuardiaMtoState()
                                 guardiasVM.cloneGuardiaMtoState(guardia)
+                                guardiasVM.updateOriginalState()
                                 onNavUp()
                             }) {
                                 Icon(

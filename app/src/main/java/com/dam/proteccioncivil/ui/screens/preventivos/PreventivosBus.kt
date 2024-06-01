@@ -3,7 +3,6 @@ package com.dam.proteccioncivil.ui.screens.preventivos
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -65,7 +64,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.ComboBox
@@ -116,7 +114,7 @@ fun PreventivosBus(
         is PreventivosMessageState.Success -> {
             mensage = getString(
                 contexto,
-                R.string.usuario_delete_success
+                R.string.preventivo_delete_success
             )
             onShowSnackBar(mensage, true)
             preventivosVM.resetPreventivoState()
@@ -128,8 +126,8 @@ fun PreventivosBus(
         is PreventivosMessageState.Error -> {
             mensage = getString(
                 contexto,
-                R.string.usuario_delete_failure
-            ) + ": \n" + (preventivosVM.preventivosMessageState as PreventivosMessageState.Error).err
+                R.string.preventivo_delete_failure
+            ) + ": " + (preventivosVM.preventivosMessageState as PreventivosMessageState.Error).err
             onShowSnackBar(mensage, false)
             preventivosVM.resetInfoState()
         }
@@ -355,15 +353,8 @@ fun PreventivoCard(
         Column {
             Row(modifier = modifier.fillMaxWidth()) {
                 Image(
-                    painter = painterResource(
-                        id =
-                        if (preventivo.riesgo.toInt() == 0) {
-                            R.drawable.pcc_icono
-                        } else {
-                            R.drawable.pcc_icono
-                        }
-                    ),
-                    contentDescription = null,
+                    painter = painterResource(if (preventivo.riesgo.toInt() == 0) R.drawable.preventivos else R.drawable.siren_transparent_png),
+                    contentDescription = stringResource(if (preventivo.riesgo.toInt() == 0) R.string.preventivos_image else R.string.preventivos_riesgo_image),
                     modifier = modifier
                         .padding(6.dp)
                         .size(80.dp)
@@ -406,7 +397,6 @@ fun PreventivoCard(
                             preventivosVM.resetPreventivoState()
                             preventivosVM.clonePreventivoState(preventivo)
                             preventivosVM.updateOriginalState()
-                            preventivo.usuarios
                             onNavUp()
                         }) {
                             Icon(

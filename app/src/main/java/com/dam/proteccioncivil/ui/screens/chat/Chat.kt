@@ -29,13 +29,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -45,6 +50,8 @@ class Mensaje(val userId: String, val text: String, val dateTime: LocalDateTime)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PantallaMensajes() {
+    val contexto = LocalContext.current
+    
     val sampleMessages = listOf(
         Mensaje(
             "User1",
@@ -67,7 +74,11 @@ fun PantallaMensajes() {
                         .zIndex(1f)
                         .background(Color.Black.copy(alpha = 0.5f)),
                 ) {
-
+                    Image(
+                        painter = painterResource(id = R.drawable.proximamente),
+                        contentDescription = ContextCompat.getString(contexto, R.string.fondo_desc),
+                        modifier = Modifier.fillMaxSize(),
+                    )
                 }
                 Image(
                     contentScale = ContentScale.FillHeight,
@@ -97,6 +108,7 @@ fun PantallaMensajes() {
                         TextField(
                             value = "",
                             onValueChange = {},
+                            enabled = false,
                             label = { Text("Ingrese su mensaje") },
                             modifier = Modifier
                                 .weight(1f)
@@ -107,7 +119,8 @@ fun PantallaMensajes() {
                             onClick = { /* Acción al hacer clic */ },
                             modifier = Modifier
                                 .align(Alignment.Bottom)
-                                .clip(RoundedCornerShape(8.dp))
+                                .clip(RoundedCornerShape(8.dp)),
+                            enabled = false
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Send,

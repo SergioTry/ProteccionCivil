@@ -32,10 +32,24 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
 
     var usuariosMessageState: UsuariosMessageState by mutableStateOf(UsuariosMessageState.Loading)
         private set
+
+    var usuariosBusState by mutableStateOf(UsuariosBusState())
+
     var usuariosMtoState by mutableStateOf(UsuariosMtoState())
         private set
 
-    var usuariosBusState by mutableStateOf(UsuariosBusState())
+    // Estas variables se usan para saber si ha habido cambios en el MtoState
+    var originalUsuariosMtoState = usuariosMtoState.copy()
+
+    fun updateOriginalState() {
+        originalUsuariosMtoState = usuariosMtoState.copy()
+    }
+
+    fun hasStateChanged(): Boolean {
+        val current = usuariosMtoState.copy(datosObligatorios = false)
+        val original = originalUsuariosMtoState.copy(datosObligatorios = false)
+        return current != original
+    }
 
     fun resetInfoState() {
         usuariosMessageState = UsuariosMessageState.Loading

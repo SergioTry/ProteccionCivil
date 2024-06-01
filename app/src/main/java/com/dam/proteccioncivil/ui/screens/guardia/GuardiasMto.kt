@@ -24,7 +24,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -48,7 +47,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
@@ -68,7 +66,7 @@ fun GuardiaMto(
     modifier: Modifier
 ) {
 
-    val mensage: String
+    var mensage: String
     val contexto = LocalContext.current
     val activity = (LocalContext.current as? Activity)
     var expandedUser1 by remember { mutableStateOf(false) }
@@ -80,9 +78,9 @@ fun GuardiaMto(
 
         is GuardiasMessageState.Success -> {
             mensage = if (guardiasVM.guardiasMtoState.codGuardia == "0") {
-                ContextCompat.getString(contexto, R.string.guardia_create_success)
+                getString(contexto, R.string.guardia_create_success)
             } else {
-                ContextCompat.getString(contexto, R.string.guardia_edit_success)
+                getString(contexto, R.string.guardia_edit_success)
             }
             onShowSnackBar(mensage, true)
             guardiasVM.resetInfoState()
@@ -93,10 +91,12 @@ fun GuardiaMto(
 
         is GuardiasMessageState.Error -> {
             mensage = if (guardiasVM.guardiasMtoState.codGuardia == "0") {
-                ContextCompat.getString(contexto, R.string.guardia_create_failure)
+                getString(contexto, R.string.guardia_create_failure)
             } else {
-                ContextCompat.getString(contexto, R.string.guardia_edit_failure)
+                getString(contexto, R.string.guardia_edit_failure)
             }
+            mensage =
+                mensage + ": " + (guardiasVM.guardiasMessageState as GuardiasMessageState.Error).err
             onShowSnackBar(mensage, false)
             guardiasVM.resetInfoState()
         }
@@ -184,7 +184,10 @@ fun GuardiaMto(
                     )
                     ExposedDropdownMenuBox(
                         expanded = expandedUser1,
-                        onExpandedChange = { if(!guardiasVM.guardiasBusState.isDetail) expandedUser1 = !expandedUser1 },
+                        onExpandedChange = {
+                            if (!guardiasVM.guardiasBusState.isDetail) expandedUser1 =
+                                !expandedUser1
+                        },
                     ) {
                         OutlinedTextField(
                             value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario1 }?.nombre
@@ -241,7 +244,10 @@ fun GuardiaMto(
                     }
                     ExposedDropdownMenuBox(
                         expanded = expandedUser2,
-                        onExpandedChange = { if(!guardiasVM.guardiasBusState.isDetail) expandedUser2 = !expandedUser2 },
+                        onExpandedChange = {
+                            if (!guardiasVM.guardiasBusState.isDetail) expandedUser2 =
+                                !expandedUser2
+                        },
                     ) {
                         OutlinedTextField(
                             value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario2 }?.nombre
@@ -318,7 +324,7 @@ fun GuardiaMto(
                 }
                 Spacer(modifier = modifier.width(100.dp))
                 Button(
-                    enabled = guardiasVM.guardiasMtoState.datosObligatorios,
+                    enabled = guardiasVM.guardiasMtoState.datosObligatorios && guardiasVM.hasStateChanged(),
                     onClick = {
                         if (guardiasVM.guardiasMtoState.codGuardia == "0") {
                             guardiasVM.setNew()

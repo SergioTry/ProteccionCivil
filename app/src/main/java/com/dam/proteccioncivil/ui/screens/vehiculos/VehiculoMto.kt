@@ -53,7 +53,7 @@ fun VehiculoMto(
     onNavDown: () -> Unit,
     onShowSnackBar: (String, Boolean) -> Job
 ) {
-    val mensage: String
+    var mensage: String
     val contexto = LocalContext.current
     val activity = (LocalContext.current as? Activity)
 
@@ -80,10 +80,11 @@ fun VehiculoMto(
 
         is VehiculoMessageState.Error -> {
             mensage = if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
-                ContextCompat.getString(contexto, R.string.vehiculo_create_failure)
+                getString(contexto, R.string.vehiculo_create_failure)
             } else {
-                ContextCompat.getString(contexto, R.string.vehiculo_edit_failure)
+                getString(contexto, R.string.vehiculo_edit_failure)
             }
+            mensage = mensage + ": " + (vehiculosVM.vehiculosMessageState as VehiculoMessageState.Error).err
             onShowSnackBar(mensage, false)
             vehiculosVM.resetInfoState()
         }
@@ -92,8 +93,6 @@ fun VehiculoMto(
     if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
         vehiculosVM.setFechaMantenimiento(FormatDate.use())
     }
-
-    val oldMtoState = vehiculosVM.vehiculosMtoState
 
     Box(
         modifier = Modifier
@@ -286,7 +285,7 @@ fun VehiculoMto(
                 }
                 Spacer(modifier = Modifier.width(100.dp))
                 Button(
-                    enabled = vehiculosVM.vehiculosMtoState.datosObligatorios &&  vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
+                    enabled = vehiculosVM.vehiculosMtoState.datosObligatorios && vehiculosVM.hasStateChanged(),
                     colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
                     onClick = {
                         if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
@@ -311,7 +310,7 @@ fun VehiculoMto(
         DlgSeleccionFecha(
             modifier = Modifier,
             onClick = {
-                if ( vehiculosVM.vehiculosUiState != VehiculosUiState.Loading ) {
+                if (vehiculosVM.vehiculosUiState != VehiculosUiState.Loading) {
                     vehiculosVM.setShowDlgDate(false)
                     vehiculosVM.setFechaMantenimiento(it)
                 }

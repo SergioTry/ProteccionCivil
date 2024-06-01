@@ -146,10 +146,17 @@ class LoginVM(
         )
     }
 
+    fun setIsLoading(isLoading: Boolean) {
+        uiLoginState = uiLoginState.copy(
+            isLoading = isLoading
+        )
+    }
+
     fun resetLogin() {
         uiLoginState = uiLoginState.copy(
             username = "",
             password = "",
+            isLoading = false,
             datosObligatorios = false
         )
     }

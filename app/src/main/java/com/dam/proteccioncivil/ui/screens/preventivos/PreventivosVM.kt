@@ -45,9 +45,9 @@ class PreventivosVM(
     var preventivosMessageState: PreventivosMessageState by mutableStateOf(PreventivosMessageState.Loading)
         private set
 
-    var preventivoMtoState: PreventivoMtoState by mutableStateOf(PreventivoMtoState())
-
     var preventivoBusState: PreventivoBusState by mutableStateOf(PreventivoBusState())
+
+    var preventivoMtoState: PreventivoMtoState by mutableStateOf(PreventivoMtoState())
 
     var originalPreventivosMtoState = preventivoMtoState.copy()
 

@@ -41,12 +41,25 @@ class GuardiasVM(
     var guardiasMessageState: GuardiasMessageState by mutableStateOf(GuardiasMessageState.Loading)
         private set
 
-    var guardiasMtoState by mutableStateOf(GuardiasMtoState())
-        private set
-
     var guardiasBusState by mutableStateOf(GuardiasBusState())
 
     var users by mutableStateOf(UsuariosGuardiaListState().userList)
+
+    var guardiasMtoState by mutableStateOf(GuardiasMtoState())
+        private set
+
+    // Estas variables se usan para saber si ha habido cambios en el MtoState
+    var originalGuardiasMtoState = guardiasMtoState.copy()
+
+    fun updateOriginalState() {
+        originalGuardiasMtoState = guardiasMtoState.copy()
+    }
+
+    fun hasStateChanged(): Boolean {
+        val current = guardiasMtoState.copy(datosObligatorios = false)
+        val original = originalGuardiasMtoState.copy(datosObligatorios = false)
+        return current != original
+    }
 
     fun setIsDetail(isDetail: Boolean) {
         guardiasBusState = guardiasBusState.copy(

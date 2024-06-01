@@ -50,15 +50,11 @@ fun AnunciosMto(
     onCancel: () -> Unit
 ) {
 
-    val mensage: String
+    var mensage: String
     val contexto = LocalContext.current
 
     if (anunciosVM.anunciosMtoState.codAnuncio == "0") {
         anunciosVM.setFechaPublicacion(FormatDate.use())
-    }
-
-    if (anunciosVM.anunciosBusState.loading) {
-        Loading()
     }
 
     when (anunciosVM.anunciosMessageState) {
@@ -67,26 +63,25 @@ fun AnunciosMto(
 
         is AnunciosMessageState.Success -> {
             mensage = if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
-                ContextCompat.getString(contexto, R.string.anuncio_create_success)
+                getString(contexto, R.string.anuncio_create_success)
             } else {
-                ContextCompat.getString(contexto, R.string.anuncio_edit_success)
+                getString(contexto, R.string.anuncio_edit_success)
             }
             onShowSnackBar(mensage, true)
             anunciosVM.resetInfoState()
             anunciosVM.resetAnuncioMtoState()
             anunciosVM.getAll()
-            anunciosVM.setLoading(false)
             refresh()
         }
 
         is AnunciosMessageState.Error -> {
             mensage = if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
-                ContextCompat.getString(contexto, R.string.anuncio_create_failure)
+                getString(contexto, R.string.anuncio_create_failure)
             } else {
-                ContextCompat.getString(contexto, R.string.anuncio_edit_failure)
+                getString(contexto, R.string.anuncio_edit_failure)
             }
+            mensage = mensage + ": " + (anunciosVM.anunciosMessageState as AnunciosMessageState.Error).err
             onShowSnackBar(mensage, false)
-            anunciosVM.setLoading(false)
             anunciosVM.resetInfoState()
         }
     }
@@ -145,17 +140,17 @@ fun AnunciosMto(
             Button(
                 onClick = {
                     anunciosVM.resetAnuncioMtoState()
-                    anunciosVM.setLoading(true)
+                 //   anunciosVM.setLoading(true)
                     onCancel()
                 },
-                enabled = !anunciosVM.anunciosBusState.loading,
+            //    enabled = !anunciosVM.anunciosBusState.loading,
                 colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
             ) {
                 Text(text = stringResource(id = R.string.opc_cancel), color = AppColors.Black)
             }
             Spacer(modifier = Modifier.width(100.dp))
             Button(
-                enabled = !anunciosVM.anunciosBusState.loading && anunciosVM.anunciosMtoState.datosObligatorios,
+                enabled =  anunciosVM.anunciosMtoState.datosObligatorios && anunciosVM.hasStateChanged(),
                 onClick = {
                     if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
                         anunciosVM.setFechaPublicacion(FormatDate.use())
@@ -163,7 +158,7 @@ fun AnunciosMto(
                     } else {
                         anunciosVM.update()
                     }
-                    anunciosVM.setLoading(true)
+             //       anunciosVM.setLoading(true)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue)
             ) {

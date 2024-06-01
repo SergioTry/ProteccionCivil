@@ -32,26 +32,34 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
     var anunciosMessageState: AnunciosMessageState by mutableStateOf(AnunciosMessageState.Loading)
         private set
 
+    var anunciosBusState by mutableStateOf(AnunciosBusState())
+
     var anunciosMtoState by mutableStateOf(AnunciosMtoState())
         private set
 
-    var anunciosBusState by mutableStateOf(AnunciosBusState())
+    // Estas variables se usan para saber si ha habido cambios en el MtoState
+    var originalAnunciosMtoState = anunciosMtoState.copy()
+
+    fun updateOriginalState() {
+        originalAnunciosMtoState = anunciosMtoState.copy()
+    }
+
+    // Esta funcionalidad no rompe durante la alta porque la clave primaria de
+    // todas las tablas no está presente en la creación (siempre es 0),
+    // por lo que siempre es diferente.
+    fun hasStateChanged(): Boolean {
+        val current = anunciosMtoState.copy(datosObligatorios = false)
+        val original = originalAnunciosMtoState.copy(datosObligatorios = false)
+        return current != original
+    }
 
     fun resetInfoState() {
         anunciosMessageState = AnunciosMessageState.Loading
     }
 
-    fun setLoading(loading: Boolean){
-        anunciosBusState = anunciosBusState.copy(
-            loading = loading,
-            showDlgBorrar = anunciosBusState.showDlgBorrar,
-            showDlgDate = anunciosBusState.showDlgDate
-        )
-    }
 
     fun setShowDlgBorrar(showDlgBorrar: Boolean){
         anunciosBusState = anunciosBusState.copy(
-            loading = anunciosBusState.loading,
             showDlgBorrar = showDlgBorrar,
             showDlgDate = anunciosBusState.showDlgDate
         )
@@ -59,7 +67,6 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
 
     fun setShowDlgDate(showDlgDate: Boolean){
         anunciosBusState = anunciosBusState.copy(
-            loading = anunciosBusState.loading,
             showDlgBorrar = anunciosBusState.showDlgBorrar,
             showDlgDate = showDlgDate
         )

@@ -104,7 +104,7 @@ fun UsuariosBus(
         }
 
         is UsuariosMessageState.Success -> {
-            mensage = ContextCompat.getString(
+            mensage = getString(
                 contexto,
                 R.string.usuario_delete_success
             )
@@ -116,10 +116,10 @@ fun UsuariosBus(
         }
 
         is UsuariosMessageState.Error -> {
-            mensage = ContextCompat.getString(
+            mensage = getString(
                 contexto,
                 R.string.usuario_delete_failure
-            )
+            ) + ": " + (usuariosVM.usuariosMessageState as UsuariosMessageState.Error).err
             onShowSnackBar(mensage, false)
             usuariosVM.resetInfoState()
         }
@@ -414,6 +414,7 @@ fun usuarioCard(
                                     usuariosVM.resetUsuarioMtoState()
                                     usuariosVM.cloneUsuarioMtoState(usuario)
                                     usuariosVM.setPassword("")
+                                    usuariosVM.updateOriginalState()
                                     onNavUp()
                                 }, enabled = enabled
                             ) {

@@ -2,7 +2,6 @@ package com.dam.proteccioncivil.ui.main
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -21,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat.getString
@@ -52,9 +50,8 @@ import com.dam.proteccioncivil.ui.screens.infomur.InfomursScreen
 import com.dam.proteccioncivil.ui.screens.infomur.InfomursVM
 import com.dam.proteccioncivil.ui.screens.login.LoginScreen
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
-import com.dam.proteccioncivil.ui.screens.preferencias.PrefScreen
-import com.dam.proteccioncivil.ui.screens.preventivos.PreventivoMto
 import com.dam.proteccioncivil.ui.screens.preferencias.Preferencias
+import com.dam.proteccioncivil.ui.screens.preventivos.PreventivoMto
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosScreen
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosVM
 import com.dam.proteccioncivil.ui.screens.sobre.SobreScreen
@@ -102,7 +99,6 @@ fun MainApp(
     windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
-    val configuration = LocalConfiguration.current
     val activity = (LocalContext.current as? Activity)
     val context = LocalContext.current
     val navController: NavHostController = rememberNavController()
@@ -144,74 +140,74 @@ fun MainApp(
         Icons.AutoMirrored.Filled.Chat to stringResource(R.string.screen_name_chat),
     )
 
-    if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-        && windowSize == WindowWidthSizeClass.Compact
-    ) {
-        Scaffold(
-            modifier = modifier,
-            topBar = {
-                if (currentScreen != AppScreens.Splash) {
-                    MainTopAppBar(
-                        currentScreen = currentScreen,
-                        canNavigateBack = (currentScreen.name != AppScreens.Splash.name && currentScreen.name != AppScreens.Home.name),
-                        showLoginScreen = { navController.navigate(AppScreens.Login.name) },
-                        showPrefScreen = { navController.navigate(AppScreens.Preferences.name) },
-                        showAnoScreen = {
-                            anunciosVM.getAll()
-                            navController.navigate(AppScreens.Anuncios.name)
-                        },
-                        showDlgSalir = {
-                            mainVM.setShowDlgSalir(true)
-                        },
-                        navigateUp = {
-                            backButtonNavigation(currentScreen, navController)
-                        },
-                        navController = navController,
-                        calendarioVM = calendarioVM,
-                        showDatosPersonalesScreen = {
-                            usuariosVM.getUsuarioById()
-                            navController.navigate(AppScreens.DatosPersonales.name)
-                        },
-                        showSobreScreen = { navController.navigate(AppScreens.Sobre.name) }
-                    )
-                }
-            },
-            bottomBar = {
-                if (currentScreen != AppScreens.Splash && currentScreen != AppScreens.Login) {
-                    MainBottomBar(
-                        menuOptions = menuOptions,
-                        navController = navController,
-                        mainVM = mainVM,
-                        resetFilters = {
-                            resetFilters(usuariosVM, vehiculosVM, preventivosVM)
-                        }
-                    )
-                }
-            },
-            snackbarHost = {
-                CustomSnackBar(
-                    snackbarHostState = snackbarHostState,
-                    context = context
+    // En futuras versiones se implementará la vista landscape y la vista
+    // para diferentes tamaños de pantalla.
+
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            if (currentScreen != AppScreens.Splash) {
+                MainTopAppBar(
+                    currentScreen = currentScreen,
+                    canNavigateBack = (currentScreen.name != AppScreens.Splash.name && currentScreen.name != AppScreens.Home.name),
+                    showLoginScreen = { navController.navigate(AppScreens.Login.name) },
+                    showPrefScreen = { navController.navigate(AppScreens.Preferences.name) },
+                    showAnoScreen = {
+                        anunciosVM.getAll()
+                        navController.navigate(AppScreens.Anuncios.name)
+                    },
+                    showDlgSalir = {
+                        mainVM.setShowDlgSalir(true)
+                    },
+                    navigateUp = {
+                        backButtonNavigation(currentScreen, navController)
+                    },
+                    navController = navController,
+                    calendarioVM = calendarioVM,
+                    showDatosPersonalesScreen = {
+                        usuariosVM.getUsuarioById()
+                        navController.navigate(AppScreens.DatosPersonales.name)
+                    },
+                    showSobreScreen = { navController.navigate(AppScreens.Sobre.name) }
                 )
-            },
-        ) {
-            NavHostRoutes(
-                navController,
-                it,
-                scope,
-                snackbarHostState,
-                anunciosVM,
-                usuariosVM,
-                guardiasVM,
-                infomursVM,
-                calendarioVM,
-                vehiculosVM,
-                preventivosVM,
-                mainVM,
-                loginVM
+            }
+        },
+        bottomBar = {
+            if (currentScreen != AppScreens.Splash && currentScreen != AppScreens.Login) {
+                MainBottomBar(
+                    menuOptions = menuOptions,
+                    navController = navController,
+                    mainVM = mainVM,
+                    resetFilters = {
+                        resetFilters(usuariosVM, vehiculosVM, preventivosVM)
+                    }
+                )
+            }
+        },
+        snackbarHost = {
+            CustomSnackBar(
+                snackbarHostState = snackbarHostState,
+                context = context
             )
-        }
+        },
+    ) {
+        NavHostRoutes(
+            navController,
+            it,
+            scope,
+            snackbarHostState,
+            anunciosVM,
+            usuariosVM,
+            guardiasVM,
+            infomursVM,
+            calendarioVM,
+            vehiculosVM,
+            preventivosVM,
+            mainVM,
+            loginVM
+        )
     }
+
     if (mainVM.uiMainState.showDlgPassword) {
         DlgPassword(usuariosVM = usuariosVM,
             onEstablecerClick = {
@@ -568,7 +564,7 @@ private fun NavHostRoutes(
                 modifier = Modifier,
                 onCancel = {
                     navController.popBackStack()
-                    anunciosVM.setLoading(false)
+                    //  anunciosVM.setLoading(false)
                 }
             )
         }
@@ -609,7 +605,6 @@ private fun NavHostRoutes(
         }
 
         composable(route = AppScreens.UsuariosMto.name) {
-            val oldMtoState = remember { usuariosVM.usuariosMtoState.copy() }
             UsuariosMto(usuariosVM = usuariosVM,
                 onNavDown = { navController.navigate(AppScreens.Usuarios.name) },
                 onShowSnackBar = { mensaje, isSuccess ->

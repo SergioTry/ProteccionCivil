@@ -177,5 +177,11 @@
     <string name="kilometros_lit">Kilometros</string>
     <string name="desapuntar_lit">Desapuntarme</string>
     <string name="apuntar_lit">Apuntarme</string>
+    <string name="preventivos_image">Imagen asociada a preventivo</string>
+    <string name="preventivos_riesgo_image">Imagen asociada a preventivo de riesgo</string>
+    <string name="infomur_image">Imagen asociada a infomur</string>
+    <string name="guardias_image">Imagen asociada a guardia</string>
+    <string name="preventivo_delete_failure">Error al eliminar el preventivo</string>
+    <string name="preventivo_delete_success">Preventivo eliminado con éxito</string>
 
 </resources>

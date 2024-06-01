@@ -31,10 +31,24 @@ class VehiculosVM(private val vehiculosRepository: VehiculosRepository) : CRUD<V
 
     var vehiculosMessageState: VehiculoMessageState by mutableStateOf(VehiculoMessageState.Loading)
         private set
+
+    var vehiculosBusState by mutableStateOf(VehiculosBusState())
+
     var vehiculosMtoState by mutableStateOf(VehiculoMtoState())
         private set
 
-    var vehiculosBusState by mutableStateOf(VehiculosBusState())
+    // Estas variables se usan para saber si ha habido cambios en el MtoState
+    var originalVehiculosMtoState = vehiculosMtoState.copy()
+
+    fun updateOriginalState() {
+        originalVehiculosMtoState = vehiculosMtoState.copy()
+    }
+
+    fun hasStateChanged(): Boolean {
+        val current = vehiculosMtoState.copy(datosObligatorios = false)
+        val original = originalVehiculosMtoState.copy(datosObligatorios = false)
+        return current != original
+    }
 
     fun setLanzarBusqueda(lanzar: Boolean) {
         vehiculosBusState = vehiculosBusState.copy(

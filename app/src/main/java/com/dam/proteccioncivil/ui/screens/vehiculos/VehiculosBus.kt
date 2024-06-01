@@ -71,6 +71,7 @@ import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Vehiculo
 import com.dam.proteccioncivil.data.model.filtrosVehiculos
 import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
+import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosMessageState
 import com.dam.proteccioncivil.ui.theme.AppColors
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -110,7 +111,7 @@ fun VehiculosBus(
         }
 
         is VehiculoMessageState.Success -> {
-            mensage = ContextCompat.getString(
+            mensage = getString(
                 contexto,
                 R.string.vehiculo_delete_success
             )
@@ -122,10 +123,10 @@ fun VehiculosBus(
         }
 
         is VehiculoMessageState.Error -> {
-            mensage = ContextCompat.getString(
+            mensage = getString(
                 contexto,
                 R.string.vehiculo_delete_failure
-            )
+            ) + ": " + (vehiculosVM.vehiculosMessageState as VehiculoMessageState.Error).err
             onShowSnackBar(mensage, false)
             vehiculosVM.resetInfoState()
         }
@@ -400,6 +401,7 @@ fun vehiculoCard(
                             onClick = {
                                 vehiculosVM.resetVehiculoMtoState()
                                 vehiculosVM.cloneVehiculoMtoState(vehiculo)
+                                vehiculosVM.updateOriginalState()
                                 onNavUp()
                             }, enabled = enabled
                         ) {

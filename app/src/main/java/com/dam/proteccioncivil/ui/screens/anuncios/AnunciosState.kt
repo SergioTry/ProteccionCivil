@@ -10,7 +10,6 @@ data class AnunciosMtoState(
 )
 
 data class AnunciosBusState(
-    val loading: Boolean = false,
     val showDlgBorrar: Boolean = false,
     val showDlgDate: Boolean = false
 )

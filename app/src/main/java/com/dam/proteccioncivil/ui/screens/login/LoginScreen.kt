@@ -79,22 +79,20 @@ fun LoginScreen(
     var isChecked by remember { mutableStateOf(savedToken) }
     val contexto = LocalContext.current
 
-    var loading by remember { mutableStateOf(false) }
-
     when (loginVM.uiInfoState) {
         is LoginUiState.Loading -> {
         }
 
         is LoginUiState.Success -> {
             onShowSnackBar(getString(contexto, R.string.login_success), true)
-            loading = false
+            loginVM.setIsLoading(false)
             loginVM.resetInfoState()
             onNavUp()
             loginVM.resetLogin()
         }
 
         is LoginUiState.Error -> {
-            loading = false
+            loginVM.setIsLoading(false)
             onShowSnackBar((loginVM.uiInfoState as LoginUiState.Error).err, false)
             loginVM.resetInfoState()
         }
@@ -111,13 +109,13 @@ fun LoginScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        if (loading) {
+        if (loginVM.uiLoginState.isLoading) {
             Loading()
         }
         Image(
             contentScale = ContentScale.FillHeight,
             painter = painterResource(id = R.drawable.fondo),
-            contentDescription = getString(contexto,R.string.fondo_desc),
+            contentDescription = getString(contexto, R.string.fondo_desc),
             modifier = modifier.fillMaxSize(),
         )
         Column(
@@ -152,7 +150,7 @@ fun LoginScreen(
                             fontWeight = FontWeight.Bold
                         )
                     },
-                    enabled = !loading,
+                    enabled = !loginVM.uiLoginState.isLoading,
                     singleLine = true,
                     value = uiLoginState.username,
                     onValueChange = {
@@ -190,8 +188,8 @@ fun LoginScreen(
                         onDone = {
                             focusManager.clearFocus()
                             keyboardController?.hide()
-                            if (uiLoginState.datosObligatorios && !loading) {
-                                loading = true
+                            if (uiLoginState.datosObligatorios && !loginVM.uiLoginState.isLoading) {
+                                loginVM.setIsLoading(true)
                                 loginVM.login(mainVM, isChecked)
                             }
                         }
@@ -202,7 +200,7 @@ fun LoginScreen(
                             fontWeight = FontWeight.Bold
                         )
                     },
-                    enabled = !loading,
+                    enabled = !loginVM.uiLoginState.isLoading,
                     singleLine = true,
                     isError = uiLoginState.password == "",
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -211,7 +209,9 @@ fun LoginScreen(
                             Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff
                         val description = if (passwordVisible) "Hide password" else "Show password"
-                        IconButton(onClick = { if (!loading) passwordVisible = !passwordVisible }) {
+                        IconButton(onClick = {
+                            if (!loginVM.uiLoginState.isLoading) passwordVisible = !passwordVisible
+                        }) {
                             Icon(
                                 imageVector = image,
                                 description,
@@ -222,7 +222,9 @@ fun LoginScreen(
                 Row(
                     modifier
                         .clickable(
-                            onClick = { if (!loading) isChecked = !isChecked }
+                            onClick = {
+                                if (!loginVM.uiLoginState.isLoading) isChecked = !isChecked
+                            }
                         )
                         .padding(16.dp, 8.dp, 16.dp, 16.dp)
                         .align(Alignment.CenterHorizontally),
@@ -230,7 +232,7 @@ fun LoginScreen(
                     Checkbox(
                         checked = isChecked,
                         onCheckedChange = null,
-                        enabled = !loading,
+                        enabled = !loginVM.uiLoginState.isLoading,
                         modifier = modifier.background(Color.White)
                     )
                     Spacer(modifier.size(6.dp))
@@ -239,10 +241,10 @@ fun LoginScreen(
             }
             Button(
                 onClick = {
-                    loading = true
+                    loginVM.setIsLoading(true)
                     loginVM.login(mainVM, isChecked)
                 },
-                enabled = uiLoginState.datosObligatorios && !loading,
+                enabled = uiLoginState.datosObligatorios && !loginVM.uiLoginState.isLoading,
                 shape = RoundedCornerShape(5.dp),
                 modifier = modifier
                     .fillMaxWidth()

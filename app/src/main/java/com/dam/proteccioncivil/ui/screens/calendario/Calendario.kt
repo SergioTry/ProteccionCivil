@@ -32,10 +32,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Guardia
 import com.dam.proteccioncivil.data.model.Infomur
@@ -66,6 +69,7 @@ fun Calendario(
     servicios: Map<LocalDate, List<Servicio>>,
     modifier: Modifier = Modifier
 ) {
+    val contexto = LocalContext.current
     val currentMonth = remember { YearMonth.now() }
     val startMonth = remember { currentMonth.minusMonths(200) } // Adjust as needed
     val endMonth = remember { currentMonth.plusMonths(200) } // Adjust as needed
@@ -86,7 +90,7 @@ fun Calendario(
         Image(
             contentScale = ContentScale.FillHeight,
             painter = painterResource(id = R.drawable.fondo),
-            contentDescription = "Escudo de Caravaca De La Cruz",
+            contentDescription = ContextCompat.getString(contexto, R.string.fondo_desc),
             modifier = modifier.fillMaxSize(),
         )
         Column(
@@ -133,7 +137,6 @@ fun Calendario(
                     } else {
                         emptyList()
                     }
-
                     Day(
                         day = day,
                         isSelected = selection == day,
@@ -213,7 +216,7 @@ fun PreventivoCalendarCard(preventivo: Preventivo, modifier: Modifier = Modifier
             Image(
                 contentScale = ContentScale.FillHeight,
                 painter = painterResource(if (preventivo.riesgo.toInt() == 0) R.drawable.preventivos else R.drawable.siren_transparent_png),
-                contentDescription = if (preventivo.riesgo.toInt() == 0) "Imagen asociada a preventivo" else "Imagen asociada a preventivo de riesgo",
+                contentDescription = stringResource(if (preventivo.riesgo.toInt() == 0) R.string.preventivos_image else R.string.preventivos_riesgo_image),
                 modifier = Modifier
                     .background(
                         color = Color.White,
@@ -257,7 +260,7 @@ fun InfomurCalendarCard(infomur: Infomur, modifier: Modifier = Modifier) {
             Image(
                 contentScale = ContentScale.FillHeight,
                 painter = painterResource(R.drawable.infomur),
-                contentDescription = "Imagen asociada a infomur",
+                contentDescription = stringResource(R.string.infomur_image),
                 modifier = Modifier
                     .background(Color.Cyan, shape = RoundedCornerShape(50))
             )
@@ -297,7 +300,7 @@ fun GuardiaCalendarCard(guardia: Guardia, modifier: Modifier = Modifier) {
             Image(
                 contentScale = ContentScale.FillHeight,
                 painter = painterResource(R.drawable.guardias),
-                contentDescription = "Imagen asociada a guardia",
+                contentDescription = stringResource(R.string.guardias_image),
                 modifier = Modifier
                     .background(CalendarTitleColor, shape = RoundedCornerShape(50))
             )

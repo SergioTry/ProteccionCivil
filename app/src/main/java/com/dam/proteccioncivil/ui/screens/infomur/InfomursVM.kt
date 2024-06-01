@@ -37,10 +37,26 @@ class InfomursVM(
     var infomursMessageState: InfomursMessageState by mutableStateOf(InfomursMessageState.Loading)
         private set
 
+    var infomursBusState by mutableStateOf(InfomursBusState())
+
     var infomursMtoState by mutableStateOf(InfomursMtoState())
         private set
 
-    var infomursBusState by mutableStateOf(InfomursBusState())
+    // Estas variables se usan para saber si ha habido cambios en el MtoState
+    var originalInfomursMtoState = infomursMtoState.copy()
+
+    fun updateOriginalState() {
+        originalInfomursMtoState = infomursMtoState.copy()
+    }
+
+    // Esta funcionalidad no rompe durante la alta porque la clave primaria de
+    // todas las tablas no está presente en la creación (siempre es 0),
+    // por lo que siempre es diferente.
+    fun hasStateChanged(): Boolean {
+        val current = infomursMtoState.copy(datosObligatorios = false)
+        val original = originalInfomursMtoState.copy(datosObligatorios = false)
+        return current != original
+    }
 
     fun setIsDetail(isDetail: Boolean) {
         infomursBusState = infomursBusState.copy(

@@ -40,12 +40,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Anuncio
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
-import com.dam.proteccioncivil.data.model.Loading
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosMessageState
@@ -65,29 +63,30 @@ fun AnunciosBus(
     val mensage: String
     val contexto = LocalContext.current
 
-    if (anunciosVM.anunciosBusState.loading) {
-        Loading()
-    }
+//    if (anunciosVM.anunciosBusState.loading) {
+//        Loading()
+//    }
 
     when (anunciosVM.anunciosMessageState) {
         is AnunciosMessageState.Loading -> {
         }
 
         is AnunciosMessageState.Success -> {
-            mensage = ContextCompat.getString(contexto, R.string.anuncios_delete_success)
+            mensage = getString(contexto, R.string.anuncios_delete_success)
             onShowSnackBar(mensage, true)
             anunciosVM.resetAnuncioMtoState()
             anunciosVM.resetInfoState()
             anunciosVM.getAll()
             refresh()
-            anunciosVM.setLoading(false)
         }
 
         is AnunciosMessageState.Error -> {
-            mensage = ContextCompat.getString(contexto, R.string.anuncios_delete_failure)
+            mensage = getString(
+                contexto,
+                R.string.anuncios_delete_failure
+            ) + ": " + (anunciosVM.anunciosMessageState as AnunciosMessageState.Error).err
             onShowSnackBar(mensage, false)
             anunciosVM.resetInfoState()
-            anunciosVM.setLoading(false)
         }
     }
 
@@ -166,7 +165,7 @@ fun AnunciosBus(
                 },
                 onAceptarClick = {
                     anunciosVM.setShowDlgBorrar(false)
-                    anunciosVM.setLoading(true)
+                    //anunciosVM.setLoading(true)
                     anunciosVM.deleteBy()
                 }
             )
@@ -210,30 +209,37 @@ fun AnuncioCard(
                     if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                         Row {
                             IconButton(
-                                enabled = !anunciosVM.anunciosBusState.loading,
+                                // enabled = !anunciosVM.anunciosUiState.loading,
                                 onClick = {
                                     anunciosVM.resetAnuncioMtoState()
                                     anunciosVM.cloneAnuncioMtoState(anuncio)
                                     anunciosVM.setShowDlgBorrar(true)
-                                    anunciosVM.setLoading(true)
+                                    //anunciosVM.setLoading(true)
                                     refresh()
                                 }) {
                                 Icon(
                                     imageVector = Icons.Filled.Delete,
-                                    contentDescription = getString(contexto, R.string.eliminar_desc),
+                                    contentDescription = getString(
+                                        contexto,
+                                        R.string.eliminar_desc
+                                    ),
                                     tint = AppColors.Black
                                 )
                             }
                             IconButton(
-                                enabled = !anunciosVM.anunciosBusState.loading,
+                                //  enabled = !anunciosVM.anunciosBusState.loading,
                                 onClick = {
                                     anunciosVM.resetAnuncioMtoState()
                                     anunciosVM.cloneAnuncioMtoState(anuncio)
+                                    anunciosVM.updateOriginalState()
                                     onNavUp()
                                 }) {
                                 Icon(
                                     imageVector = Icons.Filled.Edit,
-                                    contentDescription = getString(contexto, R.string.eliminar_desc),
+                                    contentDescription = getString(
+                                        contexto,
+                                        R.string.eliminar_desc
+                                    ),
                                     tint = AppColors.Black
                                 )
                             }

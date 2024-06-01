@@ -48,6 +48,8 @@ val filtrosVehiculos = listOf("Disponibles", "No Disponibles")
 val filtrosPreventivos = listOf("Riesgo", "Sin Riesgo", "Mes")
 val filtrosPreventivosLimitados = listOf("Mes")
 
+val rangos = listOf("administrador", "jefeservicio", "voluntario", "nuevo")
+
 val meses =
     Month.entries.map {
         it.getDisplayName(java.time.format.TextStyle.FULL, Locale("es", "ES")).replaceFirstChar {

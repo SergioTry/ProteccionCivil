@@ -67,7 +67,7 @@ fun InfomurMto(
     modifier: Modifier
 ) {
 
-    val mensage: String
+    var mensage: String
     val contexto = LocalContext.current
     val activity = (LocalContext.current as? Activity)
     var expandedUser1 by remember { mutableStateOf(false) }
@@ -92,10 +92,11 @@ fun InfomurMto(
 
         is InfomursMessageState.Error -> {
             mensage = if (infomursVM.infomursMtoState.codInfomur == "0") {
-                ContextCompat.getString(contexto, R.string.infomur_create_failure)
+                getString(contexto, R.string.infomur_create_failure)
             } else {
-                ContextCompat.getString(contexto, R.string.infomur_edit_failure)
+                getString(contexto, R.string.infomur_edit_failure)
             }
+            mensage = mensage + ": " + (infomursVM.infomursMessageState as InfomursMessageState.Error).err
             onShowSnackBar(mensage, false)
             infomursVM.resetInfoState()
         }
@@ -334,7 +335,7 @@ fun InfomurMto(
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
-                    enabled = infomursVM.infomursMtoState.datosObligatorios
+                    enabled = infomursVM.infomursMtoState.datosObligatorios && infomursVM.hasStateChanged()
                 ) {
                     Text(
                         text =
