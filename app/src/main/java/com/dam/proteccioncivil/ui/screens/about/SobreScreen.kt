@@ -1,4 +1,4 @@
-package com.dam.proteccioncivil.ui.screens.sobre
+package com.dam.proteccioncivil.ui.screens.about
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

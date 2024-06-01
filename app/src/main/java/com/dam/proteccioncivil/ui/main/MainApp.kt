@@ -54,7 +54,7 @@ import com.dam.proteccioncivil.ui.screens.preferencias.Preferencias
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivoMto
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosScreen
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosVM
-import com.dam.proteccioncivil.ui.screens.sobre.SobreScreen
+import com.dam.proteccioncivil.ui.screens.about.SobreScreen
 import com.dam.proteccioncivil.ui.screens.splash.SplashScreen
 import com.dam.proteccioncivil.ui.screens.usuarios.DatosPersonales
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosMto
@@ -422,7 +422,7 @@ private fun NavHostRoutes(
             GuardiaMto(
                 guardiasVM = guardiasVM,
                 refresh = {
-                    navController.popBackStack()
+                    navController.popBackStack(AppScreens.Guardias.name, true)
                     navController.navigate(AppScreens.Guardias.name)
                 },
                 onShowSnackBar = { mensaje, isSuccess ->
@@ -485,7 +485,7 @@ private fun NavHostRoutes(
             InfomurMto(
                 infomursVM = infomursVM,
                 refresh = {
-                    navController.popBackStack()
+                    navController.popBackStack(AppScreens.Infomurs.name, true)
                     navController.navigate(AppScreens.Infomurs.name)
                 },
                 onShowSnackBar = { mensaje, isSuccess ->
@@ -543,7 +543,7 @@ private fun NavHostRoutes(
             AnunciosMto(
                 anunciosVM = anunciosVM,
                 refresh = {
-                    navController.popBackStack()
+                    navController.popBackStack(AppScreens.Anuncios.name, true)
                     navController.navigate(AppScreens.Anuncios.name)
                 },
                 onShowSnackBar = { mensaje, isSuccess ->
@@ -607,7 +607,10 @@ private fun NavHostRoutes(
 
         composable(route = AppScreens.UsuariosMto.name) {
             UsuariosMto(usuariosVM = usuariosVM,
-                onNavDown = { navController.navigate(AppScreens.Usuarios.name) },
+                refresh = {
+                    navController.popBackStack(AppScreens.Usuarios.name, true)
+                    navController.navigate(AppScreens.Usuarios.name)
+                },
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
                         if (isSuccess) {
@@ -663,7 +666,10 @@ private fun NavHostRoutes(
 
         composable(route = AppScreens.VehiculosMto.name) {
             VehiculoMto(vehiculosVM = vehiculosVM,
-                onNavDown = { navController.navigate(AppScreens.Vehiculos.name) },
+                refresh = {
+                    navController.popBackStack(AppScreens.Vehiculos.name, true)
+                    navController.navigate(AppScreens.Vehiculos.name)
+                },
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
                         if (isSuccess) {
@@ -753,7 +759,7 @@ private fun NavHostRoutes(
                     }
                 },
                 refresh = {
-                    navController.popBackStack()
+                    navController.popBackStack(AppScreens.Preventivos.name,true)
                     navController.navigate(AppScreens.Preventivos.name)
                 })
         }

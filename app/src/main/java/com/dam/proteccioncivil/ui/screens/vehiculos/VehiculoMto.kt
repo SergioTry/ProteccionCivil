@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
@@ -30,11 +32,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
@@ -48,11 +56,13 @@ import kotlinx.coroutines.Job
 @Composable
 fun VehiculoMto(
     vehiculosVM: VehiculosVM,
-    onNavDown: () -> Unit,
-    onShowSnackBar: (String, Boolean) -> Job
+    refresh: () -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit
 ) {
     var mensage: String
     val contexto = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     val activity = (LocalContext.current as? Activity)
 
     when (vehiculosVM.vehiculosMessageState) {
@@ -67,7 +77,7 @@ fun VehiculoMto(
             }
             onShowSnackBar(mensage, true)
             vehiculosVM.getAll()
-            onNavDown()
+            refresh()
             vehiculosVM.resetInfoState()
             vehiculosVM.resetVehiculoMtoState()
         }
@@ -78,7 +88,8 @@ fun VehiculoMto(
             } else {
                 getString(contexto, R.string.vehiculo_edit_failure)
             }
-            mensage = mensage + ": " + (vehiculosVM.vehiculosMessageState as VehiculoMessageState.Error).err
+            mensage =
+                mensage + ": " + (vehiculosVM.vehiculosMessageState as VehiculoMessageState.Error).err
             onShowSnackBar(mensage, false)
             vehiculosVM.resetInfoState()
         }
@@ -126,6 +137,10 @@ fun VehiculoMto(
                         ),
                         isError = vehiculosVM.vehiculosMtoState.matricula == "",
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        )
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
@@ -136,7 +151,7 @@ fun VehiculoMto(
                             )
                         },
                         readOnly = vehiculosVM.vehiculosBusState.isDetail,
-                        value = if (vehiculosVM.vehiculosMtoState.km != "0") vehiculosVM.vehiculosMtoState.km else "",
+                        value = vehiculosVM.vehiculosMtoState.km,
                         onValueChange = { vehiculosVM.setKm(it) },
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -149,7 +164,14 @@ fun VehiculoMto(
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
                         ),
-                        isError = vehiculosVM.vehiculosMtoState.km == "0"
+                        isError = vehiculosVM.vehiculosMtoState.km == "0",
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Number
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        )
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
@@ -175,6 +197,10 @@ fun VehiculoMto(
                         ),
                         isError = vehiculosVM.vehiculosMtoState.marca == "",
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        )
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
@@ -200,6 +226,10 @@ fun VehiculoMto(
                         ),
                         isError = vehiculosVM.vehiculosMtoState.modelo == "",
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        )
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     Row {
@@ -227,6 +257,9 @@ fun VehiculoMto(
                                     errorLabelColor = Color.Red,
                                     focusedTextColor = Color.Black,
                                     unfocusedTextColor = Color.Black,
+                                ),keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                                keyboardActions = KeyboardActions(
+                                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
                                 ),
                                 enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                             )
@@ -275,6 +308,20 @@ fun VehiculoMto(
                         ),
                         isError = vehiculosVM.vehiculosMtoState.descripcion == "",
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                keyboardController?.hide()
+                                focusManager.clearFocus()
+                                if (vehiculosVM.vehiculosMtoState.datosObligatorios && vehiculosVM.hasStateChanged()) {
+                                    if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
+                                        vehiculosVM.setNew()
+                                    } else {
+                                        vehiculosVM.update()
+                                    }
+                                }
+                            }
+                        )
                     )
                 }
             }
