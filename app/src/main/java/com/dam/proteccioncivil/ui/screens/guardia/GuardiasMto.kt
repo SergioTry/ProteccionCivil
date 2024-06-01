@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -220,9 +221,10 @@ fun GuardiaMto(
                             ),
                             textStyle = TextStyle(color = Color.Black)
                         )
-                        DropdownMenu(
+                        ExposedDropdownMenu(
                             expanded = expandedUser1,
-                            onDismissRequest = { expandedUser1 = false }
+                            onDismissRequest = { expandedUser1 = false },
+                            modifier = Modifier.heightIn(max = 200.dp)
                         ) {
                             users.forEach { item ->
                                 DropdownMenuItem(
@@ -276,9 +278,10 @@ fun GuardiaMto(
                             ),
                             textStyle = TextStyle(color = Color.Black)
                         )
-                        DropdownMenu(
+                        ExposedDropdownMenu(
                             expanded = expandedUser2,
-                            onDismissRequest = { expandedUser2 = false }
+                            onDismissRequest = { expandedUser2 = false },
+                            modifier = Modifier.heightIn(max = 200.dp)
                         ) {
                             users.forEach { item ->
                                 DropdownMenuItem(

@@ -76,6 +76,7 @@ import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.esMayorDeEdad
 import com.dam.proteccioncivil.data.model.filtrosPreventivos
 import com.dam.proteccioncivil.data.model.filtrosPreventivosLimitados
+import com.dam.proteccioncivil.data.model.meses
 import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionMes
 import com.dam.proteccioncivil.ui.theme.AppColors
 
@@ -154,8 +155,6 @@ fun PreventivosBus(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(2.dp)
-                    .border(BorderStroke(1.dp, Color.Black))
                     .height(75.dp)
                     .padding(top = 4.dp, start = 4.dp, end = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -302,7 +301,7 @@ fun PreventivosBus(
             ) {
                 Icon(
                     imageVector = Icons.Filled.CloudSync,
-                    contentDescription = ContextCompat.getString(contexto, R.string.refresh_desc),
+                    contentDescription = getString(contexto, R.string.refresh_desc),
                     tint = AppColors.White
                 )
             }
@@ -325,7 +324,7 @@ fun PreventivosBus(
         DlgSeleccionMes(
             onCancelarClick = { preventivosVM.setShowDlgSeleccionMes(false) },
             onAplicarClick = { numeroMes ->
-                preventivosVM.setComboBoxOptionSelected(numeroMes.toString())
+                preventivosVM.setComboBoxOptionSelected(meses[numeroMes - 1])
                 preventivosVM.setShowDlgSeleccionMes(false)
                 preventivosVM.getAll()
                 refresh()

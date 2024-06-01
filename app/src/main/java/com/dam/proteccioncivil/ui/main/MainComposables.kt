@@ -89,12 +89,12 @@ fun MainTopAppBar(
             if (canNavigateBack) {
                 if (!Token.username.isNullOrBlank()) {
                     IconButton(
-                        onClick =
-                        navigateUp
+                        onClick = {
+                            navigateUp()
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.background
                         )
@@ -118,14 +118,16 @@ fun MainTopAppBar(
         actions = {
             if (currentScreen.name == AppScreens.Home.name) {
                 Row {
-                    IconButton(onClick = { showAnoScreen() }) {
+                    IconButton(onClick = {
+                        showAnoScreen() }) {
                         Icon(
                             imageVector = Icons.Default.Notifications,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.background
                         )
                     }
-                    IconButton(onClick = { showMenu = !showMenu }) {
+                    IconButton(onClick = {
+                        showMenu = !showMenu }) {
                         Icon(
                             imageVector = Icons.Filled.MoreVert, contentDescription = null,
                             tint = MaterialTheme.colorScheme.background
@@ -173,7 +175,8 @@ fun MainTopAppBar(
 fun MainBottomBar(
     menuOptions: Map<ImageVector, String>,
     navController: NavHostController,
-    mainVM: MainVM
+    mainVM: MainVM,
+    resetFilters: () -> Unit,
 ) {
     NavigationBar(containerColor = MaterialTheme.colorScheme.primary) {
         for ((clave, valor) in menuOptions) {
@@ -197,6 +200,7 @@ fun MainBottomBar(
                             clave = clave,
                             navController = navController,
                             mainVM = mainVM,
+                            resetFilters = resetFilters
                         )
                     },
                     enabled = true
@@ -218,6 +222,7 @@ fun MainBottomBar(
                                     clave = Icons.Default.DirectionsCar,
                                     navController = navController,
                                     mainVM = mainVM,
+                                    resetFilters
                                 )
                             },
                             enabled = true
@@ -238,6 +243,7 @@ fun MainBottomBar(
                                 clave = clave,
                                 navController = navController,
                                 mainVM = mainVM,
+                                resetFilters
                             )
                         },
                         enabled = true

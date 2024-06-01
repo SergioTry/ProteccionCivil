@@ -431,7 +431,9 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
 
     fun resetFilter() {
         usuariosBusState = usuariosBusState.copy(
-            comboBoxOptionSelected = ""
+            comboBoxOptionSelected = "",
+            textoBusqueda = "",
+            lanzarBusqueda = false,
         )
     }
 
