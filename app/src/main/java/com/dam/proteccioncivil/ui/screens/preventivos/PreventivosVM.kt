@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.CRUD
+import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.ObjectToStringMap
 import com.dam.proteccioncivil.data.model.Preventivo
 import com.dam.proteccioncivil.data.model.Token
@@ -46,6 +47,79 @@ class PreventivosVM(
     var preventivoMtoState: PreventivoMtoState by mutableStateOf(PreventivoMtoState())
 
     var preventivoBusState: PreventivoBusState by mutableStateOf(PreventivoBusState())
+
+    var originalPreventivosMtoState = preventivoMtoState.copy()
+
+    fun updateOriginalState() {
+        originalPreventivosMtoState = preventivoMtoState.copy()
+    }
+
+    fun hasStateChanged(): Boolean {
+        val current = preventivoMtoState.copy(datosObligatorios = false)
+        val original = originalPreventivosMtoState.copy(datosObligatorios = false)
+        return current != original
+    }
+
+    fun setNewFecha(fecha: String) {
+        var fechas = preventivoMtoState.fechas
+        fechas.add(fecha)
+        preventivoMtoState = preventivoMtoState.copy(
+            fechas = fechas
+        )
+    }
+
+    fun delFecha() {
+        if (preventivoBusState.fechaABorrar != "") {
+            var fechas = preventivoMtoState.fechas
+            fechas.remove(preventivoBusState.fechaABorrar)
+            preventivoMtoState = preventivoMtoState.copy(
+                fechas = fechas
+            )
+            setFechaBorrar("")
+        }
+    }
+
+    fun setFechas() {
+        if (!hasStateChanged()) {
+            preventivoMtoState.fechas.clear()
+            preventivoMtoState.fechas.addAll(
+                listOf(
+                    FormatDate.use(preventivoMtoState.fechaDia1),
+                    if (!preventivoMtoState.fechaDia2.isNullOrEmpty()) FormatDate.use(
+                        preventivoMtoState.fechaDia2
+                    ) else null,
+                    if (!preventivoMtoState.fechaDia3.isNullOrEmpty()) FormatDate.use(
+                        preventivoMtoState.fechaDia3
+                    ) else null,
+                    if (!preventivoMtoState.fechaDia4.isNullOrEmpty()) FormatDate.use(
+                        preventivoMtoState.fechaDia4
+                    ) else null,
+                    if (!preventivoMtoState.fechaDia5.isNullOrEmpty()) FormatDate.use(
+                        preventivoMtoState.fechaDia5
+                    ) else null,
+                    if (!preventivoMtoState.fechaDia6.isNullOrEmpty()) FormatDate.use(
+                        preventivoMtoState.fechaDia6
+                    ) else null,
+                    if (!preventivoMtoState.fechaDia7.isNullOrEmpty()) FormatDate.use(
+                        preventivoMtoState.fechaDia7
+                    ) else null,
+                )
+            )
+            preventivoMtoState.fechas = preventivoMtoState.fechas.filterNotNull().toMutableList()
+        }
+    }
+
+    fun setFechaBorrar(fecha: String) {
+        preventivoBusState = preventivoBusState.copy(
+            fechaABorrar = fecha
+        )
+    }
+
+    fun setIsDetail(isDetail: Boolean) {
+        preventivoBusState = preventivoBusState.copy(
+            isDetail = isDetail
+        )
+    }
 
     fun resetInfoState() {
         preventivosMessageState = PreventivosMessageState.Loading
@@ -114,7 +188,21 @@ class PreventivosVM(
     }
 
     fun clonePreventivoState(preventivo: Preventivo) {
-        //preventivoMtoState =
+        preventivoMtoState = preventivoMtoState.copy(
+            codPreventivo = preventivo.codPreventivo,
+            titulo = preventivo.titulo,
+            riesgo = preventivo.riesgo,
+            descripcion = preventivo.descripcion,
+            fechaDia1 = preventivo.fechaDia1,
+            fechaDia2 = preventivo.fechaDia2,
+            fechaDia3 = preventivo.fechaDia3,
+            fechaDia4 = preventivo.fechaDia4,
+            fechaDia5 = preventivo.fechaDia5,
+            fechaDia6 = preventivo.fechaDia6,
+            fechaDia7 = preventivo.fechaDia7,
+            usuarios = preventivo.usuarios,
+            vehiculos = preventivo.vehiculos
+        )
     }
 
     override fun getAll() {

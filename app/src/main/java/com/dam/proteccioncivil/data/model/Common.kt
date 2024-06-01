@@ -119,6 +119,7 @@ class FormatDate {
 class FormatVisibleDate {
     companion object {
         fun use(fecha: String? = null): String {
+            val formatoEntrada = DateTimeFormatter.ISO_LOCAL_DATE
             val fechaFormateada = if (fecha != null) {
                 val fechaParseada = try {
                     ZonedDateTime.parse(fecha).toLocalDate()
@@ -126,7 +127,11 @@ class FormatVisibleDate {
                     try {
                         LocalDateTime.parse(fecha).toLocalDate()
                     } catch (e: DateTimeParseException) {
-                        LocalDate.now()
+                        try {
+                            LocalDate.parse(fecha,formatoEntrada)
+                        } catch (e: DateTimeParseException) {
+                            LocalDate.now()
+                        }
                     }
                 }
                 val formato = DateTimeFormatter.ofPattern("dd/MM/yyyy")

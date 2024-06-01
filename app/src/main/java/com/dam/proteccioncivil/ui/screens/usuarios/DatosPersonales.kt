@@ -114,7 +114,7 @@ fun DatosPersonales(
                 modifier = modifier
                     .padding(8.dp),
                 shape = RoundedCornerShape(8.dp),
-                colors = CardDefaults.cardColors(Color.White),
+                colors = CardDefaults.cardColors(AppColors.Posit),
                 border = CardDefaults.outlinedCardBorder(true)
             ) {
                 Column {
@@ -333,7 +333,7 @@ fun DatosPersonales(
                                 uncheckedThumbColor = Color.Gray
                             ),
                             roundedInt = 4,
-                            color = Color.White
+                            color = AppColors.Posit
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(

@@ -12,6 +12,7 @@ fun PreventivosScreen(
     preventivosVM: PreventivosVM,
     retryAction: () -> Unit,
     onNavUp: () -> Unit,
+    onNavDetail: () -> Unit,
     refresh: () -> Unit,
     onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -25,6 +26,7 @@ fun PreventivosScreen(
                 onShowSnackBar,
                 modifier,
                 onNavUp,
+                onNavDetail,
                 refresh
             )
         }

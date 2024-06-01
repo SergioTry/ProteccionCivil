@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -86,6 +87,7 @@ fun PreventivosBus(
     onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier,
     onNavUp: () -> Unit,
+    onNavDetail: () -> Unit,
     refresh: () -> Unit
 ) {
     val mensage: String
@@ -274,6 +276,7 @@ fun PreventivosBus(
                                 preventivosVM.update()
                                 preventivosVM.setAction(null)
                             },
+                            onNavDetail = { onNavDetail() },
                             apuntado = it.usuarios?.firstOrNull { it.codUsuario == Token.codUsuario } != null
                         )
                     }
@@ -336,6 +339,7 @@ fun PreventivoCard(
     preventivo: Preventivo,
     preventivosVM: PreventivosVM,
     onNavUp: () -> Unit,
+    onNavDetail: () -> Unit,
     modifier: Modifier,
     contexto: Context,
     action: () -> Unit,
@@ -372,11 +376,22 @@ fun PreventivoCard(
                         .align(Alignment.CenterVertically),
                     color = Color.Black
                 )
-                if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
-                    Row(
-                        modifier = modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    IconButton(onClick = {
+                        preventivosVM.resetPreventivoState()
+                        preventivosVM.clonePreventivoState(preventivo)
+                        onNavDetail()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.RemoveRedEye,
+                            contentDescription = getString(contexto, R.string.eliminar_desc),
+                            tint = AppColors.Black
+                        )
+                    }
+                    if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                         IconButton(onClick = {
                             preventivosVM.resetPreventivoState()
                             preventivosVM.clonePreventivoState(preventivo)
@@ -391,6 +406,8 @@ fun PreventivoCard(
                         IconButton(onClick = {
                             preventivosVM.resetPreventivoState()
                             preventivosVM.clonePreventivoState(preventivo)
+                            preventivosVM.updateOriginalState()
+                            preventivo.usuarios
                             onNavUp()
                         }) {
                             Icon(

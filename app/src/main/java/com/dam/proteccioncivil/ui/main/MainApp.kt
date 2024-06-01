@@ -53,6 +53,7 @@ import com.dam.proteccioncivil.ui.screens.infomur.InfomursVM
 import com.dam.proteccioncivil.ui.screens.login.LoginScreen
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
 import com.dam.proteccioncivil.ui.screens.preferencias.PrefScreen
+import com.dam.proteccioncivil.ui.screens.preventivos.PreventivoMto
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosScreen
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosVM
 import com.dam.proteccioncivil.ui.screens.sobre.SobreScreen
@@ -693,7 +694,14 @@ private fun NavHostRoutes(
                 preventivosUiState = preventivosVM.preventivosUiState,
                 preventivosVM = preventivosVM,
                 retryAction = { usuariosVM.getAll() },
-                onNavUp = { },
+                onNavUp = {
+                    preventivosVM.setIsDetail(false)
+                    navController.navigate(AppScreens.PreventivosMto.name)
+                },
+                onNavDetail = {
+                    preventivosVM.setIsDetail(true)
+                    navController.navigate(AppScreens.PreventivosMto.name)
+                },
                 refresh = {
                     navController.popBackStack()
                     navController.navigate(AppScreens.Preventivos.name)
@@ -717,7 +725,15 @@ private fun NavHostRoutes(
         }
 
         composable(route = AppScreens.PreventivosMto.name) {
-            //TODO
+            PreventivoMto(
+                preventivosVM = preventivosVM,
+                usuariosVM = usuariosVM,
+                onNavUsuarioDetail = {
+                    usuariosVM.setIsDetail(true)
+                    navController.navigate(AppScreens.UsuariosMto.name)
+                },
+                modifier = Modifier
+            )
         }
 
         composable(route = AppScreens.Chat.name) {

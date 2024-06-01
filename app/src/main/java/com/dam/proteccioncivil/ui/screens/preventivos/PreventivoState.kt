@@ -10,6 +10,7 @@ data class PrevState(
 )
 
 data class PreventivoBusState(
+    val fechaABorrar: String = "",
     val action: String? = null,
     val isDetail: Boolean = false,
     val textoBusqueda: String = "",
@@ -32,8 +33,10 @@ data class PreventivoMtoState(
     val fechaDia5: String? = null,
     val fechaDia6: String? = null,
     val fechaDia7: String? = null,
+    var fechas: MutableList<String?> = mutableListOf(),
     val usuarios: List<Usuario>? = null,
-    var vehiculos: List<Vehiculo>? = null
+    var vehiculos: List<Vehiculo>? = null,
+    val datosObligatorios: Boolean = false
 )
 
 fun PreventivoMtoState.toPreventivo(preventivoMtoState: PreventivoMtoState): Preventivo {

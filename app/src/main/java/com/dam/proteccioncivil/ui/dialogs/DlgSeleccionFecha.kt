@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.dam.proteccioncivil.R
-import com.dam.proteccioncivil.data.model.FormatDate
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -37,7 +36,7 @@ fun DlgSeleccionFecha(
         onDismissRequest = { onDismiss() },
         confirmButton = {
             TextButton(onClick = {
-                onClick(FormatDate.use(selectedDate.toString()))
+                onClick(selectedDate.toString())
             }) {
                 Text(text = stringResource(id = R.string.opc_accept))
             }
