@@ -2,10 +2,8 @@ package com.dam.proteccioncivil.ui.screens.vehiculos
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -62,7 +60,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.ComboBox
@@ -71,7 +68,6 @@ import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Vehiculo
 import com.dam.proteccioncivil.data.model.filtrosVehiculos
 import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
-import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosMessageState
 import com.dam.proteccioncivil.ui.theme.AppColors
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -356,8 +352,8 @@ fun vehiculoCard(
             }
             Column {
                 Spacer(modifier = modifier.height(8.dp))
-                Row {
-                    Column {
+                Row(modifier = modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
+                    Column(modifier = Modifier.weight(1f)) {
                         Spacer(modifier = modifier.height(12.dp))
                         Text(
                             text = vehiculo.km.toString(),
@@ -365,54 +361,55 @@ fun vehiculoCard(
                             color = Color.Black
                         )
                     }
-                    Spacer(modifier = modifier.width(45.dp))
-                    IconButton(
-                        onClick = {
-                            vehiculosVM.resetVehiculoMtoState()
-                            vehiculosVM.cloneVehiculoMtoState(vehiculo)
-                            onNavDetail()
-                        }, enabled = enabled
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.RemoveRedEye,
-                            contentDescription = getString(contexto, R.string.detalle_desc),
-                            tint = Color.Black
-                        )
-                    }
-                    if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
+                    Row(horizontalArrangement = Arrangement.End) {
                         IconButton(
                             onClick = {
                                 vehiculosVM.resetVehiculoMtoState()
                                 vehiculosVM.cloneVehiculoMtoState(vehiculo)
-                                vehiculosVM.setShowDlgBorrar(true)
+                                onNavDetail()
                             }, enabled = enabled
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = getString(
-                                    contexto,
-                                    R.string.eliminar_desc
-                                ),
+                                imageVector = Icons.Filled.RemoveRedEye,
+                                contentDescription = getString(contexto, R.string.detalle_desc),
                                 tint = Color.Black
                             )
                         }
-                        Spacer(modifier = modifier.height(28.dp))
-                        IconButton(
-                            onClick = {
-                                vehiculosVM.resetVehiculoMtoState()
-                                vehiculosVM.cloneVehiculoMtoState(vehiculo)
-                                vehiculosVM.updateOriginalState()
-                                onNavUp()
-                            }, enabled = enabled
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Edit,
-                                contentDescription = getString(
-                                    contexto,
-                                    R.string.editar_desc
-                                ),
-                                tint = Color.Black
-                            )
+                        if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
+                            IconButton(
+                                onClick = {
+                                    vehiculosVM.resetVehiculoMtoState()
+                                    vehiculosVM.cloneVehiculoMtoState(vehiculo)
+                                    vehiculosVM.setShowDlgBorrar(true)
+                                }, enabled = enabled
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = getString(
+                                        contexto,
+                                        R.string.eliminar_desc
+                                    ),
+                                    tint = Color.Black
+                                )
+                            }
+                            Spacer(modifier = modifier.height(28.dp))
+                            IconButton(
+                                onClick = {
+                                    vehiculosVM.resetVehiculoMtoState()
+                                    vehiculosVM.cloneVehiculoMtoState(vehiculo)
+                                    vehiculosVM.updateOriginalState()
+                                    onNavUp()
+                                }, enabled = enabled
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = getString(
+                                        contexto,
+                                        R.string.editar_desc
+                                    ),
+                                    tint = Color.Black
+                                )
+                            }
                         }
                     }
                 }

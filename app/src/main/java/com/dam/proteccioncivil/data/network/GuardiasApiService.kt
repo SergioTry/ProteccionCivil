@@ -22,7 +22,7 @@ interface GuardiasApiService {
     @POST("guardias")
     suspend fun altaGuardia(
         @Header("Authorization") authToken: String,
-        @Body body: Map<String, String>
+        @Body body: Map<String, String?>
     ): ApiResponse
 
     @DELETE("guardias/{codGuardia}")
@@ -35,7 +35,7 @@ interface GuardiasApiService {
     suspend fun updateGuardia(
         @Header("Authorization") authToken: String,
         @Path("codGuardia") id: Int,
-        @Body body: Map<String, String>
+        @Body body: Map<String, String?>
     )
 
 }

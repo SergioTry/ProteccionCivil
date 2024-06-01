@@ -26,7 +26,7 @@ interface VehiculosApiService {
     @POST("vehiculos")
     suspend fun altaVehiculo(
         @Header("Authorization") authToken: String,
-        @Body body: Map<String, String>
+        @Body body: Map<String, String?>
     ): ApiResponse
 
     @DELETE("vehiculos/{codVehiculo}")
@@ -39,7 +39,7 @@ interface VehiculosApiService {
     suspend fun updateVehiculo(
         @Header("Authorization") authToken: String,
         @Path("codVehiculo") id: Int,
-        @Body body: Map<String, String>
+        @Body body: Map<String, String?>
     )
 
 }

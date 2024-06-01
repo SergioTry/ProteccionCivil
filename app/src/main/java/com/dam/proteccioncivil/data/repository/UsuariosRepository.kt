@@ -7,7 +7,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
 
 interface UsuariosRepository {
-    suspend fun updateUsuario(codUsuario: Int, usuarioData: Map<String, String>)
+    suspend fun updateUsuario(codUsuario: Int, usuarioData: Map<String, String?>)
     suspend fun getUsuarios(
         conductores: Boolean? = null,
         mayores: Boolean? = null,
@@ -17,14 +17,14 @@ interface UsuariosRepository {
     suspend fun getUsuarioById(codUsuario: Int): Usuario?
     suspend fun getUsuariosPreventivo(codPreventivo: Int): List<Usuario>
     suspend fun deleteUsuario(id: Int)
-    suspend fun setUsuario(usuarioData: Map<String, String>)
+    suspend fun setUsuario(usuarioData: Map<String, String?>)
 }
 
 
 class NetworkUsuariosRepository(
     private val usuariosApiService: UsuariosApiService
 ) : UsuariosRepository {
-    override suspend fun updateUsuario(codUsuario: Int, usuarioData: Map<String, String>) {
+    override suspend fun updateUsuario(codUsuario: Int, usuarioData: Map<String, String?>) {
         usuariosApiService.updateUsuario("Bearer ${Token.token}", codUsuario, usuarioData)
     }
 
@@ -54,7 +54,7 @@ class NetworkUsuariosRepository(
         usuariosApiService.deleteUsuario("Bearer ${Token.token}", id)
     }
 
-    override suspend fun setUsuario(usuarioData: Map<String, String>) {
+    override suspend fun setUsuario(usuarioData: Map<String, String?>) {
         usuariosApiService.altaUsuario("Bearer ${Token.token}", usuarioData)
     }
 

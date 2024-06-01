@@ -15,7 +15,7 @@ interface AnunciosApiService {
     suspend fun getAnuncios(@Header("Authorization") authToken: String): ApiResponse
 
     @POST("anuncios")
-    suspend fun altaAnuncio(@Header("Authorization") authToken: String,@Body body: Map<String, String>): ApiResponse
+    suspend fun altaAnuncio(@Header("Authorization") authToken: String,@Body body: Map<String, String?>): ApiResponse
 
     @DELETE("anuncios/{codAnuncio}")
     suspend fun deleteAnuncio(
@@ -27,7 +27,7 @@ interface AnunciosApiService {
     suspend fun updateAnuncio(
         @Header("Authorization") authToken: String,
         @Path("codAnuncio") id: Int,
-        @Body body: Map<String, String>
+        @Body body: Map<String, String?>
     )
 
 }

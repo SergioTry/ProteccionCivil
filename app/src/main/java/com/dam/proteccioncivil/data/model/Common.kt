@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.spr.jetpack_loading.components.indicators.BallClipRotateMultipleIndicator
@@ -43,7 +42,7 @@ import java.util.Locale
 //Tiempo máximo de espera
 val timeoutMillis: Long = 5000
 
-val filtrosUsuarios = listOf("+18", "Conductores","Rango")
+val filtrosUsuarios = listOf("+18", "Conductores", "Rango")
 val filtrosVehiculos = listOf("Disponibles", "No Disponibles")
 val filtrosPreventivos = listOf("Riesgo", "Sin Riesgo", "Mes")
 val filtrosPreventivosLimitados = listOf("Mes")
@@ -79,9 +78,9 @@ class ObjectToStringMap {
                 field.isAccessible = true
                 val value = field.get(obj)
 
-                val strValue = value?.toString() ?: "null"
+                val strValue = value?.toString() ?: ""
 
-                var key = field.name.get(0).uppercaseChar() + field.name.substring(1)
+                var key = field.name[0].uppercaseChar() + field.name.substring(1)
 
                 if (key == "Dni") {
                     key = "DNI"
@@ -149,7 +148,7 @@ class FormatVisibleDate {
                         LocalDateTime.parse(fecha).toLocalDate()
                     } catch (e: DateTimeParseException) {
                         try {
-                            LocalDate.parse(fecha,formatoEntrada)
+                            LocalDate.parse(fecha, formatoEntrada)
                         } catch (e: DateTimeParseException) {
                             LocalDate.now()
                         }
@@ -300,7 +299,7 @@ fun ComboBox(
                     onExpandedChange(false)
                 },
                 enabled = enabled,
-                text = { Text(text = "Borrar Filtro",color = Color.Red) }
+                text = { Text(text = "Borrar Filtro", color = Color.Red) }
             )
         }
     }

@@ -32,7 +32,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -132,7 +134,16 @@ fun PreventivoMto(
                             .fillMaxWidth()
                             .padding(8.dp),
                         label = { Text(text = stringResource(id = R.string.titulo_lit)) },
-                        readOnly = preventivosVM.preventivoBusState.isDetail
+                        readOnly = preventivosVM.preventivoBusState.isDetail,
+                        isError = preventivosVM.preventivoMtoState.titulo == "",
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                            focusedContainerColor = MaterialTheme.colorScheme.background,
+                            focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
+                            focusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                        ),
                     )
                     Spacer(modifier = modifier.size(8.dp))
                     Text(
@@ -141,7 +152,10 @@ fun PreventivoMto(
                     Box(
                         modifier = modifier
                             .border(
-                                BorderStroke(1.dp, Color.Black),
+                                BorderStroke(
+                                    1.dp,
+                                    if (preventivosVM.preventivoMtoState.fechas.isEmpty()) Color.Red else Color.Black
+                                ),
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .fillMaxWidth(),
@@ -151,8 +165,8 @@ fun PreventivoMto(
                                 Row {
                                     IconButton(
                                         onClick = {
-                                            if (it != null && !preventivosVM.preventivoBusState.isDetail) {
-                                                preventivosVM.setFechaBorrar(it)
+                                            if (!preventivosVM.preventivoBusState.isDetail) {
+                                                preventivosVM.setFechaBorrar(it!!)
                                             }
                                         },
                                         modifier = modifier
@@ -303,7 +317,16 @@ fun PreventivoMto(
                         .padding(8.dp)
                         .height(160.dp),
                     label = { Text(text = stringResource(id = R.string.descripcion_lit)) },
-                    readOnly = preventivosVM.preventivoBusState.isDetail
+                    readOnly = preventivosVM.preventivoBusState.isDetail,
+                    isError = preventivosVM.preventivoMtoState.descripcion == "",
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                        focusedContainerColor = MaterialTheme.colorScheme.background,
+                        focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
+                        focusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                    ),
                 )
                 Spacer(modifier = modifier.size(16.dp))
             }
@@ -334,7 +357,7 @@ fun PreventivoMto(
                                 preventivosVM.update()
                             }
                         },
-                        enabled = //preventivosVM.preventivoMtoState.datosObligatorios &&
+                        enabled = preventivosVM.datosObligatorios() &&
                                 preventivosVM.hasStateChanged(),
                         colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue)
                     ) {

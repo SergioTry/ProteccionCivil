@@ -51,13 +51,19 @@ class PreventivosVM(
 
     var originalPreventivosMtoState = preventivoMtoState.copy()
 
+    fun datosObligatorios(): Boolean {
+        return preventivoMtoState.fechas.isNotEmpty()
+                && preventivoMtoState.titulo.isNotBlank()
+                && preventivoMtoState.descripcion.isNotBlank()
+    }
+
     fun convertFechas(): MutableList<String?> {
-        preventivoMtoState.fechas = preventivoMtoState.fechas.filterNotNull().toMutableList()
+        preventivoMtoState.fechas = preventivoMtoState.fechas.filterNotNull().sortedDescending().toMutableList()
         val fechas = preventivoMtoState.fechas + List(7 - preventivoMtoState.fechas.size) { null }
 
         preventivoMtoState = fechas[0]?.let {
             preventivoMtoState.copy(
-                fechaDia1 = it,
+                fechaDia1 = fechas[0]!!,
                 fechaDia2 = fechas.getOrNull(1),
                 fechaDia3 = fechas.getOrNull(2),
                 fechaDia4 = fechas.getOrNull(3),
@@ -154,7 +160,8 @@ class PreventivosVM(
                     ) else null,
                 )
             )
-            originalPreventivosMtoState.fechas = originalPreventivosMtoState.fechas.filterNotNull().toMutableList()
+            originalPreventivosMtoState.fechas =
+                originalPreventivosMtoState.fechas.filterNotNull().toMutableList()
         }
     }
 

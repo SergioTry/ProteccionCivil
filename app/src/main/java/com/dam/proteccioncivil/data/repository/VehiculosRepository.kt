@@ -7,18 +7,18 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
 
 interface VehiculosRepository {
-    suspend fun updateVehiculo(codVehiculo: Int, vehiculoData: Map<String, String>)
+    suspend fun updateVehiculo(codVehiculo: Int, vehiculoData: Map<String, String?>)
     suspend fun getVehiculos(disponible: Boolean? = null): List<Vehiculo>
     suspend fun getVehiculosPreventivo(codPreventivo: Int): List<Vehiculo>
     suspend fun deleteVehiculo(id: Int)
-    suspend fun setVehiculo(vehiculoData: Map<String, String>)
+    suspend fun setVehiculo(vehiculoData: Map<String, String?>)
 }
 
 
 class NetworkVehiculosRepository(
     private val vehiculosApiService: VehiculosApiService
 ) : VehiculosRepository {
-    override suspend fun updateVehiculo(codVehiculo: Int, vehiculoData: Map<String, String>) {
+    override suspend fun updateVehiculo(codVehiculo: Int, vehiculoData: Map<String, String?>) {
         vehiculosApiService.updateVehiculo("Bearer ${Token.token}", codVehiculo, vehiculoData)
     }
 
@@ -37,7 +37,7 @@ class NetworkVehiculosRepository(
         vehiculosApiService.deleteVehiculo("Bearer ${Token.token}", id)
     }
 
-    override suspend fun setVehiculo(vehiculoData: Map<String, String>) {
+    override suspend fun setVehiculo(vehiculoData: Map<String, String?>) {
         vehiculosApiService.altaVehiculo("Bearer ${Token.token}", vehiculoData)
     }
 
