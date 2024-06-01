@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
-import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
 import com.dam.proteccioncivil.ui.theme.AppColors
@@ -56,10 +55,6 @@ fun VehiculoMto(
     var mensage: String
     val contexto = LocalContext.current
     val activity = (LocalContext.current as? Activity)
-
-    if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
-        vehiculosVM.setFechaMantenimiento(FormatDate.use())
-    }
 
     when (vehiculosVM.vehiculosMessageState) {
         is VehiculoMessageState.Loading -> {
@@ -88,10 +83,6 @@ fun VehiculoMto(
             onShowSnackBar(mensage, false)
             vehiculosVM.resetInfoState()
         }
-    }
-
-    if (vehiculosVM.vehiculosMtoState.codVehiculo == "0") {
-        vehiculosVM.setFechaMantenimiento(FormatDate.use())
     }
 
     Box(
@@ -215,7 +206,7 @@ fun VehiculoMto(
                                 value = FormatVisibleDate.use(vehiculosVM.vehiculosMtoState.fechaMantenimiento),
                                 onValueChange = {},
                                 modifier = Modifier.fillMaxWidth(),
-                                isError = vehiculosVM.vehiculosMtoState.fechaMantenimiento == "",
+                                isError = vehiculosVM.vehiculosMtoState.fechaMantenimiento.isNullOrBlank(),
                                 textStyle = TextStyle(Color.Black),
                                 enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                             )

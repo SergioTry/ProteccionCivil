@@ -49,7 +49,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
-import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
@@ -65,7 +64,6 @@ fun GuardiaMto(
     users: List<Usuario>,
     modifier: Modifier
 ) {
-
     var mensage: String
     val contexto = LocalContext.current
     val activity = (LocalContext.current as? Activity)
@@ -101,9 +99,6 @@ fun GuardiaMto(
             guardiasVM.resetInfoState()
         }
     }
-    if (guardiasVM.guardiasMtoState.codGuardia == "0") {
-        guardiasVM.setFechaGuardia(FormatDate.use())
-    }
 
     Box(
         modifier = modifier
@@ -133,7 +128,7 @@ fun GuardiaMto(
                                 label = { Text(text = stringResource(id = R.string.fechaGuardia_lit)) },
                                 value = FormatVisibleDate.use(guardiasVM.guardiasMtoState.fechaGuardia),
                                 onValueChange = {},
-                                readOnly = guardiasVM.guardiasBusState.isDetail,
+                                readOnly = true,
                                 modifier = modifier.fillMaxWidth(),
                                 isError = guardiasVM.guardiasMtoState.fechaGuardia == "",
                                 colors = OutlinedTextFieldDefaults.colors(
@@ -351,7 +346,7 @@ fun GuardiaMto(
             DlgSeleccionFecha(
                 onClick = {
                     guardiasVM.setShowDlgDate(false)
-                    guardiasVM.setFechaGuardia(FormatDate.use(it))
+                    guardiasVM.setFechaGuardia(it)
                 },
                 modifier = modifier,
                 onDismiss = {

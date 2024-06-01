@@ -50,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
-import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
@@ -102,10 +101,6 @@ fun InfomurMto(
         }
     }
 
-    if (infomursVM.infomursMtoState.codInfomur == "0") {
-        infomursVM.setFechaInfomur(FormatDate.use())
-    }
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -132,7 +127,7 @@ fun InfomurMto(
                             modifier = modifier.weight(1f)
                         ) {
                             OutlinedTextField(
-                                readOnly = infomursVM.infomursBusState.isDetail,
+                                readOnly = true,
                                 label = { Text(text = stringResource(id = R.string.fechaInfomur_lit)) },
                                 value = FormatVisibleDate.use(infomursVM.infomursMtoState.fechaInfomur),
                                 isError = infomursVM.infomursMtoState.fechaInfomur == "",
@@ -351,7 +346,7 @@ fun InfomurMto(
                 DlgSeleccionFecha(
                     onClick = {
                         infomursVM.setShowDlgDate(false)
-                        infomursVM.setFechaInfomur(FormatDate.use(it))
+                        infomursVM.setFechaInfomur(it)
                     },
                     modifier = modifier,
                     onDismiss = {

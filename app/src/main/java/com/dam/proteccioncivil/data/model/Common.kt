@@ -114,22 +114,20 @@ fun Loading() {
 class FormatDate {
     companion object {
         fun use(fecha: String? = null): String {
-            val fechaFormateada = if (fecha != null) {
+            val fechaFormateada = if (fecha.isNullOrBlank()) {
                 val fechaParseada = try {
                     ZonedDateTime.parse(fecha).toLocalDate()
                 } catch (e: DateTimeParseException) {
                     try {
                         LocalDateTime.parse(fecha).toLocalDate()
                     } catch (e: DateTimeParseException) {
-                        LocalDate.now()
+                        return ""
                     }
                 }
                 val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 fechaParseada.format(formato)
             } else {
-                val fechaActual = LocalDate.now()
-                val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                fechaActual.format(formato)
+                ""
             }
             return fechaFormateada
         }
@@ -150,16 +148,14 @@ class FormatVisibleDate {
                         try {
                             LocalDate.parse(fecha, formatoEntrada)
                         } catch (e: DateTimeParseException) {
-                            LocalDate.now()
+                            return ""
                         }
                     }
                 }
                 val formato = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                 fechaParseada.format(formato)
             } else {
-                val fechaActual = LocalDate.now()
-                val formato = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                fechaActual.format(formato)
+                ""
             }
             return fechaFormateada
         }

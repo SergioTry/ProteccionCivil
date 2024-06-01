@@ -10,8 +10,8 @@ interface GuardiasRepository {
     suspend fun getGuardias(): List<Guardia>
     suspend fun getGuardiasUsuario(codUsuario: Int): List<Guardia>
     suspend fun deleteGuardia(id: Int)
-    suspend fun setGuardia(guardiaData: Map<String, String?>)
-    suspend fun updateGuardia(codGuardia: Int, guardiaData: Map<String, String?>)
+    suspend fun setGuardia(guardiaData: Map<String, String>)
+    suspend fun updateGuardia(codGuardia: Int, guardiaData: Map<String, String>)
 
 }
 
@@ -32,11 +32,11 @@ class NetworkGuardiasRepository(
         guardiasApiService.deleteGuardia("Bearer ${Token.token}", id)
     }
 
-    override suspend fun setGuardia(guardiaData: Map<String, String?>) {
+    override suspend fun setGuardia(guardiaData: Map<String, String>) {
         guardiasApiService.altaGuardia("Bearer ${Token.token}", guardiaData)
     }
 
-    override suspend fun updateGuardia(codGuardia: Int, guardiaData: Map<String, String?>) {
+    override suspend fun updateGuardia(codGuardia: Int, guardiaData: Map<String, String>) {
         guardiasApiService.updateGuardia("Bearer ${Token.token}", codGuardia, guardiaData)
     }
 

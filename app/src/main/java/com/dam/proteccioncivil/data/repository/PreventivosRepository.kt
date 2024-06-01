@@ -10,10 +10,10 @@ interface PreventivosRepository {
     suspend fun getPreventivos(riesgo: Boolean? = null, mes: Int? = null): List<Preventivo>
     suspend fun getPreventivosUsuario(codPreventivo: Int): List<Preventivo>
     suspend fun deletePreventivo(codPreventivo: Int)
-    suspend fun setPreventivo(preventiveData: Map<String, String?>)
+    suspend fun setPreventivo(preventiveData: Map<String, String>)
     suspend fun updPreventivo(
         codPreventivo: Int,
-        preventiveData: Map<String, String?>,
+        preventiveData: Map<String, String>,
         action: String? = null
     )
 }
@@ -41,13 +41,13 @@ class NetworkPreventivosRepository(
         preventivosApiService.deletePreventivo("Bearer ${Token.token}", codPreventivo)
     }
 
-    override suspend fun setPreventivo(preventiveData: Map<String, String?>) {
+    override suspend fun setPreventivo(preventiveData: Map<String, String>) {
         preventivosApiService.altaPreventivo("Bearer ${Token.token}", preventiveData)
     }
 
     override suspend fun updPreventivo(
         codPreventivo: Int,
-        preventiveData: Map<String, String?>,
+        preventiveData: Map<String, String>,
         action: String?
     ) {
         preventivosApiService.updPreventivo(

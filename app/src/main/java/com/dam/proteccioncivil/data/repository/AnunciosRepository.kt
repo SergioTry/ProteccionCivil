@@ -9,8 +9,8 @@ import kotlinx.serialization.json.decodeFromJsonElement
 interface AnunciosRepository {
     suspend fun getAnuncios(): List<Anuncio>
     suspend fun deleteAnuncio(id: Int)
-    suspend fun setAnuncio(anuncioData: Map<String, String?>)
-    suspend fun updateAnuncio(codAnuncio: Int, anuncioData: Map<String, String?>)
+    suspend fun setAnuncio(anuncioData: Map<String, String>)
+    suspend fun updateAnuncio(codAnuncio: Int, anuncioData: Map<String, String>)
 
 }
 
@@ -26,11 +26,11 @@ class NetworkAnunciosRepository(
         anunciosApiService.deleteAnuncio("Bearer ${Token.token}", id)
     }
 
-    override suspend fun setAnuncio(anuncioData: Map<String, String?>) {
+    override suspend fun setAnuncio(anuncioData: Map<String, String>) {
         anunciosApiService.altaAnuncio("Bearer ${Token.token}", anuncioData)
     }
 
-    override suspend fun updateAnuncio(codAnuncio: Int, anuncioData: Map<String, String?>) {
+    override suspend fun updateAnuncio(codAnuncio: Int, anuncioData: Map<String, String>) {
         anunciosApiService.updateAnuncio("Bearer ${Token.token}", codAnuncio, anuncioData)
     }
 

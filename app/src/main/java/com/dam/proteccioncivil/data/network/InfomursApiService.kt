@@ -22,7 +22,7 @@ interface InfomursApiService {
     @POST("infomurs")
     suspend fun altaInfomur(
         @Header("Authorization") authToken: String,
-        @Body body: Map<String, String?>
+        @Body body: Map<String, String>
     ): ApiResponse
 
     @DELETE("infomurs/{codInfomur}")
@@ -35,7 +35,7 @@ interface InfomursApiService {
     suspend fun updateInfomur(
         @Header("Authorization") authToken: String,
         @Path("codInfomur") id: Int,
-        @Body body: Map<String, String?>
+        @Body body: Map<String, String>
     )
 
 }

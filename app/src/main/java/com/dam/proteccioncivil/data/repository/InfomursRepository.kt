@@ -11,8 +11,8 @@ interface InfomursRepository {
     suspend fun getInfomursUsuario(codInfomur: Int): List<Infomur>
 
     suspend fun deleteInfomur(id: Int)
-    suspend fun setInfomur(infomurData: Map<String, String?>)
-    suspend fun updateInfomur(codInfomur: Int, infomurData: Map<String, String?>)
+    suspend fun setInfomur(infomurData: Map<String, String>)
+    suspend fun updateInfomur(codInfomur: Int, infomurData: Map<String, String>)
 
 }
 
@@ -33,11 +33,11 @@ class NetworkInfomursRepository(
         infomursApiService.deleteInfomur("Bearer ${Token.token}", id)
     }
 
-    override suspend fun setInfomur(infomurData: Map<String, String?>) {
+    override suspend fun setInfomur(infomurData: Map<String, String>) {
         infomursApiService.altaInfomur("Bearer ${Token.token}", infomurData)
     }
 
-    override suspend fun updateInfomur(codInfomur: Int, infomurData: Map<String, String?>) {
+    override suspend fun updateInfomur(codInfomur: Int, infomurData: Map<String, String>) {
         infomursApiService.updateInfomur("Bearer ${Token.token}", codInfomur, infomurData)
     }
 

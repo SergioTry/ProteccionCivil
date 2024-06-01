@@ -37,7 +37,7 @@ interface UsuariosApiService {
     @POST("usuarios")
     suspend fun altaUsuario(
         @Header("Authorization") authToken: String,
-        @Body body: Map<String, String?>
+        @Body body: Map<String, String>
     ): ApiResponse
 
     @DELETE("usuarios/{codUsuario}")
@@ -50,6 +50,6 @@ interface UsuariosApiService {
     suspend fun updateUsuario(
         @Header("Authorization") authToken: String,
         @Path("codUsuario") id: Int,
-        @Body body: Map<String, String?>
+        @Body body: Map<String, String>
     )
 }

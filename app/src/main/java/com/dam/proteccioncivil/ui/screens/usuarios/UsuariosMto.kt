@@ -58,7 +58,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
-import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.LabelledSwitch
 import com.dam.proteccioncivil.data.model.rangos
@@ -116,10 +115,6 @@ fun UsuariosMto(
             onShowSnackBar(mensage, false)
             usuariosVM.resetInfoState()
         }
-    }
-
-    if (usuariosVM.usuariosMtoState.codUsuario == "0") {
-        usuariosVM.setFechaNacimiento(FormatDate.use())
     }
 
     Box(

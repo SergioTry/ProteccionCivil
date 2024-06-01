@@ -32,14 +32,14 @@ interface PreventivosApiService {
     suspend fun updPreventivo(
         @Header("Authorization") authToken: String,
         @Path("codPreventivo") codPreventivo: Int,
-        @Body body: Map<String, String?>,
+        @Body body: Map<String, String>,
         @Query("accion") accion: String?
     ): ApiResponse
 
     @POST("preventivos")
     suspend fun altaPreventivo(
         @Header("Authorization") authToken: String,
-        @Body body: Map<String, String?>
+        @Body body: Map<String, String>
     ): ApiResponse
 
     @DELETE("preventivos/{codPreventivo}")

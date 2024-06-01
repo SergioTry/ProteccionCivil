@@ -196,9 +196,10 @@ fun GuardiaCard(
             Column {
                 Row(modifier = modifier.fillMaxWidth()) {
                     Text(
-                        text = stringResource(id = R.string.guardia_lit) + " " + FormatVisibleDate.use(
-                            guardia.fechaGuardia
-                        ),
+                        text =
+                        stringResource(id = R.string.guardia_lit) + " " + FormatVisibleDate.use(
+                            guardia.fechaGuardia)
+                        ,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         modifier = modifier
