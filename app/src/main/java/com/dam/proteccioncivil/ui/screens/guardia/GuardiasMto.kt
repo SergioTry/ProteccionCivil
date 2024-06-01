@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
@@ -40,11 +42,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
@@ -66,6 +73,8 @@ fun GuardiaMto(
     var mensage: String
     val contexto = LocalContext.current
     val activity = (LocalContext.current as? Activity)
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     var expandedUser1 by remember { mutableStateOf(false) }
     var expandedUser2 by remember { mutableStateOf(false) }
 
@@ -129,7 +138,7 @@ fun GuardiaMto(
                                 onValueChange = {},
                                 readOnly = true,
                                 modifier = modifier.fillMaxWidth(),
-                                isError = guardiasVM.guardiasMtoState.fechaGuardia == "",
+                                isError = !guardiasVM.guardiasMtoState.datosObligatorios,
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedBorderColor = Color.Blue,
                                     unfocusedBorderColor = Color.Black,
@@ -139,6 +148,11 @@ fun GuardiaMto(
                                     errorLabelColor = Color.Red,
                                     focusedTextColor = Color.Black,
                                     unfocusedTextColor = Color.Black,
+                                ),
+                                textStyle = TextStyle(color = Color.Black),
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                                keyboardActions = KeyboardActions(
+                                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
                                 )
                             )
                             if (!guardiasVM.guardiasBusState.isDetail) {
@@ -160,7 +174,7 @@ fun GuardiaMto(
                             }
                         }
                     }
-                    Spacer(modifier = modifier.size(16.dp))
+                    Spacer(modifier = modifier.size(4.dp))
                     OutlinedTextField(
                         value = guardiasVM.guardiasMtoState.descripcion,
                         label = { Text(stringResource(id = R.string.descripcion_lit)) },
@@ -180,8 +194,17 @@ fun GuardiaMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                        ),
+                        textStyle = TextStyle(color = Color.Black),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        keyboardActions = KeyboardActions(
+                            onNext = {
+                                keyboardController?.hide()
+                                focusManager.moveFocus(FocusDirection.Down)
+                            }
                         )
                     )
+                    Spacer(modifier = modifier.size(4.dp))
                     ExposedDropdownMenuBox(
                         expanded = expandedUser1,
                         onExpandedChange = {
@@ -193,7 +216,7 @@ fun GuardiaMto(
                             value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario1 }?.nombre
                                 ?: "",
                             onValueChange = { },
-                            isError = guardiasVM.guardiasMtoState.codUsuario1 == "0",
+                            isError = !guardiasVM.guardiasMtoState.datosObligatorios,
                             label = { Text(stringResource(id = R.string.usuario1_lit)) },
                             readOnly = true,
                             trailingIcon = {
@@ -241,10 +264,12 @@ fun GuardiaMto(
                                             guardiasVM.guardiasMtoState.codUsuario2
                                         )
                                         expandedUser1 = false
+                                        focusManager.moveFocus(FocusDirection.Down)
                                     })
                             }
                         }
                     }
+                    Spacer(modifier = modifier.size(4.dp))
                     ExposedDropdownMenuBox(
                         expanded = expandedUser2,
                         onExpandedChange = {
@@ -256,7 +281,7 @@ fun GuardiaMto(
                             value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario2 }?.nombre
                                 ?: "",
                             onValueChange = {},
-                            isError = guardiasVM.guardiasMtoState.codUsuario2 == "0",
+                            isError = !guardiasVM.guardiasMtoState.datosObligatorios,
                             label = { Text(stringResource(id = R.string.usuario2_lit)) },
                             readOnly = true,
                             trailingIcon = {

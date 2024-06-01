@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
@@ -40,9 +41,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -68,6 +72,8 @@ fun InfomurMto(
     var mensage: String
     val contexto = LocalContext.current
     val activity = (LocalContext.current as? Activity)
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     var expandedUser1 by remember { mutableStateOf(false) }
     var expandedUser2 by remember { mutableStateOf(false) }
 
@@ -94,7 +100,8 @@ fun InfomurMto(
             } else {
                 getString(contexto, R.string.infomur_edit_failure)
             }
-            mensage = mensage + ": " + (infomursVM.infomursMessageState as InfomursMessageState.Error).err
+            mensage =
+                mensage + ": " + (infomursVM.infomursMessageState as InfomursMessageState.Error).err
             onShowSnackBar(mensage, false)
             infomursVM.resetInfoState()
         }
@@ -114,7 +121,7 @@ fun InfomurMto(
         Card(
             modifier = modifier
                 .fillMaxWidth()
-                .height(380.dp)
+                .height(320.dp)
                 .padding(8.dp),
             shape = RoundedCornerShape(8.dp),
             colors = CardDefaults.cardColors(AppColors.Posit)
@@ -129,7 +136,7 @@ fun InfomurMto(
                                 readOnly = true,
                                 label = { Text(text = stringResource(id = R.string.fechaInfomur_lit)) },
                                 value = FormatVisibleDate.use(infomursVM.infomursMtoState.fechaInfomur),
-                                isError = infomursVM.infomursMtoState.fechaInfomur == "",
+                                isError = !infomursVM.infomursMtoState.datosObligatorios,
                                 onValueChange = {},
                                 modifier = modifier.fillMaxWidth(),
                                 colors = OutlinedTextFieldDefaults.colors(
@@ -141,6 +148,9 @@ fun InfomurMto(
                                     errorLabelColor = Color.Red,
                                     focusedTextColor = Color.Black,
                                     unfocusedTextColor = Color.Black,
+                                ),
+                                keyboardActions = KeyboardActions(
+                                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
                                 )
                             )
                             if (!infomursVM.infomursBusState.isDetail) {
@@ -162,7 +172,7 @@ fun InfomurMto(
                             }
                         }
                     }
-                    Spacer(modifier = modifier.size(8.dp))
+                    Spacer(modifier = modifier.size(4.dp))
                     OutlinedTextField(
                         readOnly = infomursVM.infomursBusState.isDetail,
                         value = infomursVM.infomursMtoState.descripcion,
@@ -173,7 +183,7 @@ fun InfomurMto(
                                 color = AppColors.Black
                             )
                         },
-                        isError = infomursVM.infomursMtoState.descripcion == "",
+                        isError = !infomursVM.infomursMtoState.datosObligatorios,
                         modifier = modifier
                             .fillMaxWidth()
                             .height(80.dp),
@@ -186,18 +196,26 @@ fun InfomurMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                        ),keyboardActions = KeyboardActions(
+                            onNext = {
+                                keyboardController?.hide()
+                                focusManager.moveFocus(FocusDirection.Down)
+                            }
                         )
                     )
-                    Spacer(modifier = modifier.size(16.dp))
+                    Spacer(modifier = modifier.size(4.dp))
                     ExposedDropdownMenuBox(
                         expanded = expandedUser1 && !infomursVM.infomursBusState.isDetail,
-                        onExpandedChange = { if (!infomursVM.infomursBusState.isDetail) expandedUser1 = !expandedUser1 },
+                        onExpandedChange = {
+                            if (!infomursVM.infomursBusState.isDetail) expandedUser1 =
+                                !expandedUser1
+                        },
                     ) {
                         OutlinedTextField(
                             value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario1 }?.nombre
                                 ?: "",
                             onValueChange = { },
-                            isError = infomursVM.infomursMtoState.codUsuario1 == "0",
+                            isError = !infomursVM.infomursMtoState.datosObligatorios,
                             label = {
                                 Text(
                                     stringResource(id = R.string.usuario1_lit),
@@ -248,6 +266,7 @@ fun InfomurMto(
                                             infomursVM.infomursMtoState.codUsuario2
                                         )
                                         expandedUser1 = false
+                                        focusManager.moveFocus(FocusDirection.Down)
                                     }
                                 )
                             }
@@ -256,13 +275,16 @@ fun InfomurMto(
                     Spacer(modifier = modifier.size(4.dp))
                     ExposedDropdownMenuBox(
                         expanded = expandedUser2,
-                        onExpandedChange = { if (!infomursVM.infomursBusState.isDetail) expandedUser2 = !expandedUser2 },
+                        onExpandedChange = {
+                            if (!infomursVM.infomursBusState.isDetail) expandedUser2 =
+                                !expandedUser2
+                        },
                     ) {
                         OutlinedTextField(
                             value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario2 }?.nombre
                                 ?: "",
                             onValueChange = { },
-                            isError = infomursVM.infomursMtoState.codUsuario2 == "0",
+                            isError = !infomursVM.infomursMtoState.datosObligatorios,
                             label = {
                                 Text(
                                     stringResource(id = R.string.usuario2_lit),

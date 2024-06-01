@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -29,8 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
@@ -51,6 +55,7 @@ fun AnunciosMto(
 
     var mensage: String
     val contexto = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     if (anunciosVM.anunciosMtoState.codAnuncio == "0") {
         anunciosVM.setFechaPublicacion(FormatDate.use(LocalDate.now().toString()))
@@ -126,7 +131,23 @@ fun AnunciosMto(
                             errorBorderColor = Color.Red,
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                keyboardController?.hide()
+                                if (anunciosVM.anunciosMtoState.datosObligatorios && anunciosVM.hasStateChanged()) {
+                                    if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
+                                        anunciosVM.setFechaPublicacion(FormatDate.use())
+                                        anunciosVM.setNew()
+                                    } else {
+                                        anunciosVM.update()
+                                    }
+                                }
+                            }
                         )
                     )
                 }
@@ -143,10 +164,8 @@ fun AnunciosMto(
             Button(
                 onClick = {
                     anunciosVM.resetAnuncioMtoState()
-                 //   anunciosVM.setLoading(true)
                     onCancel()
                 },
-            //    enabled = !anunciosVM.anunciosBusState.loading,
                 colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
             ) {
                 Text(text = stringResource(id = R.string.opc_cancel), color = AppColors.Black)
@@ -161,7 +180,6 @@ fun AnunciosMto(
                     } else {
                         anunciosVM.update()
                     }
-             //       anunciosVM.setLoading(true)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue)
             ) {

@@ -68,7 +68,7 @@ import com.dam.proteccioncivil.ui.theme.AppColors
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun UsuariosMto(
-    onNavDown: () -> Unit,
+    refresh: () -> Unit,
     usuariosVM: UsuariosVM,
     onShowSnackBar: (String, Boolean) -> Unit
 ) {
@@ -96,7 +96,7 @@ fun UsuariosMto(
             }
             onShowSnackBar(mensage, true)
             usuariosVM.getAll()
-            onNavDown()
+            refresh()
             usuariosVM.resetInfoState()
             usuariosVM.resetUsuarioMtoState()
         }
