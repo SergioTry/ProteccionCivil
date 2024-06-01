@@ -32,7 +32,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SwitchDefaults
@@ -137,17 +136,66 @@ fun PreventivoMto(
                         readOnly = preventivosVM.preventivoBusState.isDetail,
                         isError = preventivosVM.preventivoMtoState.titulo == "",
                         colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                            focusedContainerColor = MaterialTheme.colorScheme.background,
-                            focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
-                            focusedLabelColor = MaterialTheme.colorScheme.tertiary,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.tertiary,
-                        ),
+                            focusedBorderColor = Color.Blue,
+                            unfocusedBorderColor = Color.Black,
+                            focusedLabelColor = Color.Blue,
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
+                        )
                     )
-                    Spacer(modifier = modifier.size(8.dp))
+                    Spacer(modifier = modifier.size(16.dp))
+
+                    OutlinedTextField(
+                        value = preventivosVM.preventivoMtoState.descripcion,
+                        onValueChange = { preventivosVM.setDescripcion(it) },
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .height(160.dp),
+                        label = { Text(text = stringResource(id = R.string.descripcion_lit)) },
+                        readOnly = preventivosVM.preventivoBusState.isDetail,
+                        isError = preventivosVM.preventivoMtoState.descripcion == "",
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color.Blue,
+                            unfocusedBorderColor = Color.Black,
+                            focusedLabelColor = Color.Blue,
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
+                        )
+                    )
+                    Spacer(modifier = modifier.size(16.dp))
+                    Box(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    ) {
+                        LabelledSwitch(
+                            checked = ShortToBoolean.use(preventivosVM.preventivoMtoState.riesgo),
+                            label = stringResource(id = R.string.riesgo_lit),
+                            onCheckedChange = {
+                                if (!preventivosVM.preventivoBusState.isDetail) {
+                                    preventivosVM.setRiesgo(it)
+                                }
+                            },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = Color.Blue,
+                                uncheckedThumbColor = Color.Gray
+                            ),
+                            roundedInt = 4,
+                            backgroundColor = AppColors.Posit,
+                            textColor = AppColors.Black
+                        )
+                    }
+                    Spacer(modifier = modifier.size(16.dp))
                     Text(
-                        text = stringResource(id = R.string.fechas_lit)
+                        text = stringResource(id = R.string.fechas_lit),
+                        style = TextStyle(color = Color.Black)
                     )
                     Box(
                         modifier = modifier
@@ -175,7 +223,7 @@ fun PreventivoMto(
                                         if (it != null) {
                                             Text(
                                                 text = FormatVisibleDate.use(it).substring(0, 5),
-                                                style = TextStyle(fontSize = 12.sp)
+                                                style = TextStyle(fontSize = 12.sp, color = Color.Black)
                                             )
                                         }
                                     }
@@ -197,7 +245,8 @@ fun PreventivoMto(
                                             contentDescription = getString(
                                                 context,
                                                 R.string.anadir_desc
-                                            )
+                                            ),
+                                            tint = Color.Black
                                         )
                                     }
                                 }
@@ -206,7 +255,8 @@ fun PreventivoMto(
                     }
                     Spacer(modifier = modifier.size(16.dp))
                     Text(
-                        text = stringResource(id = R.string.usuarios_lit)
+                        text = stringResource(id = R.string.usuarios_lit),
+                        style = TextStyle(color = Color.Black)
                     )
                     Box(
                         modifier = modifier
@@ -219,7 +269,8 @@ fun PreventivoMto(
                         if (preventivosVM.preventivoMtoState.usuarios.isNullOrEmpty()) {
                             Text(
                                 text = stringResource(id = R.string.no_usuarios),
-                                modifier = modifier.padding(8.dp)
+                                modifier = modifier.padding(8.dp).height(30.dp),
+                                style = TextStyle(color = Color.Black)
                             )
                         } else {
                             LazyRow {
@@ -285,50 +336,6 @@ fun PreventivoMto(
                         }
                     }
                 }
-                Spacer(modifier = modifier.size(16.dp))
-                Box(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                ) {
-                    LabelledSwitch(
-                        checked = ShortToBoolean.use(preventivosVM.preventivoMtoState.riesgo),
-                        label = stringResource(id = R.string.riesgo_lit),
-                        onCheckedChange = {
-                            if (!preventivosVM.preventivoBusState.isDetail) {
-                                preventivosVM.setRiesgo(it)
-                            }
-                        },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = Color.Blue,
-                            uncheckedThumbColor = Color.Gray
-                        ),
-                        roundedInt = 4,
-                        backgroundColor = AppColors.Posit,
-                        textColor = AppColors.Black
-                    )
-                }
-                Spacer(modifier = modifier.size(16.dp))
-                OutlinedTextField(
-                    value = preventivosVM.preventivoMtoState.descripcion,
-                    onValueChange = { preventivosVM.setDescripcion(it) },
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .height(160.dp),
-                    label = { Text(text = stringResource(id = R.string.descripcion_lit)) },
-                    readOnly = preventivosVM.preventivoBusState.isDetail,
-                    isError = preventivosVM.preventivoMtoState.descripcion == "",
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                        focusedContainerColor = MaterialTheme.colorScheme.background,
-                        focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
-                        focusedLabelColor = MaterialTheme.colorScheme.tertiary,
-                        unfocusedLabelColor = MaterialTheme.colorScheme.tertiary,
-                    ),
-                )
-                Spacer(modifier = modifier.size(16.dp))
             }
             if (!preventivosVM.preventivoBusState.isDetail) {
                 Row(

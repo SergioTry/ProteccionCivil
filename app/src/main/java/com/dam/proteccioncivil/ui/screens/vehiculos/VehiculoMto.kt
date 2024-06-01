@@ -239,8 +239,8 @@ fun VehiculoMto(
                                 color = Color.Black
                             )
                         },
-                        value = vehiculosVM.vehiculosMtoState.descripcion.let { if (it != "null" && it != null) vehiculosVM.vehiculosMtoState.descripcion else " " }
-                            ?: " ",
+                        value = vehiculosVM.vehiculosMtoState.descripcion.let { if (it != "null" && it != null) vehiculosVM.vehiculosMtoState.descripcion else "" }
+                            ?: "",
                         onValueChange = { vehiculosVM.setDescripcion(it) },
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(

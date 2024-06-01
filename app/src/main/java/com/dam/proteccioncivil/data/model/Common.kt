@@ -114,21 +114,23 @@ fun Loading() {
 class FormatDate {
     companion object {
         fun use(fecha: String? = null): String {
-            val fechaFormateada = if (fecha.isNullOrBlank()) {
-                val fechaParseada = try {
-                    ZonedDateTime.parse(fecha).toLocalDate()
-                } catch (e: DateTimeParseException) {
-                    try {
-                        LocalDateTime.parse(fecha).toLocalDate()
-                    } catch (e: DateTimeParseException) {
-                        return ""
-                    }
-                }
-                val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                fechaParseada.format(formato)
-            } else {
-                ""
+            if (fecha.isNullOrBlank()) {
+                return ""
             }
+            val fechaFormateada = try {
+                val fechaParseada = ZonedDateTime.parse(fecha)
+                val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                fechaParseada.toLocalDate().format(formato)
+            } catch (e: DateTimeParseException) {
+                try {
+                    val fechaParseada = LocalDateTime.parse(fecha)
+                    val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                    fechaParseada.toLocalDate().format(formato)
+                } catch (e: DateTimeParseException) {
+                    ""
+                }
+            }
+
             return fechaFormateada
         }
     }

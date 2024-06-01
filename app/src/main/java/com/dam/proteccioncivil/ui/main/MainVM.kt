@@ -14,6 +14,7 @@ import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.repository.MainRepository
 import com.dam.proteccioncivil.ui.screens.login.LoginUiState
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
+import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
@@ -32,7 +33,7 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
     var uiPrefState by mutableStateOf(PrefState())
         private set
 
-    suspend fun getPreferences(loginVM: LoginVM, showLogin: (Boolean) -> Unit) {
+    suspend fun getPreferences(loginVM: LoginVM, showLogin: (Boolean) -> Unit,usuariosVM: UsuariosVM) {
         viewModelScope.async {
             mainRepository.getPreferences().take(1).collect {
                 uiPrefState = uiPrefState.copy(
@@ -62,6 +63,7 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
                     }
 
                     is LoginUiState.Success -> {
+                        usuariosVM.setPasswordForUi(loginVM.uiLoginState.password)
                         loginVM.resetInfoState()
                         loginVM.resetLogin()
                         showLogin(false)

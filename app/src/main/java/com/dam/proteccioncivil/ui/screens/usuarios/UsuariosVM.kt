@@ -35,6 +35,8 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
 
     var usuariosBusState by mutableStateOf(UsuariosBusState())
 
+    var passwordState by mutableStateOf(PasswordState())
+
     var usuariosMtoState by mutableStateOf(UsuariosMtoState())
         private set
 
@@ -43,6 +45,12 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
 
     fun updateOriginalState() {
         originalUsuariosMtoState = usuariosMtoState.copy()
+    }
+
+    fun setPasswordForUi(password: String){
+        passwordState = passwordState.copy(
+            password = password
+        )
     }
 
     fun hasStateChanged(): Boolean {

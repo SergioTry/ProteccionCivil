@@ -306,7 +306,7 @@ private fun NavHostRoutes(
         modifier = Modifier.padding(it)
     ) {
         composable(route = AppScreens.Splash.name) {
-            SplashScreen(mainVM, loginVM, {
+            SplashScreen(mainVM, loginVM, usuariosVM, {
                 if (it) {
                     navController.navigate(AppScreens.Login.name)
                 } else {
@@ -356,6 +356,7 @@ private fun NavHostRoutes(
         }
         composable(route = AppScreens.DatosPersonales.name) {
             DatosPersonales(
+                mainVM = mainVM,
                 usuariosUiState = usuariosVM.usuariosUiState,
                 usuariosVM = usuariosVM,
                 onShowSnackBar = { mensaje, isSuccess ->

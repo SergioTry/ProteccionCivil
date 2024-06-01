@@ -24,18 +24,20 @@ import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.main.MainVM
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
+import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
 
 @Composable
 fun SplashScreen(
     mainVM: MainVM,
     loginVM: LoginVM,
+    usuariosVM: UsuariosVM,
     showLogin: (Boolean) -> Unit,
     version: String
 ) {
     val contexto = LocalContext.current
 
     LaunchedEffect(key1 = true) {
-        mainVM.getPreferences(loginVM, showLogin)
+        mainVM.getPreferences(loginVM, showLogin,usuariosVM)
     }
     Surface(
         color = MaterialTheme.colorScheme.background,

@@ -32,12 +32,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
-import com.dam.proteccioncivil.data.model.Loading
 import com.dam.proteccioncivil.ui.theme.AppColors
+import java.time.LocalDate
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -54,7 +53,7 @@ fun AnunciosMto(
     val contexto = LocalContext.current
 
     if (anunciosVM.anunciosMtoState.codAnuncio == "0") {
-        anunciosVM.setFechaPublicacion(FormatDate.use())
+        anunciosVM.setFechaPublicacion(FormatDate.use(LocalDate.now().toString()))
     }
 
     when (anunciosVM.anunciosMessageState) {

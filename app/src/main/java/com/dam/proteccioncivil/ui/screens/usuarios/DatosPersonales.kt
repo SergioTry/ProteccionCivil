@@ -2,6 +2,7 @@ package com.dam.proteccioncivil.ui.screens.usuarios
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.util.Base64
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -50,21 +51,23 @@ import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.LabelledSwitch
+import com.dam.proteccioncivil.ui.main.KeystoreHelper
+import com.dam.proteccioncivil.ui.main.MainVM
 import com.dam.proteccioncivil.ui.theme.AppColors
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DatosPersonales(
     usuariosVM: UsuariosVM,
+    mainVM: MainVM,
     onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier
 ) {
-
+    val uiPrefState = mainVM.uiPrefState
     val mensage: String
     val contexto = LocalContext.current
     val activity = (LocalContext.current as? Activity)
     val scrollState = rememberScrollState()
-    var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
     when (usuariosVM.usuariosMessageState) {
@@ -188,8 +191,12 @@ fun DatosPersonales(
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
                             readOnly = true,
-                            label = { Text(text = stringResource(id = R.string.correElectronico_lit),
-                                color = Color.Black) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.correElectronico_lit),
+                                    color = Color.Black
+                                )
+                            },
                             isError = usuariosVM.usuariosMtoState.correoElectronico == "",
                             value = usuariosVM.usuariosMtoState.correoElectronico,
                             onValueChange = { usuariosVM.setCorreoElectronico(it) },
@@ -205,8 +212,12 @@ fun DatosPersonales(
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
                             readOnly = true,
-                            label = { Text(text = stringResource(id = R.string.identificador_lit),
-                                color = Color.Black) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.identificador_lit),
+                                    color = Color.Black
+                                )
+                            },
                             isError = usuariosVM.usuariosMtoState.username == "",
                             value = usuariosVM.usuariosMtoState.username,
                             onValueChange = { usuariosVM.setUsername(it) },
@@ -222,8 +233,12 @@ fun DatosPersonales(
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
                             readOnly = true,
-                            label = { Text(text = stringResource(id = R.string.telefono_lit),
-                                color = Color.Black) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.telefono_lit),
+                                    color = Color.Black
+                                )
+                            },
                             isError = usuariosVM.usuariosMtoState.telefono == "",
                             value = usuariosVM.usuariosMtoState.telefono,
                             onValueChange = { usuariosVM.setTelefono(it) },
@@ -238,8 +253,12 @@ fun DatosPersonales(
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.rango_lit),
-                                color = Color.Black) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.rango_lit),
+                                    color = Color.Black
+                                )
+                            },
                             isError = usuariosVM.usuariosMtoState.rango == "",
                             value = if (usuariosVM.usuariosMtoState.rango.lowercase() == "jefeservicio") {
                                 "Jefe de Servicio"
@@ -266,12 +285,18 @@ fun DatosPersonales(
                                 modifier = modifier.weight(1f)
                             ) {
                                 OutlinedTextField(
-                                    label = { Text(text = stringResource(id = R.string.contrasena_lit),
-                                        color = Color.Black) },
+                                    label = {
+                                        Text(
+                                            text = stringResource(id = R.string.contrasena_lit),
+                                            color = Color.Black
+                                        )
+                                    },
                                     isError = usuariosVM.usuariosMtoState.password == "",
-                                    value = password,
+                                    value = usuariosVM.passwordState.password,
                                     enabled = usuariosVM.usuariosBusState.changePassword,
-                                    onValueChange = { password = it },
+                                    onValueChange = {
+                                        usuariosVM.setPasswordForUi(it)
+                                    },
                                     modifier = modifier.fillMaxWidth(),
                                     colors = OutlinedTextFieldDefaults.colors(
                                         focusedBorderColor = Color.Blue,
@@ -284,8 +309,13 @@ fun DatosPersonales(
                                 IconButton(
                                     onClick = {
                                         if (usuariosVM.usuariosBusState.changePassword) {
+                                            val key = KeystoreHelper.getKey()
+                                            usuariosVM.setPasswordForUi(KeystoreHelper.desencriptar(
+                                                datosEncriptados = uiPrefState.password,
+                                                secretKey = key,
+                                                iv = Base64.decode(uiPrefState.iv, Base64.DEFAULT)
+                                            ))
                                             usuariosVM.setChangePassword(false)
-                                            password = ""
                                             confirmPassword = ""
                                         } else {
                                             usuariosVM.setChangePassword(true)
@@ -305,8 +335,12 @@ fun DatosPersonales(
                         }
                         if (usuariosVM.usuariosBusState.changePassword) {
                             OutlinedTextField(
-                                label = { Text(text = stringResource(id = R.string.confirmarContrasena_lit),
-                                    color = Color.Black) },
+                                label = {
+                                    Text(
+                                        text = stringResource(id = R.string.confirmarContrasena_lit),
+                                        color = Color.Black
+                                    )
+                                },
                                 value = confirmPassword,
                                 isError = usuariosVM.usuariosMtoState.confirmPassword == "",
                                 enabled = usuariosVM.usuariosBusState.changePassword,
@@ -338,8 +372,12 @@ fun DatosPersonales(
                         )
                         Spacer(modifier = modifier.size(16.dp))
                         OutlinedTextField(
-                            label = { Text(text = stringResource(id = R.string.fechaNacimiento_lit),
-                                color = Color.Black) },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.fechaNacimiento_lit),
+                                    color = Color.Black
+                                )
+                            },
                             isError = usuariosVM.usuariosMtoState.fechaNacimiento == "",
                             value = FormatVisibleDate.use(usuariosVM.usuariosMtoState.fechaNacimiento),
                             onValueChange = {},
@@ -377,9 +415,9 @@ fun DatosPersonales(
                         colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
 
                         enabled = usuariosVM.usuariosMtoState.datosObligatorios ||
-                                usuariosVM.usuariosBusState.changePassword && password.isNotEmpty() && confirmPassword.isNotEmpty(),
+                                usuariosVM.usuariosBusState.changePassword && usuariosVM.passwordState.password.isNotEmpty() && confirmPassword.isNotEmpty(),
                         onClick = {
-                            usuariosVM.setPassword(password)
+                            usuariosVM.setPassword(usuariosVM.passwordState.password)
                             usuariosVM.setConfirmPassword(confirmPassword)
                             if (usuariosVM.passwordCorrect()) {
                                 usuariosVM.changePassword()

@@ -135,7 +135,7 @@ class PreventivosVM(
                     ) else null,
                 )
             )
-            preventivoMtoState.fechas = preventivoMtoState.fechas.filterNotNull().toMutableList()
+            preventivoMtoState.fechas = preventivoMtoState.fechas.filterNotNull().filter { it.isNotBlank() }.toMutableList()
             originalPreventivosMtoState.fechas.clear()
             originalPreventivosMtoState.fechas.addAll(
                 listOf(
@@ -161,7 +161,7 @@ class PreventivosVM(
                 )
             )
             originalPreventivosMtoState.fechas =
-                originalPreventivosMtoState.fechas.filterNotNull().toMutableList()
+                originalPreventivosMtoState.fechas.filterNotNull().filter { it.isNotBlank() }.toMutableList()
         }
     }
 
