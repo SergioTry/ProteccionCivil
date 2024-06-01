@@ -734,8 +734,23 @@ private fun NavHostRoutes(
                     usuariosVM.setIsDetail(true)
                     navController.navigate(AppScreens.UsuariosMto.name)
                 },
-                modifier = Modifier
-            )
+                modifier = Modifier,
+                onShowSnackBar = { mensaje, isSuccess ->
+                    scope.launch {
+                        if (isSuccess) {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                "",
+                                duration = SnackbarDuration.Short
+                            )
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                mensaje,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                })
         }
 
         composable(route = AppScreens.Chat.name) {

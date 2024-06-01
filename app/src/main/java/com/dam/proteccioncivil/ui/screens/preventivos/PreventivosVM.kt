@@ -51,8 +51,31 @@ class PreventivosVM(
 
     var originalPreventivosMtoState = preventivoMtoState.copy()
 
+    fun convertFechas(): MutableList<String?> {
+        preventivoMtoState.fechas = preventivoMtoState.fechas.filterNotNull().toMutableList()
+        val fechas = preventivoMtoState.fechas + List(7 - preventivoMtoState.fechas.size) { null }
+
+        preventivoMtoState = fechas[0]?.let {
+            preventivoMtoState.copy(
+                fechaDia1 = it,
+                fechaDia2 = fechas.getOrNull(1),
+                fechaDia3 = fechas.getOrNull(2),
+                fechaDia4 = fechas.getOrNull(3),
+                fechaDia5 = fechas.getOrNull(4),
+                fechaDia6 = fechas.getOrNull(5),
+                fechaDia7 = fechas.getOrNull(6)
+            )
+        }!!
+        return preventivoMtoState.fechas
+    }
+
+
     fun updateOriginalState() {
         originalPreventivosMtoState = preventivoMtoState.copy()
+    }
+
+    fun setIsBorrado(isBorrado: Boolean) {
+        preventivoBusState = preventivoBusState.copy(isBorrado = isBorrado)
     }
 
     fun hasStateChanged(): Boolean {
@@ -107,6 +130,31 @@ class PreventivosVM(
                 )
             )
             preventivoMtoState.fechas = preventivoMtoState.fechas.filterNotNull().toMutableList()
+            originalPreventivosMtoState.fechas.clear()
+            originalPreventivosMtoState.fechas.addAll(
+                listOf(
+                    FormatDate.use(originalPreventivosMtoState.fechaDia1),
+                    if (!originalPreventivosMtoState.fechaDia2.isNullOrEmpty()) FormatDate.use(
+                        originalPreventivosMtoState.fechaDia2
+                    ) else null,
+                    if (!originalPreventivosMtoState.fechaDia3.isNullOrEmpty()) FormatDate.use(
+                        originalPreventivosMtoState.fechaDia3
+                    ) else null,
+                    if (!originalPreventivosMtoState.fechaDia4.isNullOrEmpty()) FormatDate.use(
+                        originalPreventivosMtoState.fechaDia4
+                    ) else null,
+                    if (!originalPreventivosMtoState.fechaDia5.isNullOrEmpty()) FormatDate.use(
+                        originalPreventivosMtoState.fechaDia5
+                    ) else null,
+                    if (!originalPreventivosMtoState.fechaDia6.isNullOrEmpty()) FormatDate.use(
+                        originalPreventivosMtoState.fechaDia6
+                    ) else null,
+                    if (!originalPreventivosMtoState.fechaDia7.isNullOrEmpty()) FormatDate.use(
+                        originalPreventivosMtoState.fechaDia7
+                    ) else null,
+                )
+            )
+            originalPreventivosMtoState.fechas = originalPreventivosMtoState.fechas.filterNotNull().toMutableList()
         }
     }
 
@@ -183,6 +231,24 @@ class PreventivosVM(
             comboBoxOptionSelected = "",
             textoBusqueda = "",
             lanzarBusqueda = false,
+        )
+    }
+
+    fun setDescripcion(descripcion: String) {
+        preventivoMtoState = preventivoMtoState.copy(
+            descripcion = descripcion
+        )
+    }
+
+    fun setTitulo(titulo: String) {
+        preventivoMtoState = preventivoMtoState.copy(
+            titulo = titulo
+        )
+    }
+
+    fun setRiesgo(riesgo: Boolean) {
+        preventivoMtoState = preventivoMtoState.copy(
+            riesgo = if (riesgo) 1 else 0
         )
     }
 

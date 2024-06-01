@@ -318,7 +318,8 @@ fun GuardiaMto(
                     onClick = {
                         guardiasVM.resetGuardiaMtoState()
                         activity?.onBackPressed()
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
                 ) {
                     Text(text = stringResource(id = R.string.opc_cancel))
                 }

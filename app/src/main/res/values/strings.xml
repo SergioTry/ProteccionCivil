@@ -183,5 +183,16 @@
     <string name="guardias_image">Imagen asociada a guardia</string>
     <string name="preventivo_delete_failure">Error al eliminar el preventivo</string>
     <string name="preventivo_delete_success">Preventivo eliminado con éxito</string>
+    <string name="titulo_lit">Titulo</string>
+    <string name="fechas_lit">Fechas</string>
+    <string name="usuarios_lit">Voluntarios</string>
+    <string name="riesgo_lit">Riesgo</string>
+    <string name="no_usuarios">No hay usuarios apuntados al preventivo</string>
+    <string name="preventivo_create_success">Exito al crear el preventivo</string>
+    <string name="preventivo_edit_success">Exito al editar el preventivo</string>
+    <string name="preventivo_create_failure">Hubo un error al crear el preventivo</string>
+    <string name="preventivo_edit_failure">Hubo un error al editar el preventivo</string>
+    <string name="apuntado_desapuntado_confirmation">¿Está seguro de que quiere apuntarse/desapuntarse de este preventivo?</string>
+    <string name="preventivo_delete_confirmation">¿Está seguro de que quiere eliminar este preventivo?</string>
 
 </resources>

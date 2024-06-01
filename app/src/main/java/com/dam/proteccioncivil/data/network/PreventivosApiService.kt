@@ -45,7 +45,7 @@ interface PreventivosApiService {
     @DELETE("preventivos/{codPreventivo}")
     suspend fun deletePreventivo(
         @Header("Authorization") authToken: String,
-        @Path("codGuardia") id: Int
+        @Path("codPreventivo") id: Int
     )
 
 }

@@ -75,6 +75,7 @@ import com.dam.proteccioncivil.data.model.esMayorDeEdad
 import com.dam.proteccioncivil.data.model.filtrosPreventivos
 import com.dam.proteccioncivil.data.model.filtrosPreventivosLimitados
 import com.dam.proteccioncivil.data.model.meses
+import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
 import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionMes
 import com.dam.proteccioncivil.ui.theme.AppColors
 
@@ -305,7 +306,9 @@ fun PreventivosBus(
             }
             if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                 FloatingActionButton(
-                    onClick = {},
+                    onClick = {
+                        preventivosVM.resetPreventivoState()
+                        onNavUp()},
                     containerColor = AppColors.Blue,
                     elevation = FloatingActionButtonDefaults.elevation(8.dp),
                 ) {
@@ -385,6 +388,7 @@ fun PreventivoCard(
                         IconButton(onClick = {
                             preventivosVM.resetPreventivoState()
                             preventivosVM.clonePreventivoState(preventivo)
+                            preventivosVM.setIsBorrado(true)
                             preventivosVM.setShowDlgBorrar(true)
                         }) {
                             Icon(
@@ -413,7 +417,10 @@ fun PreventivoCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
-                    onClick = { action() },
+                    onClick = {
+                        preventivosVM.setIsBorrado(false)
+                        preventivosVM.setShowDlgBorrar(true)
+                    },
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(8.dp)
@@ -478,6 +485,31 @@ fun PreventivoCard(
                             }
                         }
                     }
+                }
+            }
+            if (preventivosVM.preventivoBusState.showDlgBorrar) {
+                if (preventivosVM.preventivoBusState.isBorrado) {
+                    DlgConfirmacion(
+                        mensaje = R.string.preventivo_delete_confirmation,
+                        onCancelarClick = {
+                            preventivosVM.setShowDlgBorrar(false)
+                        },
+                        onAceptarClick = {
+                            preventivosVM.setShowDlgBorrar(false)
+                            preventivosVM.deleteBy()
+                        }
+                    )
+                } else {
+                    DlgConfirmacion(
+                        mensaje = R.string.apuntado_desapuntado_confirmation,
+                        onCancelarClick = {
+                            preventivosVM.setShowDlgBorrar(false)
+                        },
+                        onAceptarClick = {
+                            preventivosVM.setShowDlgBorrar(false)
+                            action()
+                        }
+                    )
                 }
             }
         }
