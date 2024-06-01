@@ -751,6 +751,10 @@ private fun NavHostRoutes(
                             )
                         }
                     }
+                },
+                refresh = {
+                    navController.popBackStack()
+                    navController.navigate(AppScreens.Preventivos.name)
                 })
         }
 

@@ -45,7 +45,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
@@ -137,9 +136,12 @@ fun InfomurMto(
                                     focusedBorderColor = Color.Blue,
                                     unfocusedBorderColor = Color.Black,
                                     focusedLabelColor = Color.Blue,
-                                    unfocusedLabelColor = Color.Black
-                                ),
-                                textStyle = TextStyle(color = AppColors.Black)
+                                    unfocusedLabelColor = Color.Black,
+                                    errorBorderColor = Color.Red,
+                                    errorLabelColor = Color.Red,
+                                    focusedTextColor = Color.Black,
+                                    unfocusedTextColor = Color.Black,
+                                )
                             )
                             if (!infomursVM.infomursBusState.isDetail) {
                                 IconButton(
@@ -179,8 +181,12 @@ fun InfomurMto(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
-                        ), textStyle = TextStyle(color = AppColors.Black)
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
+                        )
                     )
                     Spacer(modifier = modifier.size(16.dp))
                     ExposedDropdownMenuBox(
@@ -222,9 +228,12 @@ fun InfomurMto(
                                 focusedBorderColor = Color.Blue,
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
-                                unfocusedLabelColor = Color.Black
-                            ),
-                            textStyle = TextStyle(color = AppColors.Black)
+                                unfocusedLabelColor = Color.Black,
+                                errorBorderColor = Color.Red,
+                                errorLabelColor = Color.Red,
+                                focusedTextColor = Color.Black,
+                                unfocusedTextColor = Color.Black,
+                            )
                         )
                         DropdownMenu(
                             expanded = expandedUser1 && !infomursVM.infomursBusState.isDetail,
@@ -278,9 +287,12 @@ fun InfomurMto(
                                 focusedBorderColor = Color.Blue,
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
-                                unfocusedLabelColor = Color.Black
-                            ),
-                            textStyle = TextStyle(color = AppColors.Black)
+                                unfocusedLabelColor = Color.Black,
+                                errorBorderColor = Color.Red,
+                                errorLabelColor = Color.Red,
+                                focusedTextColor = Color.Black,
+                                unfocusedTextColor = Color.Black,
+                            )
                         )
                         DropdownMenu(
                             expanded = expandedUser2,

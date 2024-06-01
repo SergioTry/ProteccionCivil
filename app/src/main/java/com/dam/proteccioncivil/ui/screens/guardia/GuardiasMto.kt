@@ -45,7 +45,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
@@ -135,9 +134,12 @@ fun GuardiaMto(
                                     focusedBorderColor = Color.Blue,
                                     unfocusedBorderColor = Color.Black,
                                     focusedLabelColor = Color.Blue,
-                                    unfocusedLabelColor = Color.Black
-                                ),
-                                textStyle = TextStyle(color = Color.Black)
+                                    unfocusedLabelColor = Color.Black,
+                                    errorBorderColor = Color.Red,
+                                    errorLabelColor = Color.Red,
+                                    focusedTextColor = Color.Black,
+                                    unfocusedTextColor = Color.Black,
+                                )
                             )
                             if (!guardiasVM.guardiasBusState.isDetail) {
                                 IconButton(
@@ -173,9 +175,12 @@ fun GuardiaMto(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
-                        ),
-                        textStyle = TextStyle(color = Color.Black)
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
+                        )
                     )
                     ExposedDropdownMenuBox(
                         expanded = expandedUser1,
@@ -215,9 +220,12 @@ fun GuardiaMto(
                                 focusedBorderColor = Color.Blue,
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
-                                unfocusedLabelColor = Color.Black
-                            ),
-                            textStyle = TextStyle(color = Color.Black)
+                                unfocusedLabelColor = Color.Black,
+                                errorBorderColor = Color.Red,
+                                errorLabelColor = Color.Red,
+                                focusedTextColor = Color.Black,
+                                unfocusedTextColor = Color.Black,
+                            )
                         )
                         ExposedDropdownMenu(
                             expanded = expandedUser1,
@@ -275,9 +283,12 @@ fun GuardiaMto(
                                 focusedBorderColor = Color.Blue,
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
-                                unfocusedLabelColor = Color.Black
-                            ),
-                            textStyle = TextStyle(color = Color.Black)
+                                unfocusedLabelColor = Color.Black,
+                                errorBorderColor = Color.Red,
+                                errorLabelColor = Color.Red,
+                                focusedTextColor = Color.Black,
+                                unfocusedTextColor = Color.Black,
+                            )
                         )
                         ExposedDropdownMenu(
                             expanded = expandedUser2,

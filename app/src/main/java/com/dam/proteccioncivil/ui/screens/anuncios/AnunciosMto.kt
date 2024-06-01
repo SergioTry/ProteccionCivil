@@ -123,6 +123,10 @@ fun AnunciosMto(
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
                             unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
                         )
                     )
                 }

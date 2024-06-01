@@ -152,10 +152,13 @@ fun UsuariosMto(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
                         ),
                         readOnly = usuariosVM.usuariosBusState.isDetail,
-                        textStyle = TextStyle(color = AppColors.Black),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         keyboardActions = KeyboardActions(
                             onNext = { focusManager.moveFocus(FocusDirection.Down) }
@@ -178,10 +181,13 @@ fun UsuariosMto(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
                         ),
                         readOnly = usuariosVM.usuariosBusState.isDetail,
-                        textStyle = TextStyle(color = AppColors.Black),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         keyboardActions = KeyboardActions(
                             onNext = { focusManager.moveFocus(FocusDirection.Down) }
@@ -203,10 +209,13 @@ fun UsuariosMto(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
                         ),
                         readOnly = usuariosVM.usuariosBusState.isDetail,
-                        textStyle = TextStyle(color = AppColors.Black),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         keyboardActions = KeyboardActions(
                             onNext = { focusManager.moveFocus(FocusDirection.Down) }
@@ -234,7 +243,11 @@ fun UsuariosMto(
                                     focusedBorderColor = Color.Blue,
                                     unfocusedBorderColor = Color.Black,
                                     focusedLabelColor = Color.Blue,
-                                    unfocusedLabelColor = Color.Black
+                                    unfocusedLabelColor = Color.Black,
+                                    errorBorderColor = Color.Red,
+                                    errorLabelColor = Color.Red,
+                                    focusedTextColor = Color.Black,
+                                    unfocusedTextColor = Color.Black,
                                 ),
                                 textStyle = TextStyle(color = AppColors.Black),
                                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -277,9 +290,13 @@ fun UsuariosMto(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
-                        ), readOnly = usuariosVM.usuariosBusState.isDetail,
-                        textStyle = TextStyle(color = AppColors.Black),
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
+                        ),
+                        readOnly = usuariosVM.usuariosBusState.isDetail,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         keyboardActions = KeyboardActions(
                             onNext = { focusManager.moveFocus(FocusDirection.Down) }
@@ -308,9 +325,15 @@ fun UsuariosMto(
                                         focusedBorderColor = Color.Blue,
                                         unfocusedBorderColor = Color.Black,
                                         focusedLabelColor = Color.Blue,
-                                        unfocusedLabelColor = Color.Black
+                                        unfocusedLabelColor = Color.Black,
+                                        errorBorderColor = Color.Red,
+                                        errorLabelColor = Color.Red,
+                                        focusedTextColor = Color.Black,
+                                        unfocusedTextColor = Color.Black,
+                                        disabledTextColor = Color.Black,
+                                        disabledLabelColor = Color.Black,
+                                        disabledBorderColor = Color.Gray
                                     ),
-                                    textStyle = TextStyle(color = AppColors.Black),
                                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                                     keyboardActions = KeyboardActions(
                                         onNext = { focusManager.moveFocus(FocusDirection.Down) }
@@ -354,7 +377,14 @@ fun UsuariosMto(
                                 focusedBorderColor = Color.Blue,
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
-                                unfocusedLabelColor = Color.Black
+                                unfocusedLabelColor = Color.Black,
+                                errorBorderColor = Color.Red,
+                                errorLabelColor = Color.Red,
+                                focusedTextColor = Color.Black,
+                                unfocusedTextColor = Color.Black,
+                                disabledTextColor = Color.Black,
+                                disabledLabelColor = Color.Black,
+                                disabledBorderColor = Color.Gray
                             ),
                             textStyle = TextStyle(color = AppColors.Black),
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -397,7 +427,11 @@ fun UsuariosMto(
                                 focusedBorderColor = Color.Blue,
                                 unfocusedBorderColor = Color.Black,
                                 focusedLabelColor = Color.Blue,
-                                unfocusedLabelColor = Color.Black
+                                unfocusedLabelColor = Color.Black,
+                                errorBorderColor = Color.Red,
+                                errorLabelColor = Color.Red,
+                                focusedTextColor = Color.Black,
+                                unfocusedTextColor = Color.Black,
                             ),
                             trailingIcon = {
                                 if (!usuariosVM.usuariosBusState.isDetail) {
@@ -482,10 +516,13 @@ fun UsuariosMto(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
                         ),
                         readOnly = usuariosVM.usuariosBusState.isDetail,
-                        textStyle = TextStyle(color = AppColors.Black),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         keyboardActions = KeyboardActions(
                             onNext = { focusManager.moveFocus(FocusDirection.Down) }
@@ -507,9 +544,12 @@ fun UsuariosMto(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
                         ), readOnly = usuariosVM.usuariosBusState.isDetail,
-                        textStyle = TextStyle(color = AppColors.Black),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Done,
                             keyboardType = KeyboardType.Number

@@ -270,7 +270,6 @@ fun PreventivosBus(
                                     else
                                         "add"
                                 )
-                                preventivosVM.setCodPreventivo(it.codPreventivo)
                                 preventivosVM.update()
                                 preventivosVM.setAction(null)
                             },
@@ -418,6 +417,8 @@ fun PreventivoCard(
             ) {
                 Button(
                     onClick = {
+                        preventivosVM.resetPreventivoState()
+                        preventivosVM.clonePreventivoState(preventivo)
                         preventivosVM.setIsBorrado(false)
                         preventivosVM.setShowDlgBorrar(true)
                     },

@@ -35,7 +35,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
@@ -119,10 +118,13 @@ fun VehiculoMto(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
                         ),
                         isError = vehiculosVM.vehiculosMtoState.matricula == "",
-                        textStyle = TextStyle(Color.Black),
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                     )
                     Spacer(modifier = Modifier.size(16.dp))
@@ -134,17 +136,20 @@ fun VehiculoMto(
                             )
                         },
                         readOnly = vehiculosVM.vehiculosBusState.isDetail,
-                        value = vehiculosVM.vehiculosMtoState.km,
+                        value = if (vehiculosVM.vehiculosMtoState.km != "0") vehiculosVM.vehiculosMtoState.km else "",
                         onValueChange = { vehiculosVM.setKm(it) },
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
                         ),
-                        isError = vehiculosVM.vehiculosMtoState.km == "0",
-                        textStyle = TextStyle(Color.Black)
+                        isError = vehiculosVM.vehiculosMtoState.km == "0"
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
@@ -162,10 +167,13 @@ fun VehiculoMto(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
                         ),
                         isError = vehiculosVM.vehiculosMtoState.marca == "",
-                        textStyle = TextStyle(Color.Black),
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                     )
                     Spacer(modifier = Modifier.size(16.dp))
@@ -184,10 +192,13 @@ fun VehiculoMto(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
                         ),
                         isError = vehiculosVM.vehiculosMtoState.modelo == "",
-                        textStyle = TextStyle(Color.Black),
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                     )
                     Spacer(modifier = Modifier.size(16.dp))
@@ -207,7 +218,16 @@ fun VehiculoMto(
                                 onValueChange = {},
                                 modifier = Modifier.fillMaxWidth(),
                                 isError = vehiculosVM.vehiculosMtoState.fechaMantenimiento.isNullOrBlank(),
-                                textStyle = TextStyle(Color.Black),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color.Blue,
+                                    unfocusedBorderColor = Color.Black,
+                                    focusedLabelColor = Color.Blue,
+                                    unfocusedLabelColor = Color.Black,
+                                    errorBorderColor = Color.Red,
+                                    errorLabelColor = Color.Red,
+                                    focusedTextColor = Color.Black,
+                                    unfocusedTextColor = Color.Black,
+                                ),
                                 enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                             )
                             if (!vehiculosVM.vehiculosBusState.isDetail) {
@@ -247,7 +267,11 @@ fun VehiculoMto(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = Color.Blue,
-                            unfocusedLabelColor = Color.Black
+                            unfocusedLabelColor = Color.Black,
+                            errorBorderColor = Color.Red,
+                            errorLabelColor = Color.Red,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
                         ),
                         isError = vehiculosVM.vehiculosMtoState.descripcion == "",
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,

@@ -63,7 +63,8 @@ fun PreventivoMto(
     usuariosVM: UsuariosVM,
     onShowSnackBar: (String, Boolean) -> Unit,
     onNavUsuarioDetail: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    refresh: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
@@ -84,6 +85,7 @@ fun PreventivoMto(
             preventivosVM.resetInfoState()
             preventivosVM.resetPreventivoState()
             preventivosVM.getAll()
+            refresh()
         }
 
         is PreventivosMessageState.Error -> {

@@ -291,7 +291,7 @@ fun DatosPersonales(
                                             color = Color.Black
                                         )
                                     },
-                                    isError = usuariosVM.usuariosMtoState.password == "",
+                                    isError = usuariosVM.passwordState.password == "",
                                     value = usuariosVM.passwordState.password,
                                     enabled = usuariosVM.usuariosBusState.changePassword,
                                     onValueChange = {
@@ -302,9 +302,14 @@ fun DatosPersonales(
                                         focusedBorderColor = Color.Blue,
                                         unfocusedBorderColor = Color.Black,
                                         focusedLabelColor = Color.Blue,
-                                        unfocusedLabelColor = Color.Black
-                                    ),
-                                    textStyle = TextStyle(Color.Black)
+                                        unfocusedLabelColor = Color.Black,
+                                        errorBorderColor = Color.Red,
+                                        errorLabelColor = Color.Red,
+                                        focusedTextColor = Color.Black,
+                                        unfocusedTextColor = Color.Black,
+                                        disabledTextColor = Color.Black,
+                                        disabledBorderColor = Color.Gray
+                                    )
                                 )
                                 IconButton(
                                     onClick = {
@@ -329,6 +334,7 @@ fun DatosPersonales(
                                             contexto,
                                             R.string.editar_desc
                                         ),
+                                        tint = Color.Black
                                     )
                                 }
                             }
@@ -350,9 +356,12 @@ fun DatosPersonales(
                                     focusedBorderColor = Color.Blue,
                                     unfocusedBorderColor = Color.Black,
                                     focusedLabelColor = Color.Blue,
-                                    unfocusedLabelColor = Color.Black
-                                ),
-                                textStyle = TextStyle(Color.Black)
+                                    unfocusedLabelColor = Color.Black,
+                                    errorBorderColor = Color.Red,
+                                    errorLabelColor = Color.Red,
+                                    focusedTextColor = Color.Black,
+                                    unfocusedTextColor = Color.Black,
+                                )
                             )
                         }
                         Spacer(modifier = modifier.size(16.dp))
