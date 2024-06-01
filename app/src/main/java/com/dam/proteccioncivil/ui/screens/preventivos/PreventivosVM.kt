@@ -58,7 +58,8 @@ class PreventivosVM(
     }
 
     fun convertFechas(): MutableList<String?> {
-        preventivoMtoState.fechas = preventivoMtoState.fechas.filterNotNull().sortedDescending().toMutableList()
+        preventivoMtoState.fechas =
+            preventivoMtoState.fechas.filterNotNull().sortedDescending().toMutableList()
         val fechas = preventivoMtoState.fechas + List(7 - preventivoMtoState.fechas.size) { null }
 
         preventivoMtoState = fechas[0]?.let {
@@ -78,6 +79,10 @@ class PreventivosVM(
 
     fun updateOriginalState() {
         originalPreventivosMtoState = preventivoMtoState.copy()
+    }
+
+    fun setUsuarioBorrar(usuarioBorrar: Boolean) {
+        preventivoBusState = preventivoBusState.copy(usuarioBorrar = usuarioBorrar)
     }
 
     fun setIsBorrado(isBorrado: Boolean) {
@@ -135,7 +140,8 @@ class PreventivosVM(
                     ) else null,
                 )
             )
-            preventivoMtoState.fechas = preventivoMtoState.fechas.filterNotNull().filter { it.isNotBlank() }.toMutableList()
+            preventivoMtoState.fechas =
+                preventivoMtoState.fechas.filterNotNull().filter { it.isNotBlank() }.toMutableList()
             originalPreventivosMtoState.fechas.clear()
             originalPreventivosMtoState.fechas.addAll(
                 listOf(
@@ -161,7 +167,8 @@ class PreventivosVM(
                 )
             )
             originalPreventivosMtoState.fechas =
-                originalPreventivosMtoState.fechas.filterNotNull().filter { it.isNotBlank() }.toMutableList()
+                originalPreventivosMtoState.fechas.filterNotNull().filter { it.isNotBlank() }
+                    .toMutableList()
         }
     }
 

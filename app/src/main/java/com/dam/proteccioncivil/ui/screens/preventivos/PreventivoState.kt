@@ -10,6 +10,7 @@ data class PrevState(
 )
 
 data class PreventivoBusState(
+    val usuarioBorrar: Boolean = false,
     val isBorrado: Boolean = false,
     val fechaABorrar: String = "",
     val action: String? = null,

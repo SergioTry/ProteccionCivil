@@ -52,6 +52,7 @@ import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.LabelledSwitch
 import com.dam.proteccioncivil.data.model.ShortToBoolean
+import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
 import com.dam.proteccioncivil.ui.theme.AppColors
@@ -107,6 +108,16 @@ fun PreventivoMto(
 
     if (preventivosVM.preventivoMtoState.codPreventivo != -1) {
         preventivosVM.setFechas()
+    }
+
+    if (preventivosVM.preventivoBusState.usuarioBorrar) {
+        preventivosVM.setAction(
+            "delete"
+        )
+        preventivosVM.setCodPreventivo(preventivosVM.preventivoMtoState.codPreventivo)
+        preventivosVM.update()
+        preventivosVM.setAction(null)
+        preventivosVM.setUsuarioBorrar(false)
     }
 
     Box(
@@ -225,7 +236,10 @@ fun PreventivoMto(
                                         if (it != null) {
                                             Text(
                                                 text = FormatVisibleDate.use(it).substring(0, 5),
-                                                style = TextStyle(fontSize = 12.sp, color = Color.Black)
+                                                style = TextStyle(
+                                                    fontSize = 12.sp,
+                                                    color = Color.Black
+                                                )
                                             )
                                         }
                                     }
@@ -256,82 +270,92 @@ fun PreventivoMto(
                         }
                     }
                     Spacer(modifier = modifier.size(16.dp))
-                    Text(
-                        text = stringResource(id = R.string.usuarios_lit),
-                        style = TextStyle(color = Color.Black)
-                    )
-                    Box(
-                        modifier = modifier
-                            .border(
-                                BorderStroke(1.dp, Color.Black),
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .fillMaxWidth()
-                    ) {
-                        if (preventivosVM.preventivoMtoState.usuarios.isNullOrEmpty()) {
-                            Text(
-                                text = stringResource(id = R.string.no_usuarios),
-                                modifier = modifier.padding(8.dp).height(30.dp),
-                                style = TextStyle(color = Color.Black)
-                            )
-                        } else {
-                            LazyRow {
-                                items(preventivosVM.preventivoMtoState.usuarios!!) { it ->
-                                    Row {
-                                        IconButton(
-                                            onClick = {
-                                                if (!preventivosVM.preventivoBusState.isDetail) {
-                                                    usuariosVM.cloneUsuarioMtoState(it)
-                                                    onNavUsuarioDetail()
-                                                }
-                                            },
+                    if (preventivosVM.preventivoMtoState.codPreventivo != -1) {
+                        Text(
+                            text = stringResource(id = R.string.usuarios_lit),
+                            style = TextStyle(color = Color.Black)
+                        )
+                        Box(
+                            modifier = modifier
+                                .border(
+                                    BorderStroke(1.dp, Color.Black),
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .fillMaxWidth()
+                        ) {
+                            if (preventivosVM.preventivoMtoState.usuarios.isNullOrEmpty()) {
+                                Text(
+                                    text = stringResource(id = R.string.no_usuarios),
+                                    modifier = modifier
+                                        .padding(8.dp)
+                                        .height(30.dp),
+                                    style = TextStyle(color = Color.Black)
+                                )
+                            } else {
+                                LazyRow {
+                                    items(preventivosVM.preventivoMtoState.usuarios!!) { it ->
+                                        Row(
                                             modifier = modifier
-                                                .padding(8.dp)
-                                                .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+                                                .border(
+                                                    1.dp,
+                                                    Color.Black,
+                                                    RoundedCornerShape(8.dp)
+                                                )
                                                 .background(
-                                                    if (it.codUsuario % 2 == 0) {
+                                                    if (it.codUsuario == Token.codUsuario) {
                                                         Color.LightGray
                                                     } else {
                                                         Color.White
-                                                    }
+                                                    },
+                                                    RoundedCornerShape(8.dp)
                                                 )
+                                                .padding(4.dp)
                                         ) {
-                                            Icon(
-                                                imageVector = Icons.Default.AccountBox,
-                                                contentDescription = getString(
-                                                    context,
-                                                    R.string.detalle_desc
-                                                )
-                                            )
-                                        }
-                                        IconButton(
-                                            onClick = {
-                                                preventivosVM.setAction(
-                                                    "delete"
-                                                )
-                                                preventivosVM.setCodPreventivo(preventivosVM.preventivoMtoState.codPreventivo)
-                                                preventivosVM.update()
-                                                preventivosVM.setAction(null)
-                                            },
-                                            modifier = modifier
-                                                .padding(8.dp)
-                                                .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
-                                                .background(
-                                                    if (it.codUsuario % 2 == 0) {
-                                                        Color.LightGray
-                                                    } else {
+                                            IconButton(
+                                                onClick = {
+                                                    if (!preventivosVM.preventivoBusState.isDetail) {
+                                                        usuariosVM.cloneUsuarioMtoState(it)
+                                                        onNavUsuarioDetail()
+                                                    }
+                                                },
+                                                modifier = modifier
+                                                    .padding(8.dp)
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.AccountBox,
+                                                    contentDescription = getString(
+                                                        context,
+                                                        R.string.detalle_desc
+                                                    ),
+                                                    tint = if (it.codUsuario == Token.codUsuario) {
                                                         Color.White
+                                                    } else {
+                                                        Color.Black
                                                     }
                                                 )
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Delete,
-                                                contentDescription = getString(
-                                                    context,
-                                                    R.string.anadir_desc
-                                                )
-                                            )
+                                            }
+//                                            IconButton(
+//                                                onClick = {
+//                                                    preventivosVM.setUsuarioBorrar(true)
+//                                                },
+//                                                modifier = modifier
+//                                                    .padding(8.dp)
+//                                            ) {
+//                                                Icon(
+//                                                    imageVector = Icons.Default.Delete,
+//                                                    contentDescription = getString(
+//                                                        context,
+//                                                        R.string.anadir_desc
+//                                                    ),
+//                                                    tint = if (it.codUsuario == Token.codUsuario) {
+//                                                        Color.White
+//                                                    } else {
+//                                                        Color.Black
+//                                                    }
+//                                                )
+//                                            }
                                         }
+                                        Spacer(modifier = modifier.size(8.dp))
                                     }
                                 }
                             }
