@@ -32,7 +32,7 @@ import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.theme.AppColors
 
 @Composable
-fun SobreScreen(
+fun AboutScreen(
     version: String
 ) {
     val scrollState = rememberScrollState()
@@ -102,6 +102,6 @@ fun SobreScreen(
 @Preview(showBackground = true)
 @Composable
 fun SplashScreenPreview() {
-    SobreScreen(version = "1.0.0")
+    AboutScreen(version = "1.0.0")
 }
 

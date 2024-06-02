@@ -37,6 +37,7 @@ import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
 import com.dam.proteccioncivil.ui.dialogs.DlgPassword
 import com.dam.proteccioncivil.ui.dialogs.DlgRecursos
 import com.dam.proteccioncivil.ui.dialogs.DlgServicios
+import com.dam.proteccioncivil.ui.screens.about.AboutScreen
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosMto
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosScreen
 import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosVM
@@ -54,7 +55,6 @@ import com.dam.proteccioncivil.ui.screens.preferencias.Preferencias
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivoMto
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosScreen
 import com.dam.proteccioncivil.ui.screens.preventivos.PreventivosVM
-import com.dam.proteccioncivil.ui.screens.about.SobreScreen
 import com.dam.proteccioncivil.ui.screens.splash.SplashScreen
 import com.dam.proteccioncivil.ui.screens.usuarios.DatosPersonales
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosMto
@@ -209,21 +209,21 @@ fun MainApp(
     }
 
     if (mainVM.uiMainState.showDlgPassword) {
-        DlgPassword(usuariosVM = usuariosVM,
-            onEstablecerClick = {
-                usuariosVM.changePassword()
-            },
+        DlgPassword(
+            usuariosVM = usuariosVM,
+            mainVM = mainVM,
             onShowSnackBar = {
                 scope.launch {
                     snackbarHostState.showSnackbar(it)
                 }
             },
-            onPasswordChanged = {
-                usuariosVM.resetUsuarioMtoState()
-                mainVM.setShowDlgPassword(false)
-            },
+//            onPasswordChanged = {
+//                usuariosVM.resetUsuarioMtoState()
+//                mainVM.setShowDlgPassword(false)
+//            },
             backToLogin = {
                 mainVM.setShowDlgPassword(false)
+                usuariosVM.resetUsuarioMtoState()
                 navController.navigate(AppScreens.Login.name)
             })
     }
@@ -318,7 +318,7 @@ private fun NavHostRoutes(
             MainScreen(mainVM)
         }
         composable(route = AppScreens.Sobre.name) {
-            SobreScreen(version = getString(context, R.string.version))
+            AboutScreen(version = getString(context, R.string.version))
         }
         composable(route = AppScreens.Login.name) {
             LoginScreen(
@@ -759,7 +759,7 @@ private fun NavHostRoutes(
                     }
                 },
                 refresh = {
-                    navController.popBackStack(AppScreens.Preventivos.name,true)
+                    navController.popBackStack(AppScreens.Preventivos.name, true)
                     navController.navigate(AppScreens.Preventivos.name)
                 })
         }
@@ -834,3 +834,14 @@ private fun resetFilters(
     vehiculosVM.resetFilter()
     preventivosVM.resetFilter()
 }
+
+
+/*
+ ______     ____  __                    __   __
+|  _ \ \   / /  \/  |   /\        /\    \ \ / /
+| |_) \ \_/ /| \  / |  /  \      /  \    \ V /
+|  _ < \   / | |\/| | / /\ \    / /\ \    > <
+| |_) | | |  | |  | |/ ____ \  / ____ \  / . \
+|____/  |_|  |_|  |_/_/    \_\/_/    \_\/_/ \_\
+
+*/

@@ -131,7 +131,8 @@ fun AnunciosMto(
                             errorBorderColor = Color.Red,
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black
+                            unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         ),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Done

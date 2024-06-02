@@ -51,6 +51,8 @@
     <string name="exit_confirmation">¿Quieres cerrar la aplicación?</string>
     <string name="guardia_delete_confirmation">¿Está seguro de que quiere eliminar esta guardia?</string>
     <string name="infomurs_delete_confirmation">¿Está seguro de que quiere eliminar este infomur?</string>
+    <string name="apuntado_desapuntado_confirmation">¿Está seguro de que quiere apuntarse/desapuntarse de este preventivo?</string>
+    <string name="preventivo_delete_confirmation">¿Está seguro de que quiere eliminar este preventivo?</string>
 
     <!-- Mensajes de estado -->
     <string name="anuncio_create_failure">Error al crear el anuncio</string>
@@ -85,7 +87,13 @@
     <string name="vehiculo_delete_success">Vehículo eliminado con éxito</string>
     <string name="vehiculo_edit_failure">Error al editar el vehículo</string>
     <string name="vehiculo_edit_success">Vehículo editado con éxito</string>
-
+    <string name="preventivo_delete_failure">Error al eliminar el preventivo</string>
+    <string name="preventivo_delete_success">Preventivo eliminado con éxito</string>
+    <string name="preventivo_create_success">Exito al crear el preventivo</string>
+    <string name="preventivo_edit_success">Exito al editar el preventivo</string>
+    <string name="preventivo_create_failure">Hubo un error al crear el preventivo</string>
+    <string name="preventivo_edit_failure">Hubo un error al editar el preventivo</string>
+    <string name="no_usuarios">No hay usuarios apuntados al preventivo</string>
 
     <!---Descripciones-->
     <string name="logo_chirinos_desc">Imagen del logo del IES Ginés Peréz Chirinos</string>
@@ -100,6 +108,12 @@
     <string name="guardia_image_desc">Imagen asociada a guardia</string>
     <string name="close_icon_desc">Icono asociado para las opciones de cerrar</string>
     <string name="detalle_desc">Icono asociado a los botones para ver el detalle de un recurso</string>
+    <string name="infomur_image">Imagen asociada a infomur</string>
+    <string name="guardias_image">Imagen asociada a guardia</string>
+    <string name="preventivos_image">Imagen asociada a preventivo</string>
+    <string name="preventivos_riesgo_image">Imagen asociada a preventivo de riesgo</string>
+    <string name="hide_password_icon">Hide password</string>
+    <string name="show_password_icon">Show password</string>
 
     <!--Literales-->
 
@@ -111,7 +125,7 @@
     <string name="fechaInfomur_lit">Fecha Infomur</string>
     <string name="fecha_mantenimiento_lit">Fecha próximo mantenimiento</string>
     <string name="fechaNacimiento_lit">Fecha de nacimiento</string>
-    <string name="new_password">Establecer una nueva contraseña</string>
+    <string name="new_password">Establece una nueva contraseña</string>
     <string name="no_disponible_lit">No disponible</string>
     <string name="password_establecido">Contraseña modificada</string>
     <string name="recursos_select">Seleccione un recurso</string>
@@ -122,6 +136,9 @@
     <string name="usuario1_lit">Primer voluntario</string>
     <string name="usuario2_lit">Segundo voluntario</string>
     <string name="username">Nombre de usuario</string>
+    <string name="month_select">Seleccione un mes</string>
+
+
 
     <!-- Palabras literales -->
     <string name="anuncio_lit">Anuncio</string>
@@ -163,6 +180,13 @@
     <string name="refresh_desc">Icono asociado a recargar la pantalla</string>
     <string name="fecha_preventivo_lit">"Fecha del preventivo: "</string>
     <string name="fechas_preventivo_lit">Fechas del preventivo:</string>
+    <string name="titulo_lit">Titulo</string>
+    <string name="fechas_lit">Fechas</string>
+    <string name="usuarios_lit">Voluntarios</string>
+    <string name="riesgo_lit">Riesgo</string>
+    <string name="kilometros_lit">Kilometros</string>
+    <string name="desapuntar_lit">Desapuntarme</string>
+    <string name="apuntar_lit">Apuntarme</string>
 
     <!-- Rangos de usuario -->
     <string name="range_select">Seleccione un rango</string>
@@ -171,28 +195,5 @@
     <string name="range_jef_db">JefeServicio</string>
     <string name="range_adm">Admin</string>
     <string name="range">rango</string>
-
-    <string name="month_select">Seleccione un mes</string>
-
-    <string name="kilometros_lit">Kilometros</string>
-    <string name="desapuntar_lit">Desapuntarme</string>
-    <string name="apuntar_lit">Apuntarme</string>
-    <string name="preventivos_image">Imagen asociada a preventivo</string>
-    <string name="preventivos_riesgo_image">Imagen asociada a preventivo de riesgo</string>
-    <string name="infomur_image">Imagen asociada a infomur</string>
-    <string name="guardias_image">Imagen asociada a guardia</string>
-    <string name="preventivo_delete_failure">Error al eliminar el preventivo</string>
-    <string name="preventivo_delete_success">Preventivo eliminado con éxito</string>
-    <string name="titulo_lit">Titulo</string>
-    <string name="fechas_lit">Fechas</string>
-    <string name="usuarios_lit">Voluntarios</string>
-    <string name="riesgo_lit">Riesgo</string>
-    <string name="no_usuarios">No hay usuarios apuntados al preventivo</string>
-    <string name="preventivo_create_success">Exito al crear el preventivo</string>
-    <string name="preventivo_edit_success">Exito al editar el preventivo</string>
-    <string name="preventivo_create_failure">Hubo un error al crear el preventivo</string>
-    <string name="preventivo_edit_failure">Hubo un error al editar el preventivo</string>
-    <string name="apuntado_desapuntado_confirmation">¿Está seguro de que quiere apuntarse/desapuntarse de este preventivo?</string>
-    <string name="preventivo_delete_confirmation">¿Está seguro de que quiere eliminar este preventivo?</string>
 
 </resources>

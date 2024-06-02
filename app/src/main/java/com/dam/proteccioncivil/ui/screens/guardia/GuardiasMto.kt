@@ -43,6 +43,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -75,6 +77,7 @@ fun GuardiaMto(
     val activity = (LocalContext.current as? Activity)
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
     var expandedUser1 by remember { mutableStateOf(false) }
     var expandedUser2 by remember { mutableStateOf(false) }
 
@@ -148,12 +151,9 @@ fun GuardiaMto(
                                     errorLabelColor = Color.Red,
                                     focusedTextColor = Color.Black,
                                     unfocusedTextColor = Color.Black,
+                                    errorTextColor = Color.Red
                                 ),
                                 textStyle = TextStyle(color = Color.Black),
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                                keyboardActions = KeyboardActions(
-                                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                                )
                             )
                             if (!guardiasVM.guardiasBusState.isDetail) {
                                 IconButton(
@@ -182,7 +182,7 @@ fun GuardiaMto(
                             guardiasVM.setDescripcion(it)
                         }, modifier = modifier
                             .fillMaxWidth()
-                            .height(80.dp),
+                            .height(80.dp).focusRequester(focusRequester),
                         readOnly = guardiasVM.guardiasBusState.isDetail,
                         isError = guardiasVM.guardiasMtoState.descripcion == "",
                         colors = OutlinedTextFieldDefaults.colors(
@@ -194,6 +194,7 @@ fun GuardiaMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         ),
                         textStyle = TextStyle(color = Color.Black),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -248,6 +249,7 @@ fun GuardiaMto(
                                 errorLabelColor = Color.Red,
                                 focusedTextColor = Color.Black,
                                 unfocusedTextColor = Color.Black,
+                                errorTextColor = Color.Red
                             )
                         )
                         ExposedDropdownMenu(
@@ -313,6 +315,7 @@ fun GuardiaMto(
                                 errorLabelColor = Color.Red,
                                 focusedTextColor = Color.Black,
                                 unfocusedTextColor = Color.Black,
+                                errorTextColor = Color.Red
                             )
                         )
                         ExposedDropdownMenu(
@@ -352,7 +355,7 @@ fun GuardiaMto(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
                 ) {
-                    Text(text = stringResource(id = R.string.opc_cancel))
+                    Text(text = stringResource(id = R.string.opc_cancel), color = Color.Black)
                 }
                 Spacer(modifier = modifier.width(100.dp))
                 Button(
@@ -383,6 +386,7 @@ fun GuardiaMto(
                 onClick = {
                     guardiasVM.setShowDlgDate(false)
                     guardiasVM.setFechaGuardia(it)
+                    focusRequester.requestFocus()
                 },
                 modifier = modifier,
                 onDismiss = {

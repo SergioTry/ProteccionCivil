@@ -17,6 +17,7 @@ import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
+import com.dam.proteccioncivil.ui.main.MainVM
 import com.google.gson.JsonParser
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch

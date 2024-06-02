@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
@@ -42,6 +43,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -49,6 +52,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
@@ -74,6 +78,7 @@ fun InfomurMto(
     val activity = (LocalContext.current as? Activity)
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
     var expandedUser1 by remember { mutableStateOf(false) }
     var expandedUser2 by remember { mutableStateOf(false) }
 
@@ -148,9 +153,7 @@ fun InfomurMto(
                                     errorLabelColor = Color.Red,
                                     focusedTextColor = Color.Black,
                                     unfocusedTextColor = Color.Black,
-                                ),
-                                keyboardActions = KeyboardActions(
-                                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                                    errorTextColor = Color.Red
                                 )
                             )
                             if (!infomursVM.infomursBusState.isDetail) {
@@ -186,7 +189,8 @@ fun InfomurMto(
                         isError = !infomursVM.infomursMtoState.datosObligatorios,
                         modifier = modifier
                             .fillMaxWidth()
-                            .height(80.dp),
+                            .height(80.dp)
+                            .focusRequester(focusRequester),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
@@ -196,7 +200,10 @@ fun InfomurMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
-                        ),keyboardActions = KeyboardActions(
+                            errorTextColor = Color.Red
+                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        keyboardActions = KeyboardActions(
                             onNext = {
                                 keyboardController?.hide()
                                 focusManager.moveFocus(FocusDirection.Down)
@@ -251,6 +258,7 @@ fun InfomurMto(
                                 errorLabelColor = Color.Red,
                                 focusedTextColor = Color.Black,
                                 unfocusedTextColor = Color.Black,
+                                errorTextColor = Color.Red
                             )
                         )
                         DropdownMenu(
@@ -314,6 +322,7 @@ fun InfomurMto(
                                 errorLabelColor = Color.Red,
                                 focusedTextColor = Color.Black,
                                 unfocusedTextColor = Color.Black,
+                                errorTextColor = Color.Red
                             )
                         )
                         DropdownMenu(
@@ -352,7 +361,7 @@ fun InfomurMto(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
                 ) {
-                    Text(text = "Cancelar")
+                    Text(text = stringResource(id = R.string.opc_cancel), color = Color.Black)
                 }
                 Spacer(modifier = modifier.width(100.dp))
                 Button(
@@ -369,10 +378,10 @@ fun InfomurMto(
                     Text(
                         text =
                         if (infomursVM.infomursMtoState.codInfomur == "0") {
-                            "Añadir"
+                            stringResource(id = R.string.opc_create)
                         } else {
-                            "Editar"
-                        }
+                            stringResource(id = R.string.opc_edit)
+                        }, color = Color.Black
                     )
                 }
             }
@@ -381,6 +390,7 @@ fun InfomurMto(
                     onClick = {
                         infomursVM.setShowDlgDate(false)
                         infomursVM.setFechaInfomur(it)
+                        focusRequester.requestFocus()
                     },
                     modifier = modifier,
                     onDismiss = {
