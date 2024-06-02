@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -73,13 +74,15 @@ fun AboutScreen(
                     text = stringResource(id = R.string.sobre_text),
                     modifier = Modifier
                         .padding(top = 16.dp)
-                        .align(Alignment.CenterHorizontally)
+                        .align(Alignment.CenterHorizontally),
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = stringResource(id = R.string.sobre_descrip_text),
                     modifier = Modifier
                         .padding(top = 16.dp)
-                        .padding(12.dp)
+                        .padding(12.dp),
+                    textAlign = TextAlign.Justify
                 )
             }
         }

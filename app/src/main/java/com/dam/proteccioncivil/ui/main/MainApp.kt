@@ -160,7 +160,7 @@ fun MainApp(
                         mainVM.setShowDlgSalir(true)
                     },
                     navigateUp = {
-                        backButtonNavigation(currentScreen, navController)
+                        navController.navigateUp()
                     },
                     navController = navController,
                     calendarioVM = calendarioVM,
@@ -808,20 +808,6 @@ fun selectOption(
                 }
             }
         }
-    }
-}
-
-private fun backButtonNavigation(
-    currentScreen: AppScreens,
-    navController: NavHostController
-) {
-    //TODO
-    when (currentScreen.name) {
-        "", "AulasBus", "IncsBus" -> navController.navigate(
-            AppScreens.Home.name
-        )
-
-        else -> navController.navigateUp()
     }
 }
 

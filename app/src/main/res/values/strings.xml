@@ -131,8 +131,8 @@
     <string name="recursos_select">Seleccione un recurso</string>
     <string name="remember_credentials">Inicio de sesión automático</string>
     <string name="servicios">Seleccione un servicio</string>
-    <string name="sobre_descrip_text">Esta aplicación ha sido desarrollada como un\nTFG para el grado superior DAM del instituto\nIES Ginés Pérez Chirinos y donada al cuerpo\nde voluntarios de protección civil de Caravaca\nde la Cruz.</string>
-    <string name="sobre_text">Desarrolladores:\nSergio Fernández\nPedro Antonio Pozo Sánchez</string>
+    <string name="sobre_descrip_text">Esta aplicación ha sido desarrollada como un TFG para el grado superior DAM del instituto IES Ginés Pérez Chirinos y donada al cuerpo de voluntarios de protección civil de Caravaca de la Cruz.</string>
+    <string name="sobre_text">Desarrolladores:\nSergio Fernández Muñoz\nPedro Antonio Pozo Sánchez</string>
     <string name="usuario1_lit">Primer voluntario</string>
     <string name="usuario2_lit">Segundo voluntario</string>
     <string name="username">Nombre de usuario</string>
