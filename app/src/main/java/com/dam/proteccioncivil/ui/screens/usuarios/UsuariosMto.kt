@@ -84,8 +84,7 @@ fun UsuariosMto(
     val scrollState = rememberScrollState()
     var changePassword by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+
 
     when (usuariosVM.usuariosMessageState) {
         is UsuariosMessageState.Loading -> {
@@ -147,7 +146,7 @@ fun UsuariosMto(
                             )
                         },
                         value = usuariosVM.usuariosMtoState.dni,
-                        isError = usuariosVM.usuariosMtoState.dni == "",
+                        isError = usuariosVM.usuariosMtoState.dni == "" || !usuariosVM.dniRegex.matches(usuariosVM.usuariosMtoState.dni),
                         onValueChange = { usuariosVM.setDni(it) },
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -327,9 +326,9 @@ fun UsuariosMto(
                                     },
                                     readOnly = usuariosVM.usuariosBusState.isDetail,
                                     isError = usuariosVM.usuariosMtoState.password == "",
-                                    value = password,
+                                    value = usuariosVM.usuariosMtoState.password,
                                     enabled = if (usuariosVM.usuariosMtoState.codUsuario == "0") true else changePassword,
-                                    onValueChange = { password = it },
+                                    onValueChange = { usuariosVM.setPassword(it) },
                                     modifier = Modifier.fillMaxWidth(),
                                     colors = OutlinedTextFieldDefaults.colors(
                                         focusedBorderColor = Color.Blue,
@@ -354,8 +353,8 @@ fun UsuariosMto(
                                     onClick = {
                                         changePassword = !changePassword
                                         if (!changePassword) {
-                                            password = ""
-                                            confirmPassword = ""
+                                            usuariosVM.setPassword("")
+                                            usuariosVM.setConfirmPassword("")
                                         }
                                     },
                                     modifier = Modifier.align(Alignment.CenterEnd)
@@ -379,10 +378,10 @@ fun UsuariosMto(
                                     color = Color.Black
                                 )
                             },
-                            value = confirmPassword,
+                            value = usuariosVM.usuariosMtoState.confirmPassword,
                             isError = usuariosVM.usuariosMtoState.confirmPassword == "",
                             enabled = if (usuariosVM.usuariosMtoState.codUsuario == "0") true else changePassword,
-                            onValueChange = { confirmPassword = it },
+                            onValueChange = { usuariosVM.setConfirmPassword(it) },
                             modifier = Modifier.fillMaxWidth(),
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = Color.Blue,
@@ -574,12 +573,12 @@ fun UsuariosMto(
                                 focusManager.clearFocus()
                                 keyboardController?.hide()
                                 if (usuariosVM.usuariosMtoState.datosObligatorios && usuariosVM.hasStateChanged() ||
-                                    changePassword && password.isNotEmpty() && confirmPassword.isNotEmpty()
+                                    changePassword && usuariosVM.usuariosMtoState.password.isNotEmpty() && usuariosVM.usuariosMtoState.confirmPassword.isNotEmpty()
                                 ) {
                                     ExcuteAction(
                                         changePassword,
-                                        password,
-                                        confirmPassword,
+                                        usuariosVM.usuariosMtoState.password,
+                                        usuariosVM.usuariosMtoState.confirmPassword,
                                         usuariosVM
                                     )
                                 }
@@ -623,9 +622,9 @@ fun UsuariosMto(
                         colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
 
                         enabled = usuariosVM.usuariosMtoState.datosObligatorios && usuariosVM.hasStateChanged() ||
-                                changePassword && password.isNotEmpty() && confirmPassword.isNotEmpty(),
+                                changePassword && usuariosVM.usuariosMtoState.password.isNotEmpty() && usuariosVM.usuariosMtoState.confirmPassword.isNotEmpty(),
                         onClick = {
-                            ExcuteAction(changePassword, password, confirmPassword, usuariosVM)
+                            ExcuteAction(changePassword, usuariosVM.usuariosMtoState.password, usuariosVM.usuariosMtoState.confirmPassword, usuariosVM)
                         }
                     ) {
                         Text(

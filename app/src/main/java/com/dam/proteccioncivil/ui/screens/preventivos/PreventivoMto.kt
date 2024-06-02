@@ -25,7 +25,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -315,10 +314,8 @@ fun PreventivoMto(
                                         ) {
                                             IconButton(
                                                 onClick = {
-                                                    if (!preventivosVM.preventivoBusState.isDetail) {
-                                                        usuariosVM.cloneUsuarioMtoState(it)
-                                                        onNavUsuarioDetail()
-                                                    }
+                                                    usuariosVM.cloneUsuarioMtoState(it)
+                                                    onNavUsuarioDetail()
                                                 },
                                                 modifier = modifier
                                                     .padding(8.dp)

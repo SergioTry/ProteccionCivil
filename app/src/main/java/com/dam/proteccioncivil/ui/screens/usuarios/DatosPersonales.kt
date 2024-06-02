@@ -293,7 +293,7 @@ fun DatosPersonales(
                                     },
                                     isError = usuariosVM.passwordState.password == "",
                                     value = usuariosVM.passwordState.password,
-                                    enabled = usuariosVM.usuariosBusState.changePassword,
+                                    enabled = usuariosVM.usuariosBusState.changePasswordChecker,
                                     onValueChange = {
                                         usuariosVM.setPasswordForUi(it)
                                     },
@@ -313,17 +313,17 @@ fun DatosPersonales(
                                 )
                                 IconButton(
                                     onClick = {
-                                        if (usuariosVM.usuariosBusState.changePassword) {
+                                        if (usuariosVM.usuariosBusState.changePasswordChecker) {
                                             val key = KeystoreHelper.getKey()
                                             usuariosVM.setPasswordForUi(KeystoreHelper.desencriptar(
                                                 datosEncriptados = uiPrefState.password,
                                                 secretKey = key,
                                                 iv = Base64.decode(uiPrefState.iv, Base64.DEFAULT)
                                             ))
-                                            usuariosVM.setChangePassword(false)
+                                            usuariosVM.setChangePasswordChecker(false)
                                             confirmPassword = ""
                                         } else {
-                                            usuariosVM.setChangePassword(true)
+                                            usuariosVM.setChangePasswordChecker(true)
                                         }
                                     },
                                     modifier = modifier.align(Alignment.CenterEnd)
@@ -339,7 +339,7 @@ fun DatosPersonales(
                                 }
                             }
                         }
-                        if (usuariosVM.usuariosBusState.changePassword) {
+                        if (usuariosVM.usuariosBusState.changePasswordChecker) {
                             OutlinedTextField(
                                 label = {
                                     Text(
@@ -349,7 +349,7 @@ fun DatosPersonales(
                                 },
                                 value = confirmPassword,
                                 isError = usuariosVM.usuariosMtoState.confirmPassword == "",
-                                enabled = usuariosVM.usuariosBusState.changePassword,
+                                enabled = usuariosVM.usuariosBusState.changePasswordChecker,
                                 onValueChange = { confirmPassword = it },
                                 modifier = modifier.fillMaxWidth(),
                                 colors = OutlinedTextFieldDefaults.colors(
@@ -403,7 +403,7 @@ fun DatosPersonales(
                     }
                 }
             }
-            if (usuariosVM.usuariosBusState.changePassword) {
+            if (usuariosVM.usuariosBusState.changePasswordChecker) {
                 Row(
                     modifier = modifier
                         .fillMaxWidth()
@@ -422,9 +422,7 @@ fun DatosPersonales(
                     Spacer(modifier = modifier.width(100.dp))
                     Button(
                         colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
-
-                        enabled = usuariosVM.usuariosMtoState.datosObligatorios ||
-                                usuariosVM.usuariosBusState.changePassword && usuariosVM.passwordState.password.isNotEmpty() && confirmPassword.isNotEmpty(),
+                        enabled = usuariosVM.usuariosBusState.changePasswordChecker && usuariosVM.passwordState.password.isNotEmpty() && confirmPassword.isNotEmpty(),
                         onClick = {
                             usuariosVM.setPassword(usuariosVM.passwordState.password)
                             usuariosVM.setConfirmPassword(confirmPassword)

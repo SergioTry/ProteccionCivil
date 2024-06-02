@@ -17,7 +17,6 @@ import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
-import com.dam.proteccioncivil.ui.main.MainVM
 import com.google.gson.JsonParser
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
@@ -44,11 +43,13 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
     // Estas variables se usan para saber si ha habido cambios en el MtoState
     var originalUsuariosMtoState = usuariosMtoState.copy()
 
+    val dniRegex = Regex("\\d{8}[A-HJ-NP-TV-Z]")
+
     fun updateOriginalState() {
         originalUsuariosMtoState = usuariosMtoState.copy()
     }
 
-    fun setPasswordForUi(password: String){
+    fun setPasswordForUi(password: String) {
         passwordState = passwordState.copy(
             password = password
         )
@@ -69,7 +70,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             lanzarBusqueda = lanzar,
             textoBusqueda = usuariosBusState.textoBusqueda,
             isDetail = lanzar,
-            changePassword = usuariosBusState.changePassword,
+            changePasswordChecker = usuariosBusState.changePasswordChecker,
             showDlgConfirmation = usuariosBusState.showDlgConfirmation,
             showDlgDate = usuariosBusState.showDlgDate
         )
@@ -80,7 +81,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             lanzarBusqueda = usuariosBusState.lanzarBusqueda,
             textoBusqueda = texto,
             isDetail = usuariosBusState.isDetail,
-            changePassword = usuariosBusState.changePassword,
+            changePasswordChecker = usuariosBusState.changePasswordChecker,
             showDlgConfirmation = usuariosBusState.showDlgConfirmation,
             showDlgDate = usuariosBusState.showDlgDate
         )
@@ -91,18 +92,18 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             lanzarBusqueda = usuariosBusState.lanzarBusqueda,
             textoBusqueda = usuariosBusState.textoBusqueda,
             isDetail = isDetail,
-            changePassword = usuariosBusState.changePassword,
+            changePasswordChecker = usuariosBusState.changePasswordChecker,
             showDlgConfirmation = usuariosBusState.showDlgConfirmation,
             showDlgDate = usuariosBusState.showDlgDate
         )
     }
 
-    fun setChangePassword(changePassword: Boolean) {
+    fun setChangePasswordChecker(changePasswordChecker: Boolean) {
         usuariosBusState = usuariosBusState.copy(
             lanzarBusqueda = usuariosBusState.lanzarBusqueda,
             textoBusqueda = usuariosBusState.textoBusqueda,
             isDetail = usuariosBusState.isDetail,
-            changePassword = changePassword,
+            changePasswordChecker = changePasswordChecker,
             showDlgConfirmation = usuariosBusState.showDlgConfirmation,
             showDlgDate = usuariosBusState.showDlgDate
         )
@@ -114,7 +115,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             lanzarBusqueda = usuariosBusState.lanzarBusqueda,
             textoBusqueda = usuariosBusState.textoBusqueda,
             isDetail = usuariosBusState.isDetail,
-            changePassword = usuariosBusState.changePassword,
+            changePasswordChecker = usuariosBusState.changePasswordChecker,
             showDlgConfirmation = showDlgBorrar,
             showDlgDate = usuariosBusState.showDlgDate
         )
@@ -125,7 +126,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             lanzarBusqueda = usuariosBusState.lanzarBusqueda,
             textoBusqueda = usuariosBusState.textoBusqueda,
             isDetail = usuariosBusState.isDetail,
-            changePassword = usuariosBusState.changePassword,
+            changePasswordChecker = usuariosBusState.changePasswordChecker,
             showDlgConfirmation = usuariosBusState.showDlgConfirmation,
             showDlgDate = showDlgDate
         )
@@ -380,6 +381,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             conductor = conductor,
             datosObligatorios = (usuariosMtoState.codUsuario != "" &&
                     usuariosMtoState.dni != "" &&
+                    dniRegex.matches(usuariosMtoState.dni) &&
                     usuariosMtoState.username != "" &&
                     usuariosMtoState.nombre != "" &&
                     usuariosMtoState.apellidos != "" &&
@@ -404,6 +406,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             conductor = usuariosMtoState.conductor,
             datosObligatorios = (usuariosMtoState.codUsuario != "" &&
                     usuariosMtoState.dni != "" &&
+                    dniRegex.matches(usuariosMtoState.dni) &&
                     password != "" &&
                     usuariosMtoState.username != "" &&
                     usuariosMtoState.nombre != "" &&
@@ -430,6 +433,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             conductor = usuariosMtoState.conductor,
             datosObligatorios = (usuariosMtoState.codUsuario != "" &&
                     usuariosMtoState.dni != "" &&
+                    dniRegex.matches(usuariosMtoState.dni) &&
                     password != "" &&
                     usuariosMtoState.username != "" &&
                     usuariosMtoState.nombre != "" &&
@@ -477,6 +481,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             telefono = usuariosMtoState.telefono,
             datosObligatorios = (usuariosMtoState.codUsuario != "" &&
                     dni != "" &&
+                    dniRegex.matches(dni) &&
                     usuariosMtoState.username != "" &&
                     usuariosMtoState.nombre != "" &&
                     usuariosMtoState.apellidos != "" &&
@@ -499,6 +504,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             telefono = usuariosMtoState.telefono,
             datosObligatorios = (usuariosMtoState.codUsuario != "" &&
                     usuariosMtoState.dni != "" &&
+                    dniRegex.matches(usuariosMtoState.dni) &&
                     username != "" &&
                     usuariosMtoState.nombre != "" &&
                     usuariosMtoState.apellidos != "" &&
@@ -521,6 +527,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             telefono = usuariosMtoState.telefono,
             datosObligatorios = (usuariosMtoState.codUsuario != "" &&
                     usuariosMtoState.dni != "" &&
+                    dniRegex.matches(usuariosMtoState.dni) &&
                     usuariosMtoState.username != "" &&
                     nombre != "" &&
                     usuariosMtoState.apellidos != "" &&
@@ -543,6 +550,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             telefono = usuariosMtoState.telefono,
             datosObligatorios = (usuariosMtoState.codUsuario != "" &&
                     usuariosMtoState.dni != "" &&
+                    dniRegex.matches(usuariosMtoState.dni) &&
                     usuariosMtoState.username != "" &&
                     usuariosMtoState.nombre != "" &&
                     apellidos != "" &&
@@ -565,6 +573,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             telefono = usuariosMtoState.telefono,
             datosObligatorios = (usuariosMtoState.codUsuario != "" &&
                     usuariosMtoState.dni != "" &&
+                    dniRegex.matches(usuariosMtoState.dni) &&
                     usuariosMtoState.username != "" &&
                     usuariosMtoState.nombre != "" &&
                     usuariosMtoState.apellidos != "" &&
@@ -587,6 +596,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             telefono = usuariosMtoState.telefono,
             datosObligatorios = (usuariosMtoState.codUsuario != "" &&
                     usuariosMtoState.dni != "" &&
+                    dniRegex.matches(usuariosMtoState.dni) &&
                     usuariosMtoState.username != "" &&
                     usuariosMtoState.nombre != "" &&
                     usuariosMtoState.apellidos != "" &&
@@ -609,6 +619,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             telefono = usuariosMtoState.telefono,
             datosObligatorios = (usuariosMtoState.codUsuario != "" &&
                     usuariosMtoState.dni != "" &&
+                    dniRegex.matches(usuariosMtoState.dni) &&
                     usuariosMtoState.username != "" &&
                     usuariosMtoState.nombre != "" &&
                     usuariosMtoState.apellidos != "" &&
@@ -631,6 +642,7 @@ class UsuariosVM(private val usuariosRepository: UsuariosRepository) : CRUD<Usua
             telefono = telefono,
             datosObligatorios = (usuariosMtoState.codUsuario != "" &&
                     usuariosMtoState.dni != "" &&
+                    dniRegex.matches(usuariosMtoState.dni) &&
                     usuariosMtoState.username != "" &&
                     usuariosMtoState.nombre != "" &&
                     usuariosMtoState.apellidos != "" &&

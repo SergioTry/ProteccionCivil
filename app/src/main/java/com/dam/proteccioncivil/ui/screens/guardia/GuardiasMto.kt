@@ -141,7 +141,7 @@ fun GuardiaMto(
                                 onValueChange = {},
                                 readOnly = true,
                                 modifier = modifier.fillMaxWidth(),
-                                isError = !guardiasVM.guardiasMtoState.datosObligatorios,
+                                isError = guardiasVM.guardiasMtoState.fechaGuardia == "",
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedBorderColor = Color.Blue,
                                     unfocusedBorderColor = Color.Black,
@@ -217,7 +217,7 @@ fun GuardiaMto(
                             value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario1 }?.nombre
                                 ?: "",
                             onValueChange = { },
-                            isError = !guardiasVM.guardiasMtoState.datosObligatorios,
+                            isError = guardiasVM.guardiasMtoState.codUsuario1 == "0",
                             label = { Text(stringResource(id = R.string.usuario1_lit)) },
                             readOnly = true,
                             trailingIcon = {
@@ -283,7 +283,7 @@ fun GuardiaMto(
                             value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario2 }?.nombre
                                 ?: "",
                             onValueChange = {},
-                            isError = !guardiasVM.guardiasMtoState.datosObligatorios,
+                            isError = guardiasVM.guardiasMtoState.codUsuario2 == "0",
                             label = { Text(stringResource(id = R.string.usuario2_lit)) },
                             readOnly = true,
                             trailingIcon = {

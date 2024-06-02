@@ -38,7 +38,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
-import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.ui.theme.AppColors
 import java.time.LocalDate
 
@@ -58,7 +57,7 @@ fun AnunciosMto(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     if (anunciosVM.anunciosMtoState.codAnuncio == "0") {
-        anunciosVM.setFechaPublicacion(FormatDate.use(LocalDate.now().toString()))
+        anunciosVM.setFechaPublicacion(LocalDate.now().toString())
     }
 
     when (anunciosVM.anunciosMessageState) {
@@ -66,7 +65,7 @@ fun AnunciosMto(
         }
 
         is AnunciosMessageState.Success -> {
-            mensage = if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
+            mensage = if (anunciosVM.anunciosMtoState.codAnuncio == "0") {
                 getString(contexto, R.string.anuncio_create_success)
             } else {
                 getString(contexto, R.string.anuncio_edit_success)
@@ -79,12 +78,13 @@ fun AnunciosMto(
         }
 
         is AnunciosMessageState.Error -> {
-            mensage = if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
+            mensage = if (anunciosVM.anunciosMtoState.codAnuncio == "0") {
                 getString(contexto, R.string.anuncio_create_failure)
             } else {
                 getString(contexto, R.string.anuncio_edit_failure)
             }
-            mensage = mensage + ": " + (anunciosVM.anunciosMessageState as AnunciosMessageState.Error).err
+            mensage =
+                mensage + ": " + (anunciosVM.anunciosMessageState as AnunciosMessageState.Error).err
             onShowSnackBar(mensage, false)
             anunciosVM.resetInfoState()
         }
@@ -122,7 +122,7 @@ fun AnunciosMto(
                         modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxHeight(),
-                        isError = !anunciosVM.anunciosMtoState.datosObligatorios,
+                        isError = anunciosVM.anunciosMtoState.texto == "",
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
@@ -141,8 +141,7 @@ fun AnunciosMto(
                             onDone = {
                                 keyboardController?.hide()
                                 if (anunciosVM.anunciosMtoState.datosObligatorios && anunciosVM.hasStateChanged()) {
-                                    if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
-                                        anunciosVM.setFechaPublicacion(FormatDate.use())
+                                    if (anunciosVM.anunciosMtoState.codAnuncio == "0") {
                                         anunciosVM.setNew()
                                     } else {
                                         anunciosVM.update()
@@ -173,10 +172,9 @@ fun AnunciosMto(
             }
             Spacer(modifier = Modifier.width(100.dp))
             Button(
-                enabled =  anunciosVM.anunciosMtoState.datosObligatorios && anunciosVM.hasStateChanged(),
+                enabled = anunciosVM.anunciosMtoState.datosObligatorios && anunciosVM.hasStateChanged(),
                 onClick = {
-                    if (anunciosVM.anunciosMtoState.codAnuncio.equals("0")) {
-                        anunciosVM.setFechaPublicacion(FormatDate.use())
+                    if (anunciosVM.anunciosMtoState.codAnuncio == "0") {
                         anunciosVM.setNew()
                     } else {
                         anunciosVM.update()

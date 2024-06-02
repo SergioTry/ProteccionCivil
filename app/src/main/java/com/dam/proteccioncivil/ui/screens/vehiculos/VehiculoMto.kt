@@ -43,7 +43,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -53,7 +52,6 @@ import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
 import com.dam.proteccioncivil.ui.theme.AppColors
-import kotlinx.coroutines.Job
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -140,7 +138,7 @@ fun VehiculoMto(
                             unfocusedTextColor = Color.Black,
                             errorTextColor = Color.Red
                         ),
-                        isError = !vehiculosVM.vehiculosMtoState.datosObligatorios,
+                        isError = vehiculosVM.vehiculosMtoState.matricula == "",
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         keyboardActions = KeyboardActions(
@@ -170,7 +168,7 @@ fun VehiculoMto(
                             unfocusedTextColor = Color.Black,
                             errorTextColor = Color.Red
                         ),
-                        isError = !vehiculosVM.vehiculosMtoState.datosObligatorios,
+                        isError = vehiculosVM.vehiculosMtoState.km == "",
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next,
                             keyboardType = KeyboardType.Number
@@ -202,7 +200,7 @@ fun VehiculoMto(
                             unfocusedTextColor = Color.Black,
                             errorTextColor = Color.Red
                         ),
-                        isError = !vehiculosVM.vehiculosMtoState.datosObligatorios,
+                        isError = vehiculosVM.vehiculosMtoState.marca == "",
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         keyboardActions = KeyboardActions(
@@ -232,7 +230,7 @@ fun VehiculoMto(
                             unfocusedTextColor = Color.Black,
                             errorTextColor = Color.Red
                         ),
-                        isError = !vehiculosVM.vehiculosMtoState.datosObligatorios,
+                        isError = vehiculosVM.vehiculosMtoState.modelo == "",
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         keyboardActions = KeyboardActions(
@@ -255,7 +253,7 @@ fun VehiculoMto(
                                 value = FormatVisibleDate.use(vehiculosVM.vehiculosMtoState.fechaMantenimiento),
                                 onValueChange = {},
                                 modifier = Modifier.fillMaxWidth(),
-                                isError = !vehiculosVM.vehiculosMtoState.datosObligatorios,
+                                isError = vehiculosVM.vehiculosMtoState.fechaMantenimiento == "",
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedBorderColor = Color.Blue,
                                     unfocusedBorderColor = Color.Black,
@@ -316,7 +314,7 @@ fun VehiculoMto(
                             unfocusedTextColor = Color.Black,
                             errorTextColor = Color.Red
                         ),
-                        isError = !vehiculosVM.vehiculosMtoState.datosObligatorios,
+                        isError = vehiculosVM.vehiculosMtoState.descripcion == "",
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(

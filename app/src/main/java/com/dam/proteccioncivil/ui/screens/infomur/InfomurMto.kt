@@ -142,7 +142,7 @@ fun InfomurMto(
                                 readOnly = true,
                                 label = { Text(text = stringResource(id = R.string.fechaInfomur_lit)) },
                                 value = FormatVisibleDate.use(infomursVM.infomursMtoState.fechaInfomur),
-                                isError = !infomursVM.infomursMtoState.datosObligatorios,
+                                isError = infomursVM.infomursMtoState.fechaInfomur == "",
                                 onValueChange = {},
                                 modifier = modifier.fillMaxWidth(),
                                 colors = OutlinedTextFieldDefaults.colors(
@@ -187,7 +187,7 @@ fun InfomurMto(
                                 color = AppColors.Black
                             )
                         },
-                        isError = !infomursVM.infomursMtoState.datosObligatorios,
+                        isError = infomursVM.infomursMtoState.descripcion == "",
                         modifier = modifier
                             .fillMaxWidth()
                             .height(80.dp)
@@ -223,7 +223,7 @@ fun InfomurMto(
                             value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario1 }?.nombre
                                 ?: "",
                             onValueChange = { },
-                            isError = !infomursVM.infomursMtoState.datosObligatorios,
+                            isError = infomursVM.infomursMtoState.codUsuario1 == "",
                             label = {
                                 Text(
                                     stringResource(id = R.string.usuario1_lit),
@@ -294,7 +294,7 @@ fun InfomurMto(
                             value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario2 }?.nombre
                                 ?: "",
                             onValueChange = { },
-                            isError = !infomursVM.infomursMtoState.datosObligatorios,
+                            isError = infomursVM.infomursMtoState.codUsuario2 == "",
                             label = {
                                 Text(
                                     stringResource(id = R.string.usuario2_lit),

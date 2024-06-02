@@ -18,7 +18,7 @@ data class UsuariosBusState(
     val lanzarBusqueda: Boolean = false,
     val textoBusqueda: String = "",
     val isDetail: Boolean = false,
-    val changePassword: Boolean = false,
+    val changePasswordChecker: Boolean = false,
     val showDlgDate: Boolean = false,
     val showDlgConfirmation: Boolean = false,
     val showDlgRango: Boolean = false,
