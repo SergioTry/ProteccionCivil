@@ -138,7 +138,8 @@ fun LoginScreen(
                         unfocusedLabelColor = Color.Black,
                         unfocusedBorderColor = Color.Black,
                         errorBorderColor = AppColors.RojoError,
-                        errorLabelColor = Color.Black
+                        errorLabelColor = Color.Black,
+                        errorTextColor = Color.Red
                     ),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     keyboardActions = KeyboardActions(
@@ -165,14 +166,16 @@ fun LoginScreen(
                         .padding(16.dp, 16.dp, 16.dp, 8.dp)
                         .width(280.dp),
                 )
-                OutlinedTextField(colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.Blue,
-                    focusedLabelColor = Color.Blue,
-                    unfocusedLabelColor = Color.Black,
-                    unfocusedBorderColor = Color.Black,
-                    errorBorderColor = AppColors.RojoError,
-                    errorLabelColor = Color.Black
-                ),
+                OutlinedTextField(
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color.Blue,
+                        focusedLabelColor = Color.Blue,
+                        unfocusedLabelColor = Color.Black,
+                        unfocusedBorderColor = Color.Black,
+                        errorBorderColor = AppColors.RojoError,
+                        errorLabelColor = Color.Black,
+                        errorTextColor = Color.Red
+                    ),
                     modifier = modifier
                         .align(Alignment.CenterHorizontally)
                         .background(Color.Transparent)
@@ -208,7 +211,10 @@ fun LoginScreen(
                         val image = if (passwordVisible)
                             Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff
-                        val description = if (passwordVisible) "Hide password" else "Show password"
+                        val description = if (passwordVisible) getString(
+                            contexto,
+                            R.string.hide_password_icon
+                        ) else getString(contexto, R.string.show_password_icon)
                         IconButton(onClick = {
                             if (!loginVM.uiLoginState.isLoading) passwordVisible = !passwordVisible
                         }) {

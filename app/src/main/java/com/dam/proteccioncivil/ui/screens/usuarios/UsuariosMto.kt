@@ -45,6 +45,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -78,6 +80,7 @@ fun UsuariosMto(
     val activity = (LocalContext.current as? Activity)
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
     val scrollState = rememberScrollState()
     var changePassword by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
@@ -157,6 +160,7 @@ fun UsuariosMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         ),
                         readOnly = usuariosVM.usuariosBusState.isDetail,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -186,6 +190,7 @@ fun UsuariosMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         ),
                         readOnly = usuariosVM.usuariosBusState.isDetail,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -214,6 +219,7 @@ fun UsuariosMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         ),
                         readOnly = usuariosVM.usuariosBusState.isDetail,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -248,6 +254,7 @@ fun UsuariosMto(
                                     errorLabelColor = Color.Red,
                                     focusedTextColor = Color.Black,
                                     unfocusedTextColor = Color.Black,
+                                    errorTextColor = Color.Red
                                 ),
                                 textStyle = TextStyle(color = AppColors.Black),
                                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -285,7 +292,9 @@ fun UsuariosMto(
                         isError = usuariosVM.usuariosMtoState.username == "",
                         value = usuariosVM.usuariosMtoState.username,
                         onValueChange = { usuariosVM.setUsername(it) },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(focusRequester),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
@@ -295,6 +304,7 @@ fun UsuariosMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         ),
                         readOnly = usuariosVM.usuariosBusState.isDetail,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -302,8 +312,8 @@ fun UsuariosMto(
                             onNext = { focusManager.moveFocus(FocusDirection.Down) }
                         )
                     )
-                    Spacer(modifier = Modifier.size(16.dp))
                     if (!usuariosVM.usuariosBusState.isDetail) {
+                        Spacer(modifier = Modifier.size(16.dp))
                         Row {
                             Box(
                                 modifier = Modifier.weight(1f)
@@ -332,7 +342,8 @@ fun UsuariosMto(
                                         unfocusedTextColor = Color.Black,
                                         disabledTextColor = Color.Black,
                                         disabledLabelColor = Color.Black,
-                                        disabledBorderColor = Color.Gray
+                                        disabledBorderColor = Color.Gray,
+                                        errorTextColor = Color.Red
                                     ),
                                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                                     keyboardActions = KeyboardActions(
@@ -384,7 +395,8 @@ fun UsuariosMto(
                                 unfocusedTextColor = Color.Black,
                                 disabledTextColor = Color.Black,
                                 disabledLabelColor = Color.Black,
-                                disabledBorderColor = Color.Gray
+                                disabledBorderColor = Color.Gray,
+                                errorTextColor = Color.Red
                             ),
                             textStyle = TextStyle(color = AppColors.Black),
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -432,6 +444,7 @@ fun UsuariosMto(
                                 errorLabelColor = Color.Red,
                                 focusedTextColor = Color.Black,
                                 unfocusedTextColor = Color.Black,
+                                errorTextColor = Color.Red
                             ),
                             trailingIcon = {
                                 if (!usuariosVM.usuariosBusState.isDetail) {
@@ -521,6 +534,7 @@ fun UsuariosMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         ),
                         readOnly = usuariosVM.usuariosBusState.isDetail,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -549,6 +563,7 @@ fun UsuariosMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         ), readOnly = usuariosVM.usuariosBusState.isDetail,
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Done,
@@ -577,6 +592,7 @@ fun UsuariosMto(
                         onClick = {
                             usuariosVM.setShowDlgDate(false)
                             usuariosVM.setFechaNacimiento(it)
+                            focusRequester.requestFocus()
                         },
                         modifier = Modifier,
                         onDismiss = {
@@ -600,7 +616,7 @@ fun UsuariosMto(
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
                     ) {
-                        Text(text = stringResource(id = R.string.opc_cancel))
+                        Text(text = stringResource(id = R.string.opc_cancel), color = Color.Black)
                     }
                     Spacer(modifier = Modifier.width(100.dp))
                     Button(
@@ -617,7 +633,8 @@ fun UsuariosMto(
                                 stringResource(id = R.string.opc_create)
                             } else {
                                 stringResource(id = R.string.opc_edit)
-                            }
+                            },
+                            color = Color.Black
                         )
                     }
                 }

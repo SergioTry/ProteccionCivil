@@ -67,10 +67,6 @@ fun AnunciosBus(
     val mensage: String
     val contexto = LocalContext.current
 
-//    if (anunciosVM.anunciosBusState.loading) {
-//        Loading()
-//    }
-
     when (anunciosVM.anunciosMessageState) {
         is AnunciosMessageState.Loading -> {
         }
@@ -169,7 +165,6 @@ fun AnunciosBus(
                 },
                 onAceptarClick = {
                     anunciosVM.setShowDlgBorrar(false)
-                    //anunciosVM.setLoading(true)
                     anunciosVM.deleteBy()
                 }
             )
@@ -213,12 +208,10 @@ fun AnuncioCard(
                     if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
                         Row {
                             IconButton(
-                                // enabled = !anunciosVM.anunciosUiState.loading,
                                 onClick = {
                                     anunciosVM.resetAnuncioMtoState()
                                     anunciosVM.cloneAnuncioMtoState(anuncio)
                                     anunciosVM.setShowDlgBorrar(true)
-                                    //anunciosVM.setLoading(true)
                                     refresh()
                                 }) {
                                 Icon(
@@ -231,7 +224,6 @@ fun AnuncioCard(
                                 )
                             }
                             IconButton(
-                                //  enabled = !anunciosVM.anunciosBusState.loading,
                                 onClick = {
                                     anunciosVM.resetAnuncioMtoState()
                                     anunciosVM.cloneAnuncioMtoState(anuncio)

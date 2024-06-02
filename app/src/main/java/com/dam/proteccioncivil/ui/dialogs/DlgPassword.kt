@@ -1,5 +1,6 @@
 package com.dam.proteccioncivil.ui.dialogs
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -44,15 +46,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
+import com.dam.proteccioncivil.data.model.Token
+import com.dam.proteccioncivil.ui.main.MainVM
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosMessageState
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
+import com.dam.proteccioncivil.ui.theme.AppColors
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DlgPassword(
     usuariosVM: UsuariosVM,
-    onEstablecerClick: () -> Unit,
-    onPasswordChanged: () -> Unit,
+    mainVM: MainVM,
     onShowSnackBar: (String) -> Unit,
     backToLogin: () -> Unit,
     modifier: Modifier = Modifier
@@ -66,6 +70,30 @@ fun DlgPassword(
     var password2Visible by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
+    when (usuariosVM.usuariosMessageState) {
+        is UsuariosMessageState.Loading -> {
+        }
+
+        is UsuariosMessageState.Success -> {
+            mainVM.setCredentials(
+                mapOf(
+                    "Username" to Token.username!!,
+                    "Password" to usuariosVM.usuariosMtoState.password
+                )
+            )
+            // Preferencias
+            onShowSnackBar(getString(context, R.string.password_establecido))
+            backToLogin()
+            usuariosVM.resetInfoState()
+        }
+
+        is UsuariosMessageState.Error -> {
+            if ((usuariosVM.usuariosMessageState as UsuariosMessageState.Error).backToLogin) backToLogin()
+            onShowSnackBar((usuariosVM.usuariosMessageState as UsuariosMessageState.Error).err)
+            usuariosVM.resetInfoState()
+        }
+    }
+
     Dialog(
         onDismissRequest = {}
     ) {
@@ -74,24 +102,34 @@ fun DlgPassword(
                 .fillMaxWidth()
                 .padding(8.dp),
             shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(AppColors.DialogColors)
         ) {
             Column(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(8.dp, top = 16.dp)
+                    .padding(top = 16.dp, bottom = 8.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = stringResource(R.string.new_password),
-                    modifier = modifier.padding(start = 8.dp),
                     textDecoration = TextDecoration.Underline,
+                    color = Color.Black
                 )
                 Spacer(modifier = modifier.height(16.dp))
                 OutlinedTextField(
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color.LightGray,
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White,
+                        errorContainerColor = Color.White,
+                        errorTextColor = Color.Red,
+                        errorBorderColor = Color.Red,
                         focusedBorderColor = Color.Blue,
                         focusedLabelColor = Color.Blue,
-                        unfocusedLabelColor = Color.Blue
+                        errorLabelColor = Color.Red,
+                        unfocusedLabelColor = Color.Blue,
+                        unfocusedTextColor = Color.Black,
+                        focusedTextColor = Color.Black
                     ),
                     modifier = modifier
                         .align(Alignment.CenterHorizontally)
@@ -120,19 +158,29 @@ fun DlgPassword(
                         val image = if (password1Visible)
                             Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff
-                        val description = if (password1Visible) "Hide password" else "Show password"
+                        val description = if (password1Visible) getString(
+                            context,
+                            R.string.hide_password_icon
+                        ) else getString(context, R.string.show_password_icon)
                         IconButton(onClick = { password1Visible = !password1Visible }) {
-                            Icon(imageVector = image, description)
+                            Icon(imageVector = image, description, tint = Color.Black)
                         }
                     }
                 )
-
+                Spacer(modifier = modifier.height(4.dp))
                 OutlinedTextField(
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color.LightGray,
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White,
+                        errorContainerColor = Color.White,
+                        errorTextColor = Color.Red,
+                        errorBorderColor = Color.Red,
                         focusedBorderColor = Color.Blue,
                         focusedLabelColor = Color.Blue,
-                        unfocusedLabelColor = Color.Blue
+                        errorLabelColor = Color.Red,
+                        unfocusedLabelColor = Color.Blue,
+                        unfocusedTextColor = Color.Black,
+                        focusedTextColor = Color.Black
                     ),
                     modifier = modifier
                         .align(Alignment.CenterHorizontally)
@@ -150,7 +198,7 @@ fun DlgPassword(
                                 usuariosVM.usuariosMtoState.password == usuariosVM.usuariosMtoState.confirmPassword
                             ) {
                                 focusManager.clearFocus()
-                                onEstablecerClick()
+                                usuariosVM.changePassword()
                             }
                         }
                     ),
@@ -169,14 +217,20 @@ fun DlgPassword(
                         val image = if (password2Visible)
                             Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff
-                        val description = if (password2Visible) "Hide password" else "Show password"
+                        val description = if (password2Visible) getString(
+                            context,
+                            R.string.hide_password_icon
+                        ) else getString(context, R.string.show_password_icon)
                         IconButton(onClick = { password2Visible = !password2Visible }) {
-                            Icon(imageVector = image, description)
+                            Icon(imageVector = image, description, tint = Color.Black)
                         }
                     }
                 )
-                Spacer(modifier = modifier.height(4.dp))
+                Spacer(modifier = modifier.height(8.dp))
                 TextButton(
+                    enabled = usuariosVM.usuariosMtoState.password != "" &&
+                            usuariosVM.usuariosMtoState.confirmPassword != "" &&
+                            usuariosVM.usuariosMtoState.password == usuariosVM.usuariosMtoState.confirmPassword,
                     modifier = modifier
                         .align(Alignment.End)
                         .padding(end = 8.dp),
@@ -186,34 +240,20 @@ fun DlgPassword(
                             usuariosVM.usuariosMtoState.password == usuariosVM.usuariosMtoState.confirmPassword
                         ) {
                             keyboardController?.hide()
-                            onEstablecerClick()
+                            usuariosVM.changePassword()
                         }
                     },
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors()
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = AppColors.Blue,
+                        disabledContainerColor = Color.Gray
+                    )
                 ) {
-                    Text(stringResource(id = R.string.btn_establecer))
+                    Text(stringResource(id = R.string.btn_establecer), color = Color.Black)
                 }
                 Spacer(modifier = modifier.height(8.dp))
             }
         }
     }
 
-    when (usuariosVM.usuariosMessageState) {
-        is UsuariosMessageState.Loading -> {
-        }
-
-        is UsuariosMessageState.Success -> {
-            backToLogin()
-            // Preferencias
-            onShowSnackBar(getString(context, R.string.password_establecido))
-            usuariosVM.resetInfoState()
-        }
-
-        is UsuariosMessageState.Error -> {
-            if ((usuariosVM.usuariosMessageState as UsuariosMessageState.Error).backToLogin) backToLogin()
-            onShowSnackBar((usuariosVM.usuariosMessageState as UsuariosMessageState.Error).err)
-            usuariosVM.resetInfoState()
-        }
-    }
 }

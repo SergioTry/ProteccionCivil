@@ -157,6 +157,7 @@ fun PreventivoMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         )
                     )
                     Spacer(modifier = modifier.size(16.dp))
@@ -180,6 +181,7 @@ fun PreventivoMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         )
                     )
                     Spacer(modifier = modifier.size(16.dp))
@@ -378,7 +380,7 @@ fun PreventivoMto(
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
                     ) {
-                        Text(text = stringResource(id = R.string.opc_cancel))
+                        Text(text = stringResource(id = R.string.opc_cancel), color = Color.Black)
                     }
                     Spacer(modifier = modifier.width(100.dp))
                     Button(
@@ -399,7 +401,7 @@ fun PreventivoMto(
                                 stringResource(id = R.string.opc_create)
                             } else {
                                 stringResource(id = R.string.opc_edit)
-                            }
+                            }, color = Color.Black
                         )
                     }
                 }

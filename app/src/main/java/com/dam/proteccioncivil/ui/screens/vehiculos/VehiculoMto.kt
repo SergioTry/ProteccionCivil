@@ -30,9 +30,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -63,6 +66,7 @@ fun VehiculoMto(
     val contexto = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
     val activity = (LocalContext.current as? Activity)
 
     when (vehiculosVM.vehiculosMessageState) {
@@ -134,8 +138,9 @@ fun VehiculoMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         ),
-                        isError = vehiculosVM.vehiculosMtoState.matricula == "",
+                        isError = !vehiculosVM.vehiculosMtoState.datosObligatorios,
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         keyboardActions = KeyboardActions(
@@ -163,8 +168,9 @@ fun VehiculoMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         ),
-                        isError = vehiculosVM.vehiculosMtoState.km == "0",
+                        isError = !vehiculosVM.vehiculosMtoState.datosObligatorios,
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next,
                             keyboardType = KeyboardType.Number
@@ -194,8 +200,9 @@ fun VehiculoMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         ),
-                        isError = vehiculosVM.vehiculosMtoState.marca == "",
+                        isError = !vehiculosVM.vehiculosMtoState.datosObligatorios,
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         keyboardActions = KeyboardActions(
@@ -223,8 +230,9 @@ fun VehiculoMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         ),
-                        isError = vehiculosVM.vehiculosMtoState.modelo == "",
+                        isError = !vehiculosVM.vehiculosMtoState.datosObligatorios,
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         keyboardActions = KeyboardActions(
@@ -247,7 +255,7 @@ fun VehiculoMto(
                                 value = FormatVisibleDate.use(vehiculosVM.vehiculosMtoState.fechaMantenimiento),
                                 onValueChange = {},
                                 modifier = Modifier.fillMaxWidth(),
-                                isError = vehiculosVM.vehiculosMtoState.fechaMantenimiento.isNullOrBlank(),
+                                isError = !vehiculosVM.vehiculosMtoState.datosObligatorios,
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedBorderColor = Color.Blue,
                                     unfocusedBorderColor = Color.Black,
@@ -257,6 +265,7 @@ fun VehiculoMto(
                                     errorLabelColor = Color.Red,
                                     focusedTextColor = Color.Black,
                                     unfocusedTextColor = Color.Black,
+                                    errorTextColor = Color.Red
                                 ),keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                                 keyboardActions = KeyboardActions(
                                     onNext = { focusManager.moveFocus(FocusDirection.Down) }
@@ -295,7 +304,7 @@ fun VehiculoMto(
                         value = vehiculosVM.vehiculosMtoState.descripcion.let { if (it != "null" && it != null) vehiculosVM.vehiculosMtoState.descripcion else "" }
                             ?: "",
                         onValueChange = { vehiculosVM.setDescripcion(it) },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,
@@ -305,8 +314,9 @@ fun VehiculoMto(
                             errorLabelColor = Color.Red,
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
                         ),
-                        isError = vehiculosVM.vehiculosMtoState.descripcion == "",
+                        isError = !vehiculosVM.vehiculosMtoState.datosObligatorios,
                         enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(
@@ -343,7 +353,7 @@ fun VehiculoMto(
                     enabled = vehiculosVM.vehiculosUiState != VehiculosUiState.Loading,
                     colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError),
                 ) {
-                    Text(text = stringResource(id = R.string.opc_cancel))
+                    Text(text = stringResource(id = R.string.opc_cancel), color = Color.Black)
                 }
                 Spacer(modifier = Modifier.width(100.dp))
                 Button(
@@ -362,7 +372,7 @@ fun VehiculoMto(
                             stringResource(id = R.string.opc_create)
                         } else {
                             stringResource(id = R.string.opc_edit)
-                        }
+                        }, color = Color.Black
                     )
                 }
             }
@@ -375,6 +385,7 @@ fun VehiculoMto(
                 if (vehiculosVM.vehiculosUiState != VehiculosUiState.Loading) {
                     vehiculosVM.setShowDlgDate(false)
                     vehiculosVM.setFechaMantenimiento(it)
+                    focusRequester.requestFocus()
                 }
             },
             onDismiss = {
