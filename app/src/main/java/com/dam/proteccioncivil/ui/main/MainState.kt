@@ -10,6 +10,10 @@ data class MainState(
     val showPreferences: Boolean = false
 )
 
+data class PasswordState(
+    val UIpassword: String = "",
+)
+
 data class PrefState(
     val username: String = "",
     val password: String = "",

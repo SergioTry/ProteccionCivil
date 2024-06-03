@@ -311,7 +311,7 @@ fun UsuariosBus(
     }
     if (usuariosVM.usuariosBusState.showDlgConfirmation) {
         DlgConfirmacion(
-            mensaje = R.string.guardia_delete_confirmation,
+            mensaje = R.string.user_delete_confirmation,
             onCancelarClick = {
                 usuariosVM.setShowDlgBorrar(false)
             },

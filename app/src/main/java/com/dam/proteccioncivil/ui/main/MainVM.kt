@@ -33,6 +33,9 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
     var uiPrefState by mutableStateOf(PrefState())
         private set
 
+    var passwordState by mutableStateOf(PasswordState())
+        private set
+
     suspend fun getPreferences(loginVM: LoginVM, showLogin: (Boolean) -> Unit,usuariosVM: UsuariosVM) {
         viewModelScope.async {
             mainRepository.getPreferences().take(1).collect {
@@ -63,7 +66,6 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
                     }
 
                     is LoginUiState.Success -> {
-                        usuariosVM.setPasswordForUi(loginVM.uiLoginState.password)
                         loginVM.resetInfoState()
                         loginVM.resetLogin()
                         showLogin(false)
@@ -90,6 +92,12 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
         } catch (e: Exception) {
             uiInfoState = MainInfoState.Error
         }
+    }
+
+    fun setPasswordForUi(password: String) {
+        passwordState = passwordState.copy(
+            UIpassword = password
+        )
     }
 
     fun setCredentials(credentials: Map<String, String>) {

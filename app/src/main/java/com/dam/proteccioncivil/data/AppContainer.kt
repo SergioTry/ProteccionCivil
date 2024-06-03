@@ -27,7 +27,6 @@ import com.dam.proteccioncivil.data.repository.VehiculosRepository
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
-
 import retrofit2.Retrofit
 
 interface AppContainer {
@@ -45,11 +44,11 @@ class DefaultAppContainer(
     private val context: Context
 ) : AppContainer {
     private val baseUrl = "http://34.175.36.97:49999/api/v1/"
-    //private val baseUrl = "http://192.168.0.93:49999/api/v1/"
-    //private val baseUrl = "http://10.13.72.96:49999/api/v1/"
 
-    private val retrofit: Retrofit = Retrofit.Builder()
-        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+    val json = Json { encodeDefaults = true }
+
+    val retrofit: Retrofit = Retrofit.Builder()
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(baseUrl)
         .build()
 

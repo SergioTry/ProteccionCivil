@@ -57,8 +57,9 @@ import com.dam.proteccioncivil.ui.theme.AppColors
 fun DlgPassword(
     usuariosVM: UsuariosVM,
     mainVM: MainVM,
-    onShowSnackBar: (String) -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit,
     backToLogin: () -> Unit,
+    goHome: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -81,16 +82,25 @@ fun DlgPassword(
                     "Password" to usuariosVM.usuariosMtoState.password
                 )
             )
-            // Preferencias
-            onShowSnackBar(getString(context, R.string.password_establecido))
-            backToLogin()
+            mainVM.setPasswordForUi(usuariosVM.usuariosMtoState.password)
+            Token.password = usuariosVM.usuariosMtoState.password
+            onShowSnackBar(getString(context, R.string.password_establecido), true)
             usuariosVM.resetInfoState()
+            usuariosVM.resetUsuarioMtoState()
+            goHome()
         }
 
         is UsuariosMessageState.Error -> {
-            if ((usuariosVM.usuariosMessageState as UsuariosMessageState.Error).backToLogin) backToLogin()
-            onShowSnackBar((usuariosVM.usuariosMessageState as UsuariosMessageState.Error).err)
+            onShowSnackBar(
+                (usuariosVM.usuariosMessageState as UsuariosMessageState.Error).err,
+                false
+            )
+            usuariosVM.resetUsuarioMtoState()
             usuariosVM.resetInfoState()
+            if ((usuariosVM.usuariosMessageState as UsuariosMessageState.Error).backToLogin) {
+                backToLogin()
+            }
+
         }
     }
 
@@ -204,7 +214,7 @@ fun DlgPassword(
                     ),
                     label = {
                         Text(
-                            stringResource(R.string.lbl_password),
+                            stringResource(R.string.confirmarContrasena_lit),
                             fontWeight = FontWeight.Bold
                         )
                     },

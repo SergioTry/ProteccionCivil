@@ -48,6 +48,8 @@
 
     <!-- Preguntas -->
     <string name="anuncios_delete_confirmation">¿Está seguro de que desea eliminar este anuncio?</string>
+    <string name="user_delete_confirmation">¿Está seguro de que desea eliminar este usuario?</string>
+    <string name="vehicle_delete_confirmation">¿Está seguro de que desea eliminar este vehículo?</string>
     <string name="exit_confirmation">¿Quieres cerrar la aplicación?</string>
     <string name="guardia_delete_confirmation">¿Está seguro de que quiere eliminar esta guardia?</string>
     <string name="infomurs_delete_confirmation">¿Está seguro de que quiere eliminar este infomur?</string>

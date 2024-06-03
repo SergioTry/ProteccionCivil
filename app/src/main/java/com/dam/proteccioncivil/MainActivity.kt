@@ -38,8 +38,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    // Se usa este evento y no el onStop porque al pulsar la opción de salir
+    // desde el menú desplegame, la aplicación se cierra pero se queda ejecutando
+    // en segundo plano hasta que el usuario no se meta al menú de pestañas del
+    // dispositivo y la cierre definitivamente. Esto se hace para mejorar
+    // la eficiencia del sistema operativo. Por lo tanto, el evento onStop no se
+    // dispara hasta que no se cierre completamente la app, por eso se usa el evento que
+    // le precede, el onPause.
+    override fun onPause() {
+        super.onPause()
         mainVM?.savePreferences()
     }
 }

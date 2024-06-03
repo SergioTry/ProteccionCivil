@@ -150,7 +150,10 @@ fun MainApp(
                 MainTopAppBar(
                     currentScreen = currentScreen,
                     canNavigateBack = (currentScreen.name != AppScreens.Splash.name && currentScreen.name != AppScreens.Home.name),
-                    showLoginScreen = { navController.navigate(AppScreens.Login.name) },
+                    showLoginScreen = {
+                        usuariosVM.resetUsuarioMtoState()
+                        navController.navigate(AppScreens.Login.name)
+                    },
                     showPrefScreen = { navController.navigate(AppScreens.Preferences.name) },
                     showAnoScreen = {
                         anunciosVM.getAll()
@@ -208,23 +211,34 @@ fun MainApp(
         )
     }
 
+
     if (mainVM.uiMainState.showDlgPassword) {
         DlgPassword(
             usuariosVM = usuariosVM,
             mainVM = mainVM,
-            onShowSnackBar = {
+            onShowSnackBar = { mensaje, isSuccess ->
                 scope.launch {
-                    snackbarHostState.showSnackbar(it)
+                    if (isSuccess) {
+                        snackbarHostState.showSnackbar(
+                            mensaje,
+                            "",
+                            duration = SnackbarDuration.Short
+                        )
+                    } else {
+                        snackbarHostState.showSnackbar(
+                            mensaje,
+                            duration = SnackbarDuration.Short
+                        )
+                    }
                 }
             },
-//            onPasswordChanged = {
-//                usuariosVM.resetUsuarioMtoState()
-//                mainVM.setShowDlgPassword(false)
-//            },
             backToLogin = {
                 mainVM.setShowDlgPassword(false)
                 usuariosVM.resetUsuarioMtoState()
                 navController.navigate(AppScreens.Login.name)
+            },
+            goHome = {
+                mainVM.setShowDlgPassword(false)
             })
     }
     if (mainVM.uiMainState.showDlgRecursos) {

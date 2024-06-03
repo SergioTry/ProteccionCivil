@@ -25,9 +25,6 @@ data class UsuariosBusState(
     val comboBoxOptionSelected: String = "",
 )
 
-data class PasswordState(
-    val password: String = "",
-)
 data class UsuariosMtoState(
     val codUsuario: String = "0",
     val dni: String = "",

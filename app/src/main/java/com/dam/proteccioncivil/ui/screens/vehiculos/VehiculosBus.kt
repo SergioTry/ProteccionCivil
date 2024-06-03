@@ -300,7 +300,7 @@ fun VehiculosBus(
         }
         if (vehiculosVM.vehiculosBusState.showDlgConfirmation) {
             DlgConfirmacion(
-                mensaje = R.string.guardia_delete_confirmation,
+                mensaje = R.string.vehicle_delete_confirmation,
                 onCancelarClick = {
                     vehiculosVM.setShowDlgBorrar(false)
                 },

@@ -269,6 +269,10 @@ fun CustomSnackBar(
         }
         .build()
     SnackbarHost(snackbarHostState) {
+        // No se ha encontrado una manera simple de asignar un booleano para indicar si
+        // el snackBar es de tipo success o error, por lo que se hace uso del parámetro
+        // predefinido actionLabel para indicar el tipo.
+
         val isSuccess = it.visuals.actionLabel != null
         Snackbar(
             containerColor = MaterialTheme.colorScheme.background,
@@ -285,9 +289,6 @@ fun CustomSnackBar(
                             crossfade(true) // Transición de carga activa
                         }).build(), imageLoader = imageLoader
                 )
-            // No se ha encontrado una manera simple de asignar un booleano para indicar si
-            // el snackBar es de tipo success o error, por lo que se hace uso del parámetro
-            // predefinido actionLabel para indicar el tipo.
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,

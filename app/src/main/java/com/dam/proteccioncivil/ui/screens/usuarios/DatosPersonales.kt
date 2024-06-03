@@ -2,7 +2,6 @@ package com.dam.proteccioncivil.ui.screens.usuarios
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.util.Base64
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -32,26 +33,25 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
-import com.dam.proteccioncivil.data.model.FormatDate
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.LabelledSwitch
-import com.dam.proteccioncivil.ui.main.KeystoreHelper
+import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.ui.main.MainVM
 import com.dam.proteccioncivil.ui.theme.AppColors
 
@@ -63,12 +63,12 @@ fun DatosPersonales(
     onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier
 ) {
-    val uiPrefState = mainVM.uiPrefState
     val mensage: String
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     val contexto = LocalContext.current
     val activity = (LocalContext.current as? Activity)
     val scrollState = rememberScrollState()
-    var confirmPassword by remember { mutableStateOf("") }
 
     when (usuariosVM.usuariosMessageState) {
         is UsuariosMessageState.Loading -> {
@@ -76,11 +76,19 @@ fun DatosPersonales(
 
         is UsuariosMessageState.Success -> {
             mensage = if (usuariosVM.usuariosMtoState.codUsuario == "0") {
-                ContextCompat.getString(contexto, R.string.usuario_create_success)
+                getString(contexto, R.string.usuario_create_success)
             } else {
-                ContextCompat.getString(contexto, R.string.usuario_edit_success)
+                getString(contexto, R.string.usuario_edit_success)
             }
+            mainVM.setCredentials(
+                mapOf(
+                    "Username" to Token.username!!,
+                    "Password" to mainVM.passwordState.UIpassword
+                )
+            )
+            Token.password = mainVM.passwordState.UIpassword
             onShowSnackBar(mensage, true)
+            usuariosVM.setChangePasswordChecker(false)
             usuariosVM.getAll()
             usuariosVM.resetInfoState()
             usuariosVM.resetUsuarioMtoState()
@@ -88,17 +96,13 @@ fun DatosPersonales(
 
         is UsuariosMessageState.Error -> {
             mensage = if (usuariosVM.usuariosMtoState.codUsuario == "0") {
-                ContextCompat.getString(contexto, R.string.usuario_create_failure)
+                getString(contexto, R.string.usuario_create_failure)
             } else {
-                ContextCompat.getString(contexto, R.string.usuario_edit_failure)
+                getString(contexto, R.string.usuario_edit_failure)
             }
             onShowSnackBar(mensage, false)
             usuariosVM.resetInfoState()
         }
-    }
-
-    if (usuariosVM.usuariosMtoState.codUsuario == "0") {
-        usuariosVM.setFechaNacimiento(FormatDate.use())
     }
 
     Box(
@@ -291,12 +295,13 @@ fun DatosPersonales(
                                             color = Color.Black
                                         )
                                     },
-                                    isError = usuariosVM.passwordState.password == "",
-                                    value = usuariosVM.passwordState.password,
+                                    isError = mainVM.passwordState.UIpassword == "",
+                                    value = mainVM.passwordState.UIpassword,
                                     enabled = usuariosVM.usuariosBusState.changePasswordChecker,
                                     onValueChange = {
-                                        usuariosVM.setPasswordForUi(it)
+                                        mainVM.setPasswordForUi(it)
                                     },
+                                    singleLine = true,
                                     modifier = modifier.fillMaxWidth(),
                                     colors = OutlinedTextFieldDefaults.colors(
                                         focusedBorderColor = Color.Blue,
@@ -309,19 +314,17 @@ fun DatosPersonales(
                                         unfocusedTextColor = Color.Black,
                                         disabledTextColor = Color.Black,
                                         disabledBorderColor = Color.Gray
+                                    ),
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                                    keyboardActions = KeyboardActions(
+                                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
                                     )
                                 )
                                 IconButton(
                                     onClick = {
                                         if (usuariosVM.usuariosBusState.changePasswordChecker) {
-                                            val key = KeystoreHelper.getKey()
-                                            usuariosVM.setPasswordForUi(KeystoreHelper.desencriptar(
-                                                datosEncriptados = uiPrefState.password,
-                                                secretKey = key,
-                                                iv = Base64.decode(uiPrefState.iv, Base64.DEFAULT)
-                                            ))
                                             usuariosVM.setChangePasswordChecker(false)
-                                            confirmPassword = ""
+                                            usuariosVM.setConfirmPassword("")
                                         } else {
                                             usuariosVM.setChangePasswordChecker(true)
                                         }
@@ -347,10 +350,12 @@ fun DatosPersonales(
                                         color = Color.Black
                                     )
                                 },
-                                value = confirmPassword,
-                                isError = usuariosVM.usuariosMtoState.confirmPassword == "",
+                                singleLine = true,
+                                value = usuariosVM.usuariosMtoState.confirmPassword,
+                                isError = usuariosVM.usuariosMtoState.confirmPassword == "" ||
+                                        usuariosVM.usuariosMtoState.confirmPassword != mainVM.passwordState.UIpassword,
                                 enabled = usuariosVM.usuariosBusState.changePasswordChecker,
-                                onValueChange = { confirmPassword = it },
+                                onValueChange = { usuariosVM.setConfirmPassword(it) },
                                 modifier = modifier.fillMaxWidth(),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedBorderColor = Color.Blue,
@@ -359,8 +364,25 @@ fun DatosPersonales(
                                     unfocusedLabelColor = Color.Black,
                                     errorBorderColor = Color.Red,
                                     errorLabelColor = Color.Red,
+                                    errorTextColor = Color.Red,
                                     focusedTextColor = Color.Black,
                                     unfocusedTextColor = Color.Black,
+                                ), keyboardOptions = KeyboardOptions(
+                                    imeAction = ImeAction.Done,
+                                ),
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        focusManager.clearFocus()
+                                        keyboardController?.hide()
+                                        if (usuariosVM.usuariosBusState.changePasswordChecker && mainVM.passwordState.UIpassword.isNotEmpty() && usuariosVM.usuariosMtoState.confirmPassword.isNotEmpty()
+                                            && usuariosVM.usuariosMtoState.confirmPassword == mainVM.passwordState.UIpassword
+                                        ) {
+                                            usuariosVM.setPassword(mainVM.passwordState.UIpassword)
+                                            if (usuariosVM.passwordCorrect()) {
+                                                usuariosVM.changePassword()
+                                            }
+                                        }
+                                    }
                                 )
                             )
                         }
@@ -417,22 +439,25 @@ fun DatosPersonales(
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
                     ) {
-                        Text(text = stringResource(id = R.string.opc_cancel))
+                        Text(text = stringResource(id = R.string.opc_cancel),color = Color.Black)
                     }
                     Spacer(modifier = modifier.width(100.dp))
                     Button(
                         colors = ButtonDefaults.buttonColors(containerColor = AppColors.Blue),
-                        enabled = usuariosVM.usuariosBusState.changePasswordChecker && usuariosVM.passwordState.password.isNotEmpty() && confirmPassword.isNotEmpty(),
+
+                        enabled =
+                        usuariosVM.usuariosBusState.changePasswordChecker && mainVM.passwordState.UIpassword.isNotEmpty() && usuariosVM.usuariosMtoState.confirmPassword.isNotEmpty()
+                                && usuariosVM.usuariosMtoState.confirmPassword == mainVM.passwordState.UIpassword,
                         onClick = {
-                            usuariosVM.setPassword(usuariosVM.passwordState.password)
-                            usuariosVM.setConfirmPassword(confirmPassword)
+                            usuariosVM.setPassword(mainVM.passwordState.UIpassword)
                             if (usuariosVM.passwordCorrect()) {
                                 usuariosVM.changePassword()
                             }
                         }
                     ) {
                         Text(
-                            text = stringResource(id = R.string.opc_edit)
+                            text = stringResource(id = R.string.opc_edit),
+                            color = Color.Black
                         )
                     }
                 }

@@ -11,7 +11,6 @@ interface AnunciosRepository {
     suspend fun deleteAnuncio(id: Int)
     suspend fun setAnuncio(anuncioData: Map<String, String>)
     suspend fun updateAnuncio(codAnuncio: Int, anuncioData: Map<String, String>)
-
 }
 
 class NetworkAnunciosRepository(
