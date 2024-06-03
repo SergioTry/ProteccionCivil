@@ -54,8 +54,6 @@ fun PreventivoMtoState.toPreventivo(preventivoMtoState: PreventivoMtoState): Pre
         fechaDia5 = preventivoMtoState.fechaDia5,
         fechaDia6 = preventivoMtoState.fechaDia6,
         fechaDia7 = preventivoMtoState.fechaDia7,
-        usuarios = preventivoMtoState.usuarios,
-        vehiculos = preventivoMtoState.vehiculos
     )
 }
 

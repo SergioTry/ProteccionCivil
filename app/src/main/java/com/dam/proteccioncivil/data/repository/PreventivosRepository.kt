@@ -51,10 +51,10 @@ class NetworkPreventivosRepository(
         action: String?
     ) {
         preventivosApiService.updPreventivo(
-            "Bearer ${Token.token}",
-            codPreventivo,
-            preventiveData,
-            action
+            authToken = "Bearer ${Token.token}",
+            codPreventivo = codPreventivo,
+            body = preventiveData,
+            accion = action
         )
     }
 

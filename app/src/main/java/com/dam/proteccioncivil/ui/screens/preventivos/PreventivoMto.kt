@@ -294,7 +294,11 @@ fun PreventivoMto(
                                 )
                             } else {
                                 LazyRow {
-                                    items(preventivosVM.preventivoMtoState.usuarios!!) { it ->
+                                    // El uso del operador elvis es necesario porque al editar, no sabemos
+                                    // el motivo pero antes de que se cargen los usuarios y se muestre el
+                                    // preventivosBus, se salta ese proceso y el if anterior y llega justo a
+                                    // esta función provocando un null pointer. Poniendo el listOf() se soluciona.
+                                    items(preventivosVM.preventivoMtoState.usuarios ?: listOf()) { it ->
                                         Row(
                                             modifier = modifier
                                                 .border(

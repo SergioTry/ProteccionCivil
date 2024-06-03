@@ -1,9 +1,0 @@
-royecto de ejemplo de app completa:
-https://github.com/android/nowinandroid.git
-
-Proyecto con ejemplos de uso del calendario:
-https://github.com/kizitonwose/Calendar.git
-
-Proyecto de ejemplo de chat:
-
-Hacer uso de ejemplo del proyecto de Agustín
