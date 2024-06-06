@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -57,7 +59,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.ComboBox
@@ -364,16 +365,23 @@ fun usuarioCard(
             Spacer(modifier = modifier.width(28.dp))
             Column {
                 Row(
-                    modifier = modifier.align(Alignment.CenterHorizontally),
-                    horizontalArrangement = Arrangement.End
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(end = 8.dp), // Adding padding to align with card edges
+                    verticalAlignment = Alignment.CenterVertically // Aligning content vertically
                 ) {
-                    Text(
-                        text = usuario.username,
-                        modifier = modifier.align(Alignment.CenterVertically),
-                        color = Color.Black
-                    )
                     Row(
-                        modifier = modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .weight(1f)
+                            .horizontalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            text = usuario.username,
+                            color = Color.Black
+                        )
+                    }
+                    Row(
+                        modifier = Modifier,
                         horizontalArrangement = Arrangement.End
                     ) {
                         IconButton(

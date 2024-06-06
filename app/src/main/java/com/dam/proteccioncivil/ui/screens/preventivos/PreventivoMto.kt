@@ -82,8 +82,6 @@ fun PreventivoMto(
                 getString(context, R.string.preventivo_edit_success)
             }
             onShowSnackBar(mensage, true)
-            preventivosVM.resetInfoState()
-            preventivosVM.resetPreventivoState()
             preventivosVM.getAll()
             refresh()
         }
@@ -109,15 +107,15 @@ fun PreventivoMto(
         preventivosVM.setFechas()
     }
 
-    if (preventivosVM.preventivoBusState.usuarioBorrar) {
-        preventivosVM.setAction(
-            "delete"
-        )
-        preventivosVM.setCodPreventivo(preventivosVM.preventivoMtoState.codPreventivo)
-        preventivosVM.update()
-        preventivosVM.setAction(null)
-        preventivosVM.setUsuarioBorrar(false)
-    }
+//    if (preventivosVM.preventivoBusState.usuarioBorrar) {
+//        preventivosVM.setAction(
+//            "delete"
+//        )
+//        preventivosVM.setCodPreventivo(preventivosVM.preventivoMtoState.codPreventivo)
+//        preventivosVM.update()
+//        preventivosVM.setAction(null)
+//        preventivosVM.setUsuarioBorrar(false)
+//    }
 
     Box(
         modifier = modifier

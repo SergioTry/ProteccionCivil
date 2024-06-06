@@ -57,7 +57,7 @@ class PreventivosVM(
                 && preventivoMtoState.descripcion.isNotBlank()
     }
 
-    fun convertFechas(): MutableList<String?> {
+    fun convertFechas() {
         preventivoMtoState.fechas =
             preventivoMtoState.fechas.filterNotNull().sortedDescending().toMutableList()
         val fechas = preventivoMtoState.fechas + List(7 - preventivoMtoState.fechas.size) { null }
@@ -73,7 +73,6 @@ class PreventivosVM(
                 fechaDia7 = fechas.getOrNull(6)
             )
         }!!
-        return preventivoMtoState.fechas
     }
 
 
@@ -85,7 +84,7 @@ class PreventivosVM(
         preventivoBusState = preventivoBusState.copy(usuarioBorrar = usuarioBorrar)
     }
 
-    fun setIsBorrado(isBorrado: Boolean) {
+    fun setIsBorrado(isBorrado: Boolean?) {
         preventivoBusState = preventivoBusState.copy(isBorrado = isBorrado)
     }
 

@@ -775,6 +775,8 @@ private fun NavHostRoutes(
                 refresh = {
                     navController.popBackStack(AppScreens.Preventivos.name, true)
                     navController.navigate(AppScreens.Preventivos.name)
+                    preventivosVM.resetInfoState()
+                    preventivosVM.resetPreventivoState()
                 })
         }
 

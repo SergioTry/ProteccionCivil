@@ -15,16 +15,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -113,10 +116,12 @@ fun PreventivosBus(
         }
 
         is PreventivosMessageState.Success -> {
-            mensage = getString(
-                contexto,
-                R.string.preventivo_delete_success
-            )
+            mensage = when (preventivosVM.preventivoBusState.isBorrado) {
+                true -> getString(contexto, R.string.preventivo_delete_success)
+                false -> getString(contexto, R.string.apuntado_success)
+                else -> getString(contexto, R.string.desapuntado_success)
+            }
+            preventivosVM.setIsBorrado(null)
             onShowSnackBar(mensage, true)
             preventivosVM.resetPreventivoState()
             preventivosVM.resetInfoState()
@@ -270,6 +275,9 @@ fun PreventivosBus(
                                     else
                                         "add"
                                 )
+                                preventivosVM.setIsBorrado(
+                                    if (preventivosVM.preventivoBusState.action == "delete") null else false
+                                )
                                 preventivosVM.update()
                                 preventivosVM.setAction(null)
                             },
@@ -307,7 +315,8 @@ fun PreventivosBus(
                 FloatingActionButton(
                     onClick = {
                         preventivosVM.resetPreventivoState()
-                        onNavUp()},
+                        onNavUp()
+                    },
                     containerColor = AppColors.Blue,
                     elevation = FloatingActionButtonDefaults.elevation(8.dp),
                 ) {
@@ -353,24 +362,33 @@ fun PreventivoCard(
         colors = CardDefaults.cardColors(AppColors.Posit)
     ) {
         Column {
-            Row(modifier = modifier.fillMaxWidth()) {
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(6.dp),
+                verticalAlignment = Alignment.CenterVertically // Align items vertically centered
+            ) {
                 Image(
                     painter = painterResource(if (preventivo.riesgo.toInt() == 0) R.drawable.preventivos else R.drawable.siren_transparent_png),
                     contentDescription = stringResource(if (preventivo.riesgo.toInt() == 0) R.string.preventivos_image else R.string.preventivos_riesgo_image),
                     modifier = modifier
-                        .padding(6.dp)
                         .size(80.dp)
-                        .align(Alignment.Top)
                 )
-                Text(
-                    text = preventivo.titulo,
+                Spacer(modifier = modifier.width(8.dp))
+                Column(
                     modifier = modifier
-                        .align(Alignment.CenterVertically),
-                    color = Color.Black
-                )
+                        .weight(1f)
+                        .heightIn(max = 60.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(
+                        text = preventivo.titulo,
+                        color = Color.Black
+                    )
+                }
                 Row(
-                    modifier = modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = {
                         preventivosVM.resetPreventivoState()
@@ -489,7 +507,7 @@ fun PreventivoCard(
                 }
             }
             if (preventivosVM.preventivoBusState.showDlgBorrar) {
-                if (preventivosVM.preventivoBusState.isBorrado) {
+                if (preventivosVM.preventivoBusState.isBorrado != null && preventivosVM.preventivoBusState.isBorrado!!) {
                     DlgConfirmacion(
                         mensaje = R.string.preventivo_delete_confirmation,
                         onCancelarClick = {
@@ -515,6 +533,7 @@ fun PreventivoCard(
             }
         }
     }
+
 }
 
 @Composable

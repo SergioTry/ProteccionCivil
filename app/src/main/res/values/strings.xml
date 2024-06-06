@@ -197,5 +197,7 @@
     <string name="range_jef_db">JefeServicio</string>
     <string name="range_adm">Admin</string>
     <string name="range">rango</string>
+    <string name="desapuntado_success">Has sido desapuntado con exito del preventivo</string>
+    <string name="apuntado_success">Has sido apuntado con exito al preventivo</string>
 
 </resources>
