@@ -62,10 +62,22 @@ import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.LabelledSwitch
+import com.dam.proteccioncivil.data.model.esMayorDeEdad
 import com.dam.proteccioncivil.data.model.rangos
 import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
 import com.dam.proteccioncivil.ui.theme.AppColors
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
+fun parseFechaNacimiento(fechaNacimiento: String): LocalDateTime {
+    return try {
+        ZonedDateTime.parse(fechaNacimiento, DateTimeFormatter.ISO_DATE_TIME).toLocalDateTime()
+    } catch (e: Exception) {
+        LocalDate.parse(fechaNacimiento, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay()
+    }
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -84,7 +96,15 @@ fun UsuariosMto(
     val scrollState = rememberScrollState()
     var changePassword by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
+    var rangosCopy : MutableList<String> = rangos.toMutableList()
+    val mayorEdad = esMayorDeEdad(
+            parseFechaNacimiento(usuariosVM.usuariosMtoState.fechaNacimiento)
+        )
 
+    if(!mayorEdad){
+        rangosCopy.remove("jefeservicio")
+        rangosCopy.remove("administrador")
+    }
 
     when (usuariosVM.usuariosMessageState) {
         is UsuariosMessageState.Loading -> {
@@ -146,7 +166,9 @@ fun UsuariosMto(
                             )
                         },
                         value = usuariosVM.usuariosMtoState.dni,
-                        isError = usuariosVM.usuariosMtoState.dni == "" || !usuariosVM.dniRegex.matches(usuariosVM.usuariosMtoState.dni),
+                        isError = usuariosVM.usuariosMtoState.dni == "" || !usuariosVM.dniRegex.matches(
+                            usuariosVM.usuariosMtoState.dni
+                        ),
                         onValueChange = { usuariosVM.setDni(it) },
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -465,7 +487,7 @@ fun UsuariosMto(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
                         ) {
-                            rangos.forEach { opcion ->
+                            rangosCopy.forEach { opcion ->
                                 DropdownMenuItem(
                                     text = {
                                         Text(
@@ -500,7 +522,7 @@ fun UsuariosMto(
                         checked = usuariosVM.usuariosMtoState.conductor,
                         label = stringResource(id = R.string.conductor_lit),
                         onCheckedChange = {
-                            if (!usuariosVM.usuariosBusState.isDetail) {
+                            if (!usuariosVM.usuariosBusState.isDetail && mayorEdad) {
                                 usuariosVM.setConductor(it)
                             }
                         },
@@ -624,7 +646,12 @@ fun UsuariosMto(
                         enabled = usuariosVM.usuariosMtoState.datosObligatorios && usuariosVM.hasStateChanged() ||
                                 changePassword && usuariosVM.usuariosMtoState.password.isNotEmpty() && usuariosVM.usuariosMtoState.confirmPassword.isNotEmpty(),
                         onClick = {
-                            ExcuteAction(changePassword, usuariosVM.usuariosMtoState.password, usuariosVM.usuariosMtoState.confirmPassword, usuariosVM)
+                            ExcuteAction(
+                                changePassword,
+                                usuariosVM.usuariosMtoState.password,
+                                usuariosVM.usuariosMtoState.confirmPassword,
+                                usuariosVM
+                            )
                         }
                     ) {
                         Text(
