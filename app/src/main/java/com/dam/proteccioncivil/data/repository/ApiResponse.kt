@@ -11,3 +11,5 @@ data class ApiResponse(
     @SerialName("status") val status: Int,
     @SerialName("body") val body: JsonElement
 )
+
+

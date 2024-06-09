@@ -29,13 +29,13 @@ interface InfomursApiService {
     suspend fun deleteInfomur(
         @Header("Authorization") authToken: String,
         @Path("codInfomur") id: Int
-    )
+    ): ApiResponse
 
     @PUT("infomurs/{codInfomur}")
     suspend fun updateInfomur(
         @Header("Authorization") authToken: String,
         @Path("codInfomur") id: Int,
         @Body body: Map<String, String>
-    )
+    ): ApiResponse
 
 }

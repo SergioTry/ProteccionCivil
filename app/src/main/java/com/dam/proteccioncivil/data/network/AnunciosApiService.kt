@@ -12,22 +12,28 @@ import retrofit2.http.Path
 interface AnunciosApiService {
 
     @GET("anuncios")
-    suspend fun getAnuncios(@Header("Authorization") authToken: String): ApiResponse
+    suspend fun getAnuncios(
+        @Header("Authorization") authToken: String
+    ): ApiResponse
 
     @POST("anuncios")
-    suspend fun altaAnuncio(@Header("Authorization") authToken: String,@Body body: Map<String, String>): ApiResponse
+    suspend fun altaAnuncio(
+        @Header("Authorization") authToken: String,
+        @Body body: Map<String, String>
+    ): ApiResponse
 
     @DELETE("anuncios/{codAnuncio}")
     suspend fun deleteAnuncio(
         @Header("Authorization") authToken: String,
         @Path("codAnuncio") id: Int
-    )
+    ): ApiResponse
 
     @PUT("anuncios/{codAnuncio}")
     suspend fun updateAnuncio(
         @Header("Authorization") authToken: String,
         @Path("codAnuncio") id: Int,
         @Body body: Map<String, String>
-    )
+    ): ApiResponse
 
 }
+

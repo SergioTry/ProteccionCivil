@@ -15,7 +15,8 @@ data class InfomursMtoState(
 data class InfomursBusState(
     val isDetail: Boolean = false,
     val showDlgDate: Boolean = false,
-    val showDlgConfirmation: Boolean = false)
+    val showDlgConfirmation: Boolean = false
+)
 
 fun InfomursMtoState.toInfomur(): Infomur = Infomur(
     codInfomur = if (codInfomur.isEmpty()) 0 else codInfomur.toInt(),
@@ -26,14 +27,23 @@ fun InfomursMtoState.toInfomur(): Infomur = Infomur(
 )
 
 sealed interface InfomursUiState {
-    data class Success(val infomurs: List<Infomur>) : InfomursUiState
-    data class Error(val err: String) : InfomursUiState
+    data class Success(
+        val infomurs: List<Infomur>
+    ) : InfomursUiState
+
+    data class Error(
+        val err: String
+    ) : InfomursUiState
+
     object Loading : InfomursUiState
 }
 
 sealed interface InfomursMessageState {
     data object Success : InfomursMessageState
-    data class Error(val err: String) : InfomursMessageState
+    data class Error(
+        val err: String
+    ) : InfomursMessageState
+
     data object Loading : InfomursMessageState
 }
 

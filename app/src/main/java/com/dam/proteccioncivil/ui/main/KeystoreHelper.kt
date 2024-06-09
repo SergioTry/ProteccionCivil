@@ -7,7 +7,6 @@ import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
-import javax.crypto.spec.IvParameterSpec
 
 object KeystoreHelper {
 
@@ -50,15 +49,16 @@ object KeystoreHelper {
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         cipher.init(Cipher.ENCRYPT_MODE, secretKey)
         val datosEncriptadosBytes = cipher.doFinal(datos.toByteArray())
-        val datosEncriptados = android.util.Base64.encodeToString(datosEncriptadosBytes, android.util.Base64.DEFAULT)
+        val datosEncriptados =
+            android.util.Base64.encodeToString(datosEncriptadosBytes, android.util.Base64.DEFAULT)
         return Pair(datosEncriptados, cipher.iv)
     }
-
 
     @Throws(Exception::class)
     fun desencriptar(datosEncriptados: String, iv: ByteArray, secretKey: SecretKey): String {
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-        val datosEncriptadosBytes = android.util.Base64.decode(datosEncriptados, android.util.Base64.DEFAULT)
+        val datosEncriptadosBytes =
+            android.util.Base64.decode(datosEncriptados, android.util.Base64.DEFAULT)
         val gcmSpec = GCMParameterSpec(128, iv)  // 128 es el tamaño del tag de autenticación
         cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmSpec)
         val datosDesencriptadosBytes = cipher.doFinal(datosEncriptadosBytes)

@@ -32,8 +32,6 @@ class LoginVM(
     var uiLoginState by mutableStateOf(LoginState())
         private set
 
-    // Ese método recibirá el mainVM en caso de que
-    // el usuario quiera activar el autoinicio de sesión.
     suspend fun loginAysnc(mainVM: MainVM, saveToken: Boolean = false) {
         uiInfoState = LoginUiState.Loading
         uiInfoState = try {

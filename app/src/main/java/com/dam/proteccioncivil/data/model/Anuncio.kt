@@ -9,3 +9,5 @@ data class Anuncio(
     @SerialName("FechaPublicacion") val fechaPublicacion: String,
     @SerialName("Texto") var texto: String
 )
+
+

@@ -44,12 +44,13 @@ interface UsuariosApiService {
     suspend fun deleteUsuario(
         @Header("Authorization") authToken: String,
         @Path("codUsuario") id: Int
-    )
+    ): ApiResponse
 
     @PUT("usuarios/{codUsuario}")
     suspend fun updateUsuario(
         @Header("Authorization") authToken: String,
         @Path("codUsuario") id: Int,
         @Body body: Map<String, String>
-    )
+    ): ApiResponse
 }
+

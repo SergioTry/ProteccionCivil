@@ -71,9 +71,9 @@ fun Calendario(
 ) {
     val contexto = LocalContext.current
     val currentMonth = remember { YearMonth.now() }
-    val startMonth = remember { currentMonth.minusMonths(200) } // Adjust as needed
-    val endMonth = remember { currentMonth.plusMonths(200) } // Adjust as needed
-    val daysOfWeek = remember { daysOfWeek(DayOfWeek.MONDAY) } // Available from the library
+    val startMonth = remember { currentMonth.minusMonths(200) }
+    val endMonth = remember { currentMonth.plusMonths(200) }
+    val daysOfWeek = remember { daysOfWeek(DayOfWeek.MONDAY) }
     var selection by remember { mutableStateOf<CalendarDay?>(null) }
 
     val servicesInSelectedDate = remember {
@@ -108,7 +108,7 @@ fun Calendario(
             val visibleMonth = rememberFirstCompletelyVisibleMonth(state)
 
             LaunchedEffect(visibleMonth) {
-                // Clear selection if we scroll to a new month.
+                // Borra la selection si se cambia de mes.
                 selection = null
             }
             SimpleCalendarTitle(
@@ -117,12 +117,16 @@ fun Calendario(
                 currentMonth = visibleMonth.yearMonth,
                 goToPrevious = {
                     coroutineScope.launch {
-                        state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.previousMonth)
+                        state.animateScrollToMonth(
+                            state.firstVisibleMonth.yearMonth.previousMonth
+                        )
                     }
                 },
                 goToNext = {
                     coroutineScope.launch {
-                        state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.nextMonth)
+                        state.animateScrollToMonth(
+                            state.firstVisibleMonth.yearMonth.nextMonth
+                        )
                     }
                 },
             )
@@ -159,7 +163,8 @@ fun Calendario(
                     .fillMaxWidth()
                     .padding(start = 2.dp, end = 2.dp)
             ) {
-                items(items = servicesInSelectedDate.value) { servicio ->
+                items(items = servicesInSelectedDate.value)
+                { servicio ->
                     ServiceInformation(servicio)
                 }
             }
