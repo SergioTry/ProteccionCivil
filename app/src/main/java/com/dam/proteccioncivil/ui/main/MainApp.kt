@@ -183,7 +183,8 @@ fun MainApp(
                     mainVM = mainVM,
                     resetFilters = {
                         resetFilters(usuariosVM, vehiculosVM, preventivosVM)
-                    }
+                    },
+                    vehiculosVM = vehiculosVM,
                 )
             }
         },

@@ -53,6 +53,7 @@ import coil.request.ImageRequest
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.ui.screens.calendario.CalendarioVM
+import com.dam.proteccioncivil.ui.screens.vehiculos.VehiculosVM
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -177,6 +178,7 @@ fun MainBottomBar(
     navController: NavHostController,
     mainVM: MainVM,
     resetFilters: () -> Unit,
+    vehiculosVM: VehiculosVM
 ) {
     NavigationBar(containerColor = MaterialTheme.colorScheme.primary) {
         for ((clave, valor) in menuOptions) {
@@ -218,6 +220,7 @@ fun MainBottomBar(
                             label = { Text(stringResource(R.string.screen_name_vehicles)) },
                             selected = false,
                             onClick = {
+                                vehiculosVM.getAll()
                                 selectOption(
                                     clave = Icons.Default.DirectionsCar,
                                     navController = navController,
