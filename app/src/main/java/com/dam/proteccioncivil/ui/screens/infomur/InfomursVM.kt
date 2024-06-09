@@ -14,6 +14,7 @@ import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Infomur
 import com.dam.proteccioncivil.data.model.ObjectToStringMap
+import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.InfomursRepository
 import com.dam.proteccioncivil.data.repository.UsuariosRepository
@@ -90,15 +91,27 @@ class InfomursVM(
         viewModelScope.launch {
             infomursUiState = InfomursUiState.Loading
             infomursUiState = try {
-                var infomurs: List<Infomur>?
-                withTimeout(timeoutMillis) {
-                    users.addAll(usuarioRepository.getUsuarios())
-                    infomurs = infomursRepository.getInfomurs()
-                }
-                if (infomurs != null) {
-                    InfomursUiState.Success(infomurs!!)
-                } else {
-                    InfomursUiState.Error("Error, no se ha recibido respuesta del servidor")
+                if(Token.rango == "Voluntario"){
+                    var infomurs: List<Infomur>?
+                    withTimeout(timeoutMillis) {
+                        infomurs = infomursRepository.getInfomurs()
+                    }
+                    if (infomurs != null) {
+                        InfomursUiState.Success(infomurs!!)
+                    } else {
+                        InfomursUiState.Error("Error, no se ha recibido respuesta del servidor")
+                    }
+                }else{
+                    var infomurs: List<Infomur>?
+                    withTimeout(timeoutMillis) {
+                        users.addAll(usuarioRepository.getUsuarios())
+                        infomurs = infomursRepository.getInfomurs()
+                    }
+                    if (infomurs != null) {
+                        InfomursUiState.Success(infomurs!!)
+                    } else {
+                        InfomursUiState.Error("Error, no se ha recibido respuesta del servidor")
+                    }
                 }
             } catch (e: IOException) {
                 InfomursUiState.Error(e.message.toString())

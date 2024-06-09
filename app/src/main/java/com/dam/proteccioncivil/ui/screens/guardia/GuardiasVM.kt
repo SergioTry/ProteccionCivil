@@ -14,6 +14,7 @@ import com.dam.proteccioncivil.MainApplication
 import com.dam.proteccioncivil.data.model.CRUD
 import com.dam.proteccioncivil.data.model.Guardia
 import com.dam.proteccioncivil.data.model.ObjectToStringMap
+import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.GuardiasRepository
@@ -91,17 +92,29 @@ class GuardiasVM(
         viewModelScope.launch {
             guardiasUiState = GuardiasUiState.Loading
             guardiasUiState = try {
-                var guardias: List<Guardia>?
-                var usuarios: List<Usuario>?
-                withTimeout(timeoutMillis) {
-                    usuarios = usuariosRepository.getUsuarios()
-                    guardias = guardiasRepository.getGuardias()
-                }
-                if (guardias != null && usuarios!= null) {
-                    users.addAll(usuarios!!)
-                    GuardiasUiState.Success(guardias!!)
-                } else {
-                    GuardiasUiState.Error("Error, no se ha recibido respuesta del servidor")
+                if(Token.rango == "Voluntario"){
+                    var guardias: List<Guardia>?
+                    withTimeout(timeoutMillis) {
+                        guardias = guardiasRepository.getGuardias()
+                    }
+                    if (guardias != null) {
+                        GuardiasUiState.Success(guardias!!)
+                    } else {
+                        GuardiasUiState.Error("Error, no se ha recibido respuesta del servidor")
+                    }
+                }else{
+                    var guardias: List<Guardia>?
+                    var usuarios: List<Usuario>?
+                    withTimeout(timeoutMillis) {
+                        usuarios = usuariosRepository.getUsuarios()
+                        guardias = guardiasRepository.getGuardias()
+                    }
+                    if (guardias != null && usuarios!= null) {
+                        users.addAll(usuarios!!)
+                        GuardiasUiState.Success(guardias!!)
+                    } else {
+                        GuardiasUiState.Error("Error, no se ha recibido respuesta del servidor")
+                    }
                 }
             } catch (e: IOException) {
                 GuardiasUiState.Error(e.message.toString())
