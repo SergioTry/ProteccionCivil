@@ -289,7 +289,7 @@ fun UsuariosBus(
                     tint = AppColors.White
                 )
             }
-            if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
+            if (Token.rango == "Admin") {
                 FloatingActionButton(
                     onClick = {
                         if (usuariosVM.usuariosUiState != UsuariosUiState.Loading) {
@@ -400,7 +400,7 @@ fun usuarioCard(
                                 tint = Color.Black
                             )
                         }
-                        if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
+                        if (Token.rango == "Admin") {
                             IconButton(
                                 onClick = {
                                     usuariosVM.resetUsuarioMtoState()

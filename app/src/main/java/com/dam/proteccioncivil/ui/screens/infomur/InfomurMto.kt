@@ -189,10 +189,17 @@ fun InfomurMto(
                             )
                         },
                         isError = infomursVM.infomursMtoState.descripcion == "",
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .height(80.dp)
-                            .focusRequester(focusRequester),
+                        modifier = if (Token.rango == "Voluntario") {
+                            modifier
+                                .height(200.dp)
+                                .fillMaxWidth()
+                            .focusRequester(focusRequester)
+                        } else {
+                            modifier
+                                .fillMaxWidth()
+                                .height(80.dp)
+                                .focusRequester(focusRequester)
+                        },
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,

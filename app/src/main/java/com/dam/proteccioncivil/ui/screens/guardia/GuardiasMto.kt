@@ -181,9 +181,17 @@ fun GuardiaMto(
                         label = { Text(stringResource(id = R.string.descripcion_lit)) },
                         onValueChange = {
                             guardiasVM.setDescripcion(it)
-                        }, modifier = modifier
-                            .fillMaxWidth()
-                            .height(80.dp).focusRequester(focusRequester),
+                        }, modifier = if (Token.rango == "Voluntario") {
+                            modifier
+                                .height(200.dp)
+                                .fillMaxWidth()
+                                .focusRequester(focusRequester)
+                        } else {
+                            modifier
+                                .fillMaxWidth()
+                                .height(80.dp)
+                                .focusRequester(focusRequester)
+                        },
                         readOnly = guardiasVM.guardiasBusState.isDetail,
                         isError = guardiasVM.guardiasMtoState.descripcion == "",
                         colors = OutlinedTextFieldDefaults.colors(
