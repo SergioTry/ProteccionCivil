@@ -103,8 +103,10 @@ fun PreventivoMto(
         preventivosVM.delFecha()
     }
 
-    if (preventivosVM.preventivoMtoState.codPreventivo != -1) {
+    if (preventivosVM.preventivoMtoState.codPreventivo != -1 && !preventivosVM.preventivoBusState.isDetail) {
         preventivosVM.setFechas()
+    }else if( preventivosVM.preventivoBusState.isDetail){
+        preventivosVM.setFechasForDetail()
     }
 
 //    if (preventivosVM.preventivoBusState.usuarioBorrar) {
