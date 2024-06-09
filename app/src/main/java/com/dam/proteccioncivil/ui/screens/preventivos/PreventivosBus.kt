@@ -269,12 +269,6 @@ fun PreventivosBus(
                             preventivosVM = preventivosVM,
                             contexto = contexto,
                             action = {
-                                preventivosVM.setAction(
-                                    if (it.usuarios?.firstOrNull { usuario -> usuario.codUsuario == Token.codUsuario } != null)
-                                        "delete"
-                                    else
-                                        "add"
-                                )
                                 preventivosVM.update()
                                 preventivosVM.setAction(null)
                             },
@@ -434,7 +428,6 @@ fun PreventivoCard(
                     onClick = {
                         preventivosVM.resetPreventivoState()
                         preventivosVM.clonePreventivoState(preventivo)
-                        preventivosVM.setShowDlgBorrar(true)
                         preventivosVM.setIsBorrado(
                             if (apuntado) {
                                 null
@@ -442,6 +435,14 @@ fun PreventivoCard(
                                 false
                             }
                         )
+                        preventivosVM.setAction(
+                            if (apuntado) {
+                                "delete"
+                            } else {
+                                "add"
+                            }
+                        )
+                        preventivosVM.setShowDlgBorrar(true)
                     },
                     modifier = modifier
                         .fillMaxWidth()
