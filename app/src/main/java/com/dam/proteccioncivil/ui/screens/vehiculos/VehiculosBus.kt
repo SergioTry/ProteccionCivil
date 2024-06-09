@@ -30,7 +30,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -427,19 +426,6 @@ fun vehiculoCard(
                     modifier = modifier.padding(start = 8.dp),
                     color = Color.Black
                 )
-                Spacer(modifier = modifier.height(8.dp))
-                if (Token.rango == "Admin" || Token.rango == "JefeServicio" || ShortToBoolean.use(
-                        Token.conductor?.toShort()
-                    )
-                ) {
-                    Button(
-                        onClick = { /*TODO*/ },
-                        enabled = enabled,
-                        modifier = modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Text(stringResource(id = R.string.asignar_lit))
-                    }
-                }
             }
         }
     }

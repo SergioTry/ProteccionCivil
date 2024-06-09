@@ -71,11 +71,16 @@ import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
-fun parseFechaNacimiento(fechaNacimiento: String): LocalDateTime {
+fun parseFechaNacimiento(fechaNacimiento: String): LocalDateTime? {
     return try {
         ZonedDateTime.parse(fechaNacimiento, DateTimeFormatter.ISO_DATE_TIME).toLocalDateTime()
     } catch (e: Exception) {
-        LocalDate.parse(fechaNacimiento, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay()
+        try {
+            LocalDate.parse(fechaNacimiento, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay()
+        }
+        catch (e: Exception) {
+            null
+        }
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,9 +102,13 @@ fun UsuariosMto(
     var changePassword by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
     var rangosCopy : MutableList<String> = rangos.toMutableList()
-    val mayorEdad = esMayorDeEdad(
-            parseFechaNacimiento(usuariosVM.usuariosMtoState.fechaNacimiento)
+    var mayorEdad = false
+
+    if(parseFechaNacimiento(usuariosVM.usuariosMtoState.fechaNacimiento) != null) {
+        mayorEdad = esMayorDeEdad(
+            parseFechaNacimiento(usuariosVM.usuariosMtoState.fechaNacimiento)!!
         )
+    }
 
     if(!mayorEdad){
         rangosCopy.remove("jefeservicio")
