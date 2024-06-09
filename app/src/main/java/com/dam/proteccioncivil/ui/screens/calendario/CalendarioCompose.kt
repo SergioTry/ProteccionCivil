@@ -78,7 +78,7 @@ fun SimpleCalendarTitle(
                 fontSize = 24.sp,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.tertiary,
+                color = MaterialTheme.colorScheme.background,
             )
         }
         CalendarNavigationIcon(
@@ -108,7 +108,7 @@ private fun CalendarNavigationIcon(
             .align(Alignment.Center),
         painter = icon,
         contentDescription = contentDescription,
-        tint = MaterialTheme.colorScheme.tertiary
+        tint = MaterialTheme.colorScheme.background,
     )
 }
 
@@ -186,7 +186,7 @@ fun MonthHeader(
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.tertiary,
+                color = MaterialTheme.colorScheme.background,
                 text = dayOfWeek.displayText(uppercase = true),
                 fontWeight = FontWeight.Medium,
             )

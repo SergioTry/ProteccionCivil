@@ -39,6 +39,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.Locale
 
+//Tiempo máximo de espera para una petición
 val timeoutMillis: Long = 5000
 
 val filtrosUsuarios = listOf("+18", "Conductores", "Rango")

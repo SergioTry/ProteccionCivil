@@ -27,3 +27,4 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
         )
     }
 }
+

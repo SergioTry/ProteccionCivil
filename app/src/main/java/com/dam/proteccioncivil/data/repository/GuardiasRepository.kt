@@ -8,36 +8,59 @@ import kotlinx.serialization.json.decodeFromJsonElement
 
 interface GuardiasRepository {
     suspend fun getGuardias(): List<Guardia>
-    suspend fun getGuardiasUsuario(codUsuario: Int): List<Guardia>
-    suspend fun deleteGuardia(id: Int)
-    suspend fun setGuardia(guardiaData: Map<String, String>)
-    suspend fun updateGuardia(codGuardia: Int, guardiaData: Map<String, String>)
+    suspend fun getGuardiasUsuario(
+        codUsuario: Int
+    ): List<Guardia>
 
+    suspend fun deleteGuardia(id: Int)
+    suspend fun setGuardia(
+        guardiaData: Map<String, String>
+    )
+
+    suspend fun updateGuardia(
+        codGuardia: Int,
+        guardiaData: Map<String, String>
+    )
 }
+
 
 class NetworkGuardiasRepository(
     private val guardiasApiService: GuardiasApiService
 ) : GuardiasRepository {
     override suspend fun getGuardias(): List<Guardia> {
-        val apiResponse = guardiasApiService.getGuardias("Bearer ${Token.token}")
+        val apiResponse = guardiasApiService.getGuardias(
+            "Bearer ${Token.token}"
+        )
         return Json.decodeFromJsonElement<List<Guardia>>(apiResponse.body)
     }
-
     override suspend fun getGuardiasUsuario(codUsuario: Int): List<Guardia> {
-        val apiResponse = guardiasApiService.getGuardiasUsuario("Bearer ${Token.token}", codUsuario)
+        val apiResponse = guardiasApiService.getGuardiasUsuario(
+            "Bearer ${Token.token}",
+            codUsuario
+        )
         return Json.decodeFromJsonElement<List<Guardia>>(apiResponse.body)
     }
-
     override suspend fun deleteGuardia(id: Int) {
         guardiasApiService.deleteGuardia("Bearer ${Token.token}", id)
     }
-
-    override suspend fun setGuardia(guardiaData: Map<String, String>) {
-        guardiasApiService.altaGuardia("Bearer ${Token.token}", guardiaData)
+    override suspend fun setGuardia(
+        guardiaData: Map<String, String>
+    ) {
+        guardiasApiService.altaGuardia(
+            "Bearer ${Token.token}",
+            guardiaData
+        )
     }
-
-    override suspend fun updateGuardia(codGuardia: Int, guardiaData: Map<String, String>) {
-        guardiasApiService.updateGuardia("Bearer ${Token.token}", codGuardia, guardiaData)
+    override suspend fun updateGuardia(
+        codGuardia: Int,
+        guardiaData: Map<String, String>
+    ) {
+        guardiasApiService.updateGuardia(
+            "Bearer ${Token.token}",
+            codGuardia, guardiaData
+        )
     }
-
 }
+
+
+

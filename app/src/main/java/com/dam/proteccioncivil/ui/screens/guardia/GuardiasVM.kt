@@ -92,7 +92,9 @@ class GuardiasVM(
         viewModelScope.launch {
             guardiasUiState = GuardiasUiState.Loading
             guardiasUiState = try {
-                if(Token.rango == "Voluntario"){
+                //En futuras versiones se controlará que no se pueda alcanzar
+                // este código con el rango "nuevo".
+                if (Token.rango == "Voluntario" || Token.rango == "Nuevo") {
                     var guardias: List<Guardia>?
                     withTimeout(timeoutMillis) {
                         guardias = guardiasRepository.getGuardias()
@@ -102,14 +104,14 @@ class GuardiasVM(
                     } else {
                         GuardiasUiState.Error("Error, no se ha recibido respuesta del servidor")
                     }
-                }else{
+                } else {
                     var guardias: List<Guardia>?
                     var usuarios: List<Usuario>?
                     withTimeout(timeoutMillis) {
                         usuarios = usuariosRepository.getUsuarios()
                         guardias = guardiasRepository.getGuardias()
                     }
-                    if (guardias != null && usuarios!= null) {
+                    if (guardias != null && usuarios != null) {
                         users.addAll(usuarios!!)
                         GuardiasUiState.Success(guardias!!)
                     } else {
@@ -189,7 +191,7 @@ class GuardiasVM(
                 //error aunque el comportamiento es el que queremos, de ahi que al tratarla se maneje
                 //como success
                 GuardiasMessageState.Success
-            }catch (ex: TimeoutCancellationException) {
+            } catch (ex: TimeoutCancellationException) {
                 GuardiasMessageState.Error("Error, no se ha recibido respuesta del servidor")
             }
         }
@@ -296,7 +298,10 @@ class GuardiasVM(
                     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MainApplication)
                 val guardiasRepository = application.container.guardiasRepository
                 val usuariosRepository = application.container.usuariosRepository
-                GuardiasVM(guardiasRepository = guardiasRepository,usuariosRepository=usuariosRepository)
+                GuardiasVM(
+                    guardiasRepository = guardiasRepository,
+                    usuariosRepository = usuariosRepository
+                )
             }
         }
     }

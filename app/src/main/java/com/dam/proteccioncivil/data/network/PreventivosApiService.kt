@@ -46,6 +46,6 @@ interface PreventivosApiService {
     suspend fun deletePreventivo(
         @Header("Authorization") authToken: String,
         @Path("codPreventivo") id: Int
-    )
+    ): ApiResponse
 
 }

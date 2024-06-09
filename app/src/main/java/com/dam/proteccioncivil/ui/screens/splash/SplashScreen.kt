@@ -25,6 +25,7 @@ import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.main.MainVM
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
+import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(

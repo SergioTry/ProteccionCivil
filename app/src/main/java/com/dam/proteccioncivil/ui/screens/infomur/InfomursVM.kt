@@ -91,7 +91,9 @@ class InfomursVM(
         viewModelScope.launch {
             infomursUiState = InfomursUiState.Loading
             infomursUiState = try {
-                if(Token.rango == "Voluntario"){
+                // En futuras versiones se controlará que no se pueda alcanzar
+                // este código con el rango "nuevo".
+                if(Token.rango == "Voluntario" || Token.rango == "Nuevo"){
                     var infomurs: List<Infomur>?
                     withTimeout(timeoutMillis) {
                         infomurs = infomursRepository.getInfomurs()
@@ -161,6 +163,8 @@ class InfomursVM(
         }
     }
 
+
+
     override fun update() {
         viewModelScope.launch {
             infomursMessageState = InfomursMessageState.Loading
@@ -223,6 +227,8 @@ class InfomursVM(
             }
         }
     }
+
+
 
     fun resetInfomurMtoState() {
         infomursMtoState = infomursMtoState.copy(

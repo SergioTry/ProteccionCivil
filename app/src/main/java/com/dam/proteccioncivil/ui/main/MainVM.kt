@@ -36,7 +36,11 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
     var passwordState by mutableStateOf(PasswordState())
         private set
 
-    suspend fun getPreferences(loginVM: LoginVM, showLogin: (Boolean) -> Unit,usuariosVM: UsuariosVM) {
+    suspend fun getPreferences(
+        loginVM: LoginVM,
+        showLogin: (Boolean) -> Unit,
+        usuariosVM: UsuariosVM
+    ) {
         viewModelScope.async {
             mainRepository.getPreferences().take(1).collect {
                 uiPrefState = uiPrefState.copy(
@@ -104,13 +108,16 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
         KeystoreHelper.generateKey()
         val key = KeystoreHelper.getKey()
         // El método encriptar devuelve un Pair
-        val encryptedPassword = KeystoreHelper.encriptar(credentials["Password"]!!, key)
+        val encryptedPassword = KeystoreHelper.encriptar(
+            credentials["Password"]!!, key
+        )
         uiPrefState = uiPrefState.copy(
             username = credentials["Username"]!!,
             password = encryptedPassword.first,
-            iv = Base64.encodeToString(encryptedPassword.second, Base64.DEFAULT)
+            iv = Base64.encodeToString(
+                encryptedPassword.second, Base64.DEFAULT
+            )
         )
-
     }
 
     fun resetCredentials() {
@@ -120,6 +127,7 @@ class MainVM(private val mainRepository: MainRepository) : ViewModel() {
             iv = ""
         )
     }
+
 
     fun decodificarToken(token: String) {
         val jwtClaims = decodeJWT(token)

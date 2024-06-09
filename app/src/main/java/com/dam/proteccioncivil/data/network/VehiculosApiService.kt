@@ -33,13 +33,13 @@ interface VehiculosApiService {
     suspend fun deleteVehiculo(
         @Header("Authorization") authToken: String,
         @Path("codVehiculo") id: Int
-    )
+    ): ApiResponse
 
     @PUT("vehiculos/{codVehiculo}")
     suspend fun updateVehiculo(
         @Header("Authorization") authToken: String,
         @Path("codVehiculo") id: Int,
         @Body body: Map<String, String?>
-    )
+    ): ApiResponse
 
 }

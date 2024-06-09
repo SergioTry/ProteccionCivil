@@ -29,13 +29,13 @@ interface GuardiasApiService {
     suspend fun deleteGuardia(
         @Header("Authorization") authToken: String,
         @Path("codGuardia") id: Int
-    )
+    ): ApiResponse
 
     @PUT("guardias/{codGuardia}")
     suspend fun updateGuardia(
         @Header("Authorization") authToken: String,
         @Path("codGuardia") id: Int,
         @Body body: Map<String, String?>
-    )
+    ): ApiResponse
 
 }

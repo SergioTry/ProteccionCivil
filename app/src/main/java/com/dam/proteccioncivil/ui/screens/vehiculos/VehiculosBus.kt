@@ -342,7 +342,7 @@ fun vehiculoCard(
                     color = Color.Black
                 )
                 Image(
-                    painter = painterResource(id = R.drawable.pcc_icono),
+                    painter = painterResource(id = R.drawable.car),
                     contentDescription = null,
                     modifier = modifier
                         .padding(6.dp)

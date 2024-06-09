@@ -120,7 +120,8 @@ fun MainTopAppBar(
             if (currentScreen.name == AppScreens.Home.name) {
                 Row {
                     IconButton(onClick = {
-                        showAnoScreen() }) {
+                        showAnoScreen()
+                    }) {
                         Icon(
                             imageVector = Icons.Default.Notifications,
                             contentDescription = null,
@@ -128,7 +129,8 @@ fun MainTopAppBar(
                         )
                     }
                     IconButton(onClick = {
-                        showMenu = !showMenu }) {
+                        showMenu = !showMenu
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.MoreVert, contentDescription = null,
                             tint = MaterialTheme.colorScheme.background
@@ -217,7 +219,12 @@ fun MainBottomBar(
                                     tint = MaterialTheme.colorScheme.background
                                 )
                             },
-                            label = { Text(stringResource(R.string.screen_name_vehicles)) },
+                            label = {
+                                Text(
+                                    stringResource(R.string.screen_name_vehicles),
+                                    color = MaterialTheme.colorScheme.background
+                                )
+                            },
                             selected = false,
                             onClick = {
                                 vehiculosVM.getAll()
@@ -239,7 +246,7 @@ fun MainBottomBar(
                                 tint = MaterialTheme.colorScheme.background
                             )
                         },
-                        label = { Text(valor) },
+                        label = { Text(valor, color = MaterialTheme.colorScheme.background) },
                         selected = false,
                         onClick = {
                             selectOption(

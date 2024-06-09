@@ -239,6 +239,12 @@ fun MainApp(
                 navController.navigate(AppScreens.Login.name)
             },
             goHome = {
+                loginVM.setUsername(Token.username!!)
+                loginVM.setPassword(Token.password!!)
+//                loginVM.login(
+//                    mainVM, loginVM.uiLoginState.username.isNotEmpty()
+//                            && loginVM.uiLoginState.password.isNotEmpty()
+//                )
                 mainVM.setShowDlgPassword(false)
             })
     }
@@ -350,7 +356,8 @@ private fun NavHostRoutes(
                         }
                     )
                 },
-                savedToken = loginVM.uiLoginState.username.isNotEmpty() && loginVM.uiLoginState.password.isNotEmpty(),
+                savedToken = loginVM.uiLoginState.username.isNotEmpty()
+                        && loginVM.uiLoginState.password.isNotEmpty(),
                 onShowSnackBar = { mensaje, isSuccess ->
                     scope.launch {
                         if (isSuccess) {
@@ -813,7 +820,9 @@ fun selectOption(
 
         else -> {
             when (Token.rango) {
-                "Voluntario" -> {
+                //En futuras versiones se controlará que no se pueda alcanzar
+                // este código con el rango "nuevo".
+                "Voluntario", "Nuevo" -> {
                     if (Token.conductor == 1) {
                         navController.navigate(AppScreens.Vehiculos.name)
                     }
