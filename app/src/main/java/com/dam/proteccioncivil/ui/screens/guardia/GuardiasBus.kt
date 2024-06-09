@@ -41,7 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
@@ -63,6 +62,11 @@ fun GuardiasBus(
     onNavDetail: () -> Unit,
     refresh: () -> Unit
 ) {
+    var guardiasFiltered = guardias
+
+    if(Token.rango == "Voluntario"){
+        guardiasFiltered = guardias.filter { it.codUsuario1 == Token.codUsuario || it.codUsuario2 == Token.codUsuario }
+    }
 
     val mensage: String
     val contexto = LocalContext.current
@@ -107,7 +111,7 @@ fun GuardiasBus(
         LazyColumn(
             modifier = modifier.fillMaxSize(),
             content = {
-                items(guardias) { it ->
+                items(guardiasFiltered) { it ->
                     GuardiaCard(
                         guardia = it,
                         onNavUp = { onNavUp() },

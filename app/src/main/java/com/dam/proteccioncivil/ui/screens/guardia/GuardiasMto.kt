@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
+import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
 import com.dam.proteccioncivil.ui.theme.AppColors
@@ -205,134 +206,136 @@ fun GuardiaMto(
                             }
                         )
                     )
-                    Spacer(modifier = modifier.size(4.dp))
-                    ExposedDropdownMenuBox(
-                        expanded = expandedUser1,
-                        onExpandedChange = {
-                            if (!guardiasVM.guardiasBusState.isDetail) expandedUser1 =
-                                !expandedUser1
-                        },
-                    ) {
-                        OutlinedTextField(
-                            value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario1 }?.nombre
-                                ?: "",
-                            onValueChange = { },
-                            isError = guardiasVM.guardiasMtoState.codUsuario1 == "0",
-                            label = { Text(stringResource(id = R.string.usuario1_lit)) },
-                            readOnly = true,
-                            trailingIcon = {
-                                if (!guardiasVM.guardiasBusState.isDetail) {
-                                    IconButton(
-                                        onClick = { expandedUser1 = true }
-                                    ) {
-                                        Icon(
-                                            Icons.Filled.ArrowDropDown,
-                                            contentDescription = getString(
-                                                contexto,
-                                                R.string.drop_down_desc
-                                            ),
-                                            tint = Color.Black
-                                        )
-                                    }
-                                }
-                            },
-                            singleLine = true,
-                            modifier = modifier
-                                .fillMaxWidth()
-                                .menuAnchor(),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Color.Blue,
-                                unfocusedBorderColor = Color.Black,
-                                focusedLabelColor = Color.Blue,
-                                unfocusedLabelColor = Color.Black,
-                                errorBorderColor = Color.Red,
-                                errorLabelColor = Color.Red,
-                                focusedTextColor = Color.Black,
-                                unfocusedTextColor = Color.Black,
-                                errorTextColor = Color.Red
-                            )
-                        )
-                        ExposedDropdownMenu(
+                    if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
+                        Spacer(modifier = modifier.size(4.dp))
+                        ExposedDropdownMenuBox(
                             expanded = expandedUser1,
-                            onDismissRequest = { expandedUser1 = false },
-                            modifier = Modifier.heightIn(max = 200.dp)
+                            onExpandedChange = {
+                                if (!guardiasVM.guardiasBusState.isDetail) expandedUser1 =
+                                    !expandedUser1
+                            },
                         ) {
-                            users.forEach { item ->
-                                DropdownMenuItem(
-                                    text = { Text(item.nombre) },
-                                    onClick = {
-                                        guardiasVM.setUsuarios(
-                                            item.codUsuario.toString(),
-                                            guardiasVM.guardiasMtoState.codUsuario2
-                                        )
-                                        expandedUser1 = false
-                                        focusManager.moveFocus(FocusDirection.Down)
-                                    })
+                            OutlinedTextField(
+                                value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario1 }?.nombre
+                                    ?: "",
+                                onValueChange = { },
+                                isError = guardiasVM.guardiasMtoState.codUsuario1 == "0",
+                                label = { Text(stringResource(id = R.string.usuario1_lit)) },
+                                readOnly = true,
+                                trailingIcon = {
+                                    if (!guardiasVM.guardiasBusState.isDetail) {
+                                        IconButton(
+                                            onClick = { expandedUser1 = true }
+                                        ) {
+                                            Icon(
+                                                Icons.Filled.ArrowDropDown,
+                                                contentDescription = getString(
+                                                    contexto,
+                                                    R.string.drop_down_desc
+                                                ),
+                                                tint = Color.Black
+                                            )
+                                        }
+                                    }
+                                },
+                                singleLine = true,
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor(),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color.Blue,
+                                    unfocusedBorderColor = Color.Black,
+                                    focusedLabelColor = Color.Blue,
+                                    unfocusedLabelColor = Color.Black,
+                                    errorBorderColor = Color.Red,
+                                    errorLabelColor = Color.Red,
+                                    focusedTextColor = Color.Black,
+                                    unfocusedTextColor = Color.Black,
+                                    errorTextColor = Color.Red
+                                )
+                            )
+                            ExposedDropdownMenu(
+                                expanded = expandedUser1,
+                                onDismissRequest = { expandedUser1 = false },
+                                modifier = Modifier.heightIn(max = 200.dp)
+                            ) {
+                                users.forEach { item ->
+                                    DropdownMenuItem(
+                                        text = { Text(item.nombre) },
+                                        onClick = {
+                                            guardiasVM.setUsuarios(
+                                                item.codUsuario.toString(),
+                                                guardiasVM.guardiasMtoState.codUsuario2
+                                            )
+                                            expandedUser1 = false
+                                            focusManager.moveFocus(FocusDirection.Down)
+                                        })
+                                }
                             }
                         }
-                    }
-                    Spacer(modifier = modifier.size(4.dp))
-                    ExposedDropdownMenuBox(
-                        expanded = expandedUser2,
-                        onExpandedChange = {
-                            if (!guardiasVM.guardiasBusState.isDetail) expandedUser2 =
-                                !expandedUser2
-                        },
-                    ) {
-                        OutlinedTextField(
-                            value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario2 }?.nombre
-                                ?: "",
-                            onValueChange = {},
-                            isError = guardiasVM.guardiasMtoState.codUsuario2 == "0",
-                            label = { Text(stringResource(id = R.string.usuario2_lit)) },
-                            readOnly = true,
-                            trailingIcon = {
-                                if (!guardiasVM.guardiasBusState.isDetail) {
-                                    IconButton(
-                                        onClick = { expandedUser2 = true }
-                                    ) {
-                                        Icon(
-                                            Icons.Filled.ArrowDropDown,
-                                            contentDescription = getString(
-                                                contexto,
-                                                R.string.drop_down_desc
-                                            ),
-                                            tint = Color.Black
-                                        )
-                                    }
-                                }
-                            },
-                            singleLine = true,
-                            modifier = modifier
-                                .fillMaxWidth()
-                                .menuAnchor(),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Color.Blue,
-                                unfocusedBorderColor = Color.Black,
-                                focusedLabelColor = Color.Blue,
-                                unfocusedLabelColor = Color.Black,
-                                errorBorderColor = Color.Red,
-                                errorLabelColor = Color.Red,
-                                focusedTextColor = Color.Black,
-                                unfocusedTextColor = Color.Black,
-                                errorTextColor = Color.Red
-                            )
-                        )
-                        ExposedDropdownMenu(
+                        Spacer(modifier = modifier.size(4.dp))
+                        ExposedDropdownMenuBox(
                             expanded = expandedUser2,
-                            onDismissRequest = { expandedUser2 = false },
-                            modifier = Modifier.heightIn(max = 200.dp)
+                            onExpandedChange = {
+                                if (!guardiasVM.guardiasBusState.isDetail) expandedUser2 =
+                                    !expandedUser2
+                            },
                         ) {
-                            users.forEach { item ->
-                                DropdownMenuItem(
-                                    text = { Text(item.nombre) },
-                                    onClick = {
-                                        guardiasVM.setUsuarios(
-                                            guardiasVM.guardiasMtoState.codUsuario1,
-                                            item.codUsuario.toString()
-                                        )
-                                        expandedUser2 = false
-                                    })
+                            OutlinedTextField(
+                                value = guardiasVM.users.find { it.codUsuario.toString() == guardiasVM.guardiasMtoState.codUsuario2 }?.nombre
+                                    ?: "",
+                                onValueChange = {},
+                                isError = guardiasVM.guardiasMtoState.codUsuario2 == "0",
+                                label = { Text(stringResource(id = R.string.usuario2_lit)) },
+                                readOnly = true,
+                                trailingIcon = {
+                                    if (!guardiasVM.guardiasBusState.isDetail) {
+                                        IconButton(
+                                            onClick = { expandedUser2 = true }
+                                        ) {
+                                            Icon(
+                                                Icons.Filled.ArrowDropDown,
+                                                contentDescription = getString(
+                                                    contexto,
+                                                    R.string.drop_down_desc
+                                                ),
+                                                tint = Color.Black
+                                            )
+                                        }
+                                    }
+                                },
+                                singleLine = true,
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor(),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color.Blue,
+                                    unfocusedBorderColor = Color.Black,
+                                    focusedLabelColor = Color.Blue,
+                                    unfocusedLabelColor = Color.Black,
+                                    errorBorderColor = Color.Red,
+                                    errorLabelColor = Color.Red,
+                                    focusedTextColor = Color.Black,
+                                    unfocusedTextColor = Color.Black,
+                                    errorTextColor = Color.Red
+                                )
+                            )
+                            ExposedDropdownMenu(
+                                expanded = expandedUser2,
+                                onDismissRequest = { expandedUser2 = false },
+                                modifier = Modifier.heightIn(max = 200.dp)
+                            ) {
+                                users.forEach { item ->
+                                    DropdownMenuItem(
+                                        text = { Text(item.nombre) },
+                                        onClick = {
+                                            guardiasVM.setUsuarios(
+                                                guardiasVM.guardiasMtoState.codUsuario1,
+                                                item.codUsuario.toString()
+                                            )
+                                            expandedUser2 = false
+                                        })
+                                }
                             }
                         }
                     }

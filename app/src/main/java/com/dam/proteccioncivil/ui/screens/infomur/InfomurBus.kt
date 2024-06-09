@@ -41,14 +41,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
 import com.dam.proteccioncivil.data.model.Infomur
 import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.ui.dialogs.DlgConfirmacion
-import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosMessageState
 import com.dam.proteccioncivil.ui.theme.AppColors
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -62,6 +60,11 @@ fun InfomurBus(
     onNavDetail: () -> Unit,
     refresh: () -> Unit
 ) {
+    var informursFiltered = infomurs
+
+    if(Token.rango == "Voluntario"){
+        informursFiltered = infomurs.filter { it.codUsuario1 == Token.codUsuario || it.codUsuario2 == Token.codUsuario }
+    }
     val mensage: String
     val contexto = LocalContext.current
 
@@ -104,7 +107,7 @@ fun InfomurBus(
         LazyColumn(
             modifier = modifier.fillMaxSize(),
             content = {
-                items(infomurs) { it ->
+                items(informursFiltered) { it ->
                     InfomurCard(
                         infomur = it,
                         onNavUp = { onNavUp() },

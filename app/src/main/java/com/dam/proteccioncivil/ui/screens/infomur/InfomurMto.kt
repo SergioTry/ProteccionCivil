@@ -59,6 +59,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
+import com.dam.proteccioncivil.data.model.Token
 import com.dam.proteccioncivil.data.model.Usuario
 import com.dam.proteccioncivil.ui.dialogs.DlgSeleccionFecha
 import com.dam.proteccioncivil.ui.theme.AppColors
@@ -212,136 +213,141 @@ fun InfomurMto(
                         )
                     )
                     Spacer(modifier = modifier.size(4.dp))
-                    ExposedDropdownMenuBox(
-                        expanded = expandedUser1 && !infomursVM.infomursBusState.isDetail,
-                        onExpandedChange = {
-                            if (!infomursVM.infomursBusState.isDetail) expandedUser1 =
-                                !expandedUser1
-                        },
-                    ) {
-                        OutlinedTextField(
-                            value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario1 }?.nombre
-                                ?: "",
-                            onValueChange = { },
-                            isError = infomursVM.infomursMtoState.codUsuario1 == "",
-                            label = {
-                                Text(
-                                    stringResource(id = R.string.usuario1_lit),
-                                    color = AppColors.Black
-                                )
-                            },
-                            readOnly = true,
-                            trailingIcon = {
-                                if (!infomursVM.infomursBusState.isDetail) {
-                                    IconButton(
-                                        onClick = { expandedUser1 = true }
-                                    ) {
-                                        Icon(
-                                            Icons.Filled.ArrowDropDown,
-                                            contentDescription = getString(
-                                                contexto,
-                                                R.string.drop_down_desc
-                                            )
-                                        )
-                                    }
-                                }
-                            },
-                            singleLine = true,
-                            modifier = modifier
-                                .fillMaxWidth()
-                                .menuAnchor(),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Color.Blue,
-                                unfocusedBorderColor = Color.Black,
-                                focusedLabelColor = Color.Blue,
-                                unfocusedLabelColor = Color.Black,
-                                errorBorderColor = Color.Red,
-                                errorLabelColor = Color.Red,
-                                focusedTextColor = Color.Black,
-                                unfocusedTextColor = Color.Black,
-                                errorTextColor = Color.Red
-                            )
-                        )
-                        DropdownMenu(
+                    if (Token.rango == "Admin" || Token.rango == "JefeServicio") {
+                        ExposedDropdownMenuBox(
                             expanded = expandedUser1 && !infomursVM.infomursBusState.isDetail,
-                            onDismissRequest = { expandedUser1 = false },
-                            modifier = Modifier.heightIn(max = 200.dp)
+                            onExpandedChange = {
+                                if (!infomursVM.infomursBusState.isDetail) expandedUser1 =
+                                    !expandedUser1
+                            },
                         ) {
-                            users.forEach { item ->
-                                DropdownMenuItem(
-                                    text = { Text(item.nombre) },
-                                    onClick = {
-                                        infomursVM.setUsuarios(
-                                            item.codUsuario.toString(),
-                                            infomursVM.infomursMtoState.codUsuario2
-                                        )
-                                        expandedUser1 = false
-                                        focusManager.moveFocus(FocusDirection.Down)
+                            OutlinedTextField(
+                                value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario1 }?.nombre
+                                    ?: "",
+                                onValueChange = { },
+                                isError = infomursVM.infomursMtoState.codUsuario1 == "",
+                                label = {
+                                    Text(
+                                        stringResource(id = R.string.usuario1_lit),
+                                        color = AppColors.Black
+                                    )
+                                },
+                                readOnly = true,
+                                trailingIcon = {
+                                    if (!infomursVM.infomursBusState.isDetail) {
+                                        IconButton(
+                                            onClick = { expandedUser1 = true }
+                                        ) {
+                                            Icon(
+                                                Icons.Filled.ArrowDropDown,
+                                                contentDescription = getString(
+                                                    contexto,
+                                                    R.string.drop_down_desc
+                                                )
+                                            )
+                                        }
                                     }
+                                },
+                                singleLine = true,
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor(),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color.Blue,
+                                    unfocusedBorderColor = Color.Black,
+                                    focusedLabelColor = Color.Blue,
+                                    unfocusedLabelColor = Color.Black,
+                                    errorBorderColor = Color.Red,
+                                    errorLabelColor = Color.Red,
+                                    focusedTextColor = Color.Black,
+                                    unfocusedTextColor = Color.Black,
+                                    errorTextColor = Color.Red
                                 )
+                            )
+                            DropdownMenu(
+                                expanded = expandedUser1 && !infomursVM.infomursBusState.isDetail,
+                                onDismissRequest = { expandedUser1 = false },
+                                modifier = Modifier.heightIn(max = 200.dp)
+                            ) {
+                                users.forEach { item ->
+                                    DropdownMenuItem(
+                                        text = { Text(item.nombre) },
+                                        onClick = {
+                                            infomursVM.setUsuarios(
+                                                item.codUsuario.toString(),
+                                                infomursVM.infomursMtoState.codUsuario2
+                                            )
+                                            expandedUser1 = false
+                                            focusManager.moveFocus(FocusDirection.Down)
+                                        }
+                                    )
+                                }
                             }
                         }
-                    }
-                    Spacer(modifier = modifier.size(4.dp))
-                    ExposedDropdownMenuBox(
-                        expanded = expandedUser2,
-                        onExpandedChange = {
-                            if (!infomursVM.infomursBusState.isDetail) expandedUser2 =
-                                !expandedUser2
-                        },
-                    ) {
-                        OutlinedTextField(
-                            value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario2 }?.nombre
-                                ?: "",
-                            onValueChange = { },
-                            isError = infomursVM.infomursMtoState.codUsuario2 == "",
-                            label = {
-                                Text(
-                                    stringResource(id = R.string.usuario2_lit),
-                                    color = AppColors.Black
-                                )
-                            },
-                            readOnly = true,
-                            trailingIcon = {
-                                if (!infomursVM.infomursBusState.isDetail) {
-                                    IconButton(
-                                        onClick = { expandedUser2 = true }
-                                    ) {
-                                        Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
-                                    }
-                                }
-                            },
-                            singleLine = true,
-                            modifier = modifier
-                                .fillMaxWidth()
-                                .menuAnchor(),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Color.Blue,
-                                unfocusedBorderColor = Color.Black,
-                                focusedLabelColor = Color.Blue,
-                                unfocusedLabelColor = Color.Black,
-                                errorBorderColor = Color.Red,
-                                errorLabelColor = Color.Red,
-                                focusedTextColor = Color.Black,
-                                unfocusedTextColor = Color.Black,
-                                errorTextColor = Color.Red
-                            )
-                        )
-                        DropdownMenu(
+                        Spacer(modifier = modifier.size(4.dp))
+                        ExposedDropdownMenuBox(
                             expanded = expandedUser2,
-                            onDismissRequest = { expandedUser2 = false },
-                            modifier = Modifier.heightIn(max = 200.dp)
+                            onExpandedChange = {
+                                if (!infomursVM.infomursBusState.isDetail) expandedUser2 =
+                                    !expandedUser2
+                            },
                         ) {
-                            users.forEach { item ->
-                                DropdownMenuItem(
-                                    text = { Text(item.nombre) },
-                                    onClick = {
-                                        infomursVM.setUsuarios(
-                                            infomursVM.infomursMtoState.codUsuario1,
-                                            item.codUsuario.toString()
-                                        )
-                                        expandedUser2 = false
-                                    })
+                            OutlinedTextField(
+                                value = infomursVM.users.find { it.codUsuario.toString() == infomursVM.infomursMtoState.codUsuario2 }?.nombre
+                                    ?: "",
+                                onValueChange = { },
+                                isError = infomursVM.infomursMtoState.codUsuario2 == "",
+                                label = {
+                                    Text(
+                                        stringResource(id = R.string.usuario2_lit),
+                                        color = AppColors.Black
+                                    )
+                                },
+                                readOnly = true,
+                                trailingIcon = {
+                                    if (!infomursVM.infomursBusState.isDetail) {
+                                        IconButton(
+                                            onClick = { expandedUser2 = true }
+                                        ) {
+                                            Icon(
+                                                Icons.Filled.ArrowDropDown,
+                                                contentDescription = null
+                                            )
+                                        }
+                                    }
+                                },
+                                singleLine = true,
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor(),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color.Blue,
+                                    unfocusedBorderColor = Color.Black,
+                                    focusedLabelColor = Color.Blue,
+                                    unfocusedLabelColor = Color.Black,
+                                    errorBorderColor = Color.Red,
+                                    errorLabelColor = Color.Red,
+                                    focusedTextColor = Color.Black,
+                                    unfocusedTextColor = Color.Black,
+                                    errorTextColor = Color.Red
+                                )
+                            )
+                            DropdownMenu(
+                                expanded = expandedUser2,
+                                onDismissRequest = { expandedUser2 = false },
+                                modifier = Modifier.heightIn(max = 200.dp)
+                            ) {
+                                users.forEach { item ->
+                                    DropdownMenuItem(
+                                        text = { Text(item.nombre) },
+                                        onClick = {
+                                            infomursVM.setUsuarios(
+                                                infomursVM.infomursMtoState.codUsuario1,
+                                                item.codUsuario.toString()
+                                            )
+                                            expandedUser2 = false
+                                        })
+                                }
                             }
                         }
                     }
