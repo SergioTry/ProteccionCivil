@@ -366,7 +366,7 @@ fun PreventivoCard(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(6.dp),
-                verticalAlignment = Alignment.CenterVertically // Align items vertically centered
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
                     painter = painterResource(if (preventivo.riesgo.toInt() == 0) R.drawable.preventivos else R.drawable.siren_transparent_png),
@@ -437,8 +437,14 @@ fun PreventivoCard(
                     onClick = {
                         preventivosVM.resetPreventivoState()
                         preventivosVM.clonePreventivoState(preventivo)
-                        preventivosVM.setIsBorrado(false)
                         preventivosVM.setShowDlgBorrar(true)
+                        preventivosVM.setIsBorrado(
+                            if (apuntado) {
+                                null
+                            } else {
+                                false
+                            }
+                        )
                     },
                     modifier = modifier
                         .fillMaxWidth()
