@@ -275,9 +275,6 @@ fun PreventivosBus(
                                     else
                                         "add"
                                 )
-                                preventivosVM.setIsBorrado(
-                                    if (preventivosVM.preventivoBusState.action == "delete") null else false
-                                )
                                 preventivosVM.update()
                                 preventivosVM.setAction(null)
                             },
