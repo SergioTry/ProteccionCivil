@@ -105,7 +105,7 @@ fun PreventivoMto(
 
     if (preventivosVM.preventivoMtoState.codPreventivo != -1 && !preventivosVM.preventivoBusState.isDetail) {
         preventivosVM.setFechas()
-    }else if( preventivosVM.preventivoBusState.isDetail){
+    } else if (preventivosVM.preventivoBusState.isDetail) {
         preventivosVM.setFechasForDetail()
     }
 
@@ -298,7 +298,9 @@ fun PreventivoMto(
                                     // el motivo pero antes de que se cargen los usuarios y se muestre el
                                     // preventivosBus, se salta ese proceso y el if anterior y llega justo a
                                     // esta función provocando un null pointer. Poniendo el listOf() se soluciona.
-                                    items(preventivosVM.preventivoMtoState.usuarios ?: listOf()) { it ->
+                                    items(
+                                        preventivosVM.preventivoMtoState.usuarios ?: listOf()
+                                    ) { it ->
                                         Row(
                                             modifier = modifier
                                                 .border(

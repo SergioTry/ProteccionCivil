@@ -33,6 +33,7 @@ class NetworkGuardiasRepository(
         )
         return Json.decodeFromJsonElement<List<Guardia>>(apiResponse.body)
     }
+
     override suspend fun getGuardiasUsuario(codUsuario: Int): List<Guardia> {
         val apiResponse = guardiasApiService.getGuardiasUsuario(
             "Bearer ${Token.token}",
@@ -40,9 +41,11 @@ class NetworkGuardiasRepository(
         )
         return Json.decodeFromJsonElement<List<Guardia>>(apiResponse.body)
     }
+
     override suspend fun deleteGuardia(id: Int) {
         guardiasApiService.deleteGuardia("Bearer ${Token.token}", id)
     }
+
     override suspend fun setGuardia(
         guardiaData: Map<String, String>
     ) {
@@ -51,6 +54,7 @@ class NetworkGuardiasRepository(
             guardiaData
         )
     }
+
     override suspend fun updateGuardia(
         codGuardia: Int,
         guardiaData: Map<String, String>

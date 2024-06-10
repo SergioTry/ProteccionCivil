@@ -25,7 +25,6 @@ import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.ui.main.MainVM
 import com.dam.proteccioncivil.ui.screens.login.LoginVM
 import com.dam.proteccioncivil.ui.screens.usuarios.UsuariosVM
-import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
@@ -38,7 +37,7 @@ fun SplashScreen(
     val contexto = LocalContext.current
 
     LaunchedEffect(key1 = true) {
-        mainVM.getPreferences(loginVM, showLogin,usuariosVM)
+        mainVM.getPreferences(loginVM, showLogin, usuariosVM)
     }
     Surface(
         color = MaterialTheme.colorScheme.background,

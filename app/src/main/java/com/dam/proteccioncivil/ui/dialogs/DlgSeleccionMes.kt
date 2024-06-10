@@ -37,9 +37,6 @@ import androidx.compose.ui.window.Dialog
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.meses
 import com.dam.proteccioncivil.ui.theme.AppColors
-import java.time.Month
-import java.time.format.TextStyle
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,7 +84,7 @@ fun DlgSeleccionMes(
                     OutlinedTextField(
                         colors = OutlinedTextFieldDefaults.colors(
                             unfocusedContainerColor = AppColors.DarkBlue,
-                            focusedContainerColor =  AppColors.DarkBlue,
+                            focusedContainerColor = AppColors.DarkBlue,
                             focusedBorderColor = Color.Black,
                             unfocusedBorderColor = Color.Black,
                             focusedLabelColor = MaterialTheme.colorScheme.secondary,

@@ -20,7 +20,6 @@ import com.dam.proteccioncivil.data.model.timeoutMillis
 import com.dam.proteccioncivil.data.repository.GuardiasRepository
 import com.dam.proteccioncivil.data.repository.InfomursRepository
 import com.dam.proteccioncivil.data.repository.PreventivosRepository
-import com.dam.proteccioncivil.ui.screens.anuncios.AnunciosUiState
 import com.google.gson.JsonParser
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch

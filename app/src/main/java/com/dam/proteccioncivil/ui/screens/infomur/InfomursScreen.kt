@@ -14,7 +14,7 @@ fun InfomursScreen(
     onNavUp: () -> Unit,
     onNavDetail: () -> Unit,
     refresh: () -> Unit,
-    onShowSnackBar: (String,Boolean) -> Unit,
+    onShowSnackBar: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (infomursUiState) {
@@ -30,6 +30,7 @@ fun InfomursScreen(
                 refresh
             )
         }
+
         is InfomursUiState.Error -> ErrorScreen(
             retryAction,
             infomursUiState.err,

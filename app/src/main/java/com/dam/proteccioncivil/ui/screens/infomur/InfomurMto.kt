@@ -193,7 +193,7 @@ fun InfomurMto(
                             modifier
                                 .height(200.dp)
                                 .fillMaxWidth()
-                            .focusRequester(focusRequester)
+                                .focusRequester(focusRequester)
                         } else {
                             modifier
                                 .fillMaxWidth()

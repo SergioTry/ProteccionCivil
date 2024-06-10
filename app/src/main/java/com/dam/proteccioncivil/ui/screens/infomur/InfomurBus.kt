@@ -62,8 +62,9 @@ fun InfomurBus(
 ) {
     var informursFiltered = infomurs
 
-    if(Token.rango == "Voluntario"){
-        informursFiltered = infomurs.filter { it.codUsuario1 == Token.codUsuario || it.codUsuario2 == Token.codUsuario }
+    if (Token.rango == "Voluntario") {
+        informursFiltered =
+            infomurs.filter { it.codUsuario1 == Token.codUsuario || it.codUsuario2 == Token.codUsuario }
     }
     val mensage: String
     val contexto = LocalContext.current

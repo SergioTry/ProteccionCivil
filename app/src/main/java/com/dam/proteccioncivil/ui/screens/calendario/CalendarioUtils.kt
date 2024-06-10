@@ -5,7 +5,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
-import com.dam.proteccioncivil.data.model.Guardia
 import com.kizitonwose.calendar.compose.CalendarLayoutInfo
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.core.CalendarMonth
@@ -17,8 +16,13 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 fun YearMonth.displayText(short: Boolean = false): String {
-    return "${this.month.displayText(short = short).replaceFirstChar { if (it.isLowerCase()) it.titlecase(
-        Locale.ROOT) else it.toString() }} ${this.year}"
+    return "${
+        this.month.displayText(short = short).replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.ROOT
+            ) else it.toString()
+        }
+    } ${this.year}"
 }
 
 fun Month.displayText(short: Boolean = true): String {

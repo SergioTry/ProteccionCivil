@@ -10,6 +10,7 @@ object Token {
     var fechaNacimiento: LocalDateTime? = null
     var rango: String? = null
     var conductor: Int? = null
+
     // La contraseña no es recibida en el token,
     // se guarda encriptada tras hacer un login con éxito
     // para poder almacenarla en las preferencias

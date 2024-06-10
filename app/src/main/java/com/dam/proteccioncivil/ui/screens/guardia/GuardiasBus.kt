@@ -64,8 +64,9 @@ fun GuardiasBus(
 ) {
     var guardiasFiltered = guardias
 
-    if(Token.rango == "Voluntario"){
-        guardiasFiltered = guardias.filter { it.codUsuario1 == Token.codUsuario || it.codUsuario2 == Token.codUsuario }
+    if (Token.rango == "Voluntario") {
+        guardiasFiltered =
+            guardias.filter { it.codUsuario1 == Token.codUsuario || it.codUsuario2 == Token.codUsuario }
     }
 
     val mensage: String
@@ -202,8 +203,8 @@ fun GuardiaCard(
                     Text(
                         text =
                         stringResource(id = R.string.guardia_lit) + " " + FormatVisibleDate.use(
-                            guardia.fechaGuardia)
-                        ,
+                            guardia.fechaGuardia
+                        ),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         modifier = modifier

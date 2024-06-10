@@ -43,7 +43,7 @@ fun DlgRecursos(
             Column(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(8.dp, top = 16.dp,bottom = 8.dp)
+                    .padding(8.dp, top = 16.dp, bottom = 8.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.recursos_select), color = Color.Black,

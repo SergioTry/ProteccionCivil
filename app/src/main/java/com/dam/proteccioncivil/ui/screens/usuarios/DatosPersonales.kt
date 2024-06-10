@@ -437,7 +437,7 @@ fun DatosPersonales(
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = AppColors.RojoError)
                     ) {
-                        Text(text = stringResource(id = R.string.opc_cancel),color = Color.Black)
+                        Text(text = stringResource(id = R.string.opc_cancel), color = Color.Black)
                     }
                     Spacer(modifier = modifier.width(100.dp))
                     Button(

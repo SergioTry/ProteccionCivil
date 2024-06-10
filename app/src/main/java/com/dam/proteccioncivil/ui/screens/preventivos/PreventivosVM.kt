@@ -114,34 +114,34 @@ class PreventivosVM(
     }
 
     fun setFechasForDetail() {
-            preventivoMtoState.fechas.clear()
-            preventivoMtoState.fechas.addAll(
-                listOf(
-                    FormatDate.use(preventivoMtoState.fechaDia1),
-                    if (!preventivoMtoState.fechaDia2.isNullOrEmpty()) FormatDate.use(
-                        preventivoMtoState.fechaDia2
-                    ) else null,
-                    if (!preventivoMtoState.fechaDia3.isNullOrEmpty()) FormatDate.use(
-                        preventivoMtoState.fechaDia3
-                    ) else null,
-                    if (!preventivoMtoState.fechaDia4.isNullOrEmpty()) FormatDate.use(
-                        preventivoMtoState.fechaDia4
-                    ) else null,
-                    if (!preventivoMtoState.fechaDia5.isNullOrEmpty()) FormatDate.use(
-                        preventivoMtoState.fechaDia5
-                    ) else null,
-                    if (!preventivoMtoState.fechaDia6.isNullOrEmpty()) FormatDate.use(
-                        preventivoMtoState.fechaDia6
-                    ) else null,
-                    if (!preventivoMtoState.fechaDia7.isNullOrEmpty()) FormatDate.use(
-                        preventivoMtoState.fechaDia7
-                    ) else null,
-                )
+        preventivoMtoState.fechas.clear()
+        preventivoMtoState.fechas.addAll(
+            listOf(
+                FormatDate.use(preventivoMtoState.fechaDia1),
+                if (!preventivoMtoState.fechaDia2.isNullOrEmpty()) FormatDate.use(
+                    preventivoMtoState.fechaDia2
+                ) else null,
+                if (!preventivoMtoState.fechaDia3.isNullOrEmpty()) FormatDate.use(
+                    preventivoMtoState.fechaDia3
+                ) else null,
+                if (!preventivoMtoState.fechaDia4.isNullOrEmpty()) FormatDate.use(
+                    preventivoMtoState.fechaDia4
+                ) else null,
+                if (!preventivoMtoState.fechaDia5.isNullOrEmpty()) FormatDate.use(
+                    preventivoMtoState.fechaDia5
+                ) else null,
+                if (!preventivoMtoState.fechaDia6.isNullOrEmpty()) FormatDate.use(
+                    preventivoMtoState.fechaDia6
+                ) else null,
+                if (!preventivoMtoState.fechaDia7.isNullOrEmpty()) FormatDate.use(
+                    preventivoMtoState.fechaDia7
+                ) else null,
             )
+        )
     }
 
     fun setFechas() {
-        if(!hasStateChanged()) {
+        if (!hasStateChanged()) {
             preventivoMtoState.fechas.clear()
             preventivoMtoState.fechas.addAll(
                 listOf(

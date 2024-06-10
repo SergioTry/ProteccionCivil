@@ -34,7 +34,7 @@ data class VehiculosBusState(
     val showDlgDate: Boolean = false,
     val showDlgConfirmation: Boolean = false,
     val comboBoxOptionSelected: String = "",
-    )
+)
 
 fun VehiculoMtoState.toVehiculo(): Vehiculo = Vehiculo(
     codVehiculo = if (codVehiculo.isEmpty()) 0 else codVehiculo.toInt(),

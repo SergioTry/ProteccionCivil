@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -66,7 +65,7 @@ fun DlgRangos(
                     label = stringResource(id = R.string.range_vol),
                     onCheckedChange = { rango = "Voluntario" },
                     roundedInt = 12,
-                    backgroundColor =  AppColors.DarkBlue,
+                    backgroundColor = AppColors.DarkBlue,
                     textColor = Color.White
                 )
                 LabelledSwitch(
@@ -75,7 +74,7 @@ fun DlgRangos(
                     onCheckedChange = { rango = "JefeServicio" },
                     roundedInt = 12,
                     modifier = modifier.padding(top = 8.dp),
-                    backgroundColor =  AppColors.DarkBlue,
+                    backgroundColor = AppColors.DarkBlue,
                     textColor = Color.White
                 )
                 LabelledSwitch(
@@ -84,7 +83,7 @@ fun DlgRangos(
                     onCheckedChange = { rango = "Admin" },
                     roundedInt = 12,
                     modifier = modifier.padding(top = 8.dp),
-                    backgroundColor =  AppColors.DarkBlue,
+                    backgroundColor = AppColors.DarkBlue,
                     textColor = Color.White
 
                 )

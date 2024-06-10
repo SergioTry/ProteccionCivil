@@ -77,12 +77,12 @@ fun parseFechaNacimiento(fechaNacimiento: String): LocalDateTime? {
     } catch (e: Exception) {
         try {
             LocalDate.parse(fechaNacimiento, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay()
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             null
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -101,16 +101,16 @@ fun UsuariosMto(
     val scrollState = rememberScrollState()
     var changePassword by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
-    var rangosCopy : MutableList<String> = rangos.toMutableList()
+    var rangosCopy: MutableList<String> = rangos.toMutableList()
     var mayorEdad = false
 
-    if(parseFechaNacimiento(usuariosVM.usuariosMtoState.fechaNacimiento) != null) {
+    if (parseFechaNacimiento(usuariosVM.usuariosMtoState.fechaNacimiento) != null) {
         mayorEdad = esMayorDeEdad(
             parseFechaNacimiento(usuariosVM.usuariosMtoState.fechaNacimiento)!!
         )
     }
 
-    if(!mayorEdad){
+    if (!mayorEdad) {
         rangosCopy.remove("jefeservicio")
         rangosCopy.remove("administrador")
     }

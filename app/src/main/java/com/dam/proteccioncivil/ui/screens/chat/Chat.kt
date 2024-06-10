@@ -29,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -37,8 +36,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import com.dam.proteccioncivil.R
@@ -51,7 +48,7 @@ class Mensaje(val userId: String, val text: String, val dateTime: LocalDateTime)
 @Composable
 fun PantallaMensajes() {
     val contexto = LocalContext.current
-    
+
     val sampleMessages = listOf(
         Mensaje(
             "User1",
@@ -65,7 +62,8 @@ fun PantallaMensajes() {
         content = {
 
             Box(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
             ) {
                 Box(

@@ -264,7 +264,8 @@ fun VehiculoMto(
                                     focusedTextColor = Color.Black,
                                     unfocusedTextColor = Color.Black,
                                     errorTextColor = Color.Red
-                                ),keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                                ),
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                                 keyboardActions = KeyboardActions(
                                     onNext = { focusManager.moveFocus(FocusDirection.Down) }
                                 ),
@@ -302,7 +303,9 @@ fun VehiculoMto(
                         value = vehiculosVM.vehiculosMtoState.descripcion.let { if (it != "null" && it != null) vehiculosVM.vehiculosMtoState.descripcion else "" }
                             ?: "",
                         onValueChange = { vehiculosVM.setDescripcion(it) },
-                        modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(focusRequester),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color.Blue,
                             unfocusedBorderColor = Color.Black,

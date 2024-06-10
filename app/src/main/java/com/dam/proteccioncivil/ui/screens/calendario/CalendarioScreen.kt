@@ -21,6 +21,7 @@ fun CalendarioScreen(
         is CalendarioUiState.Success -> {
             Calendario(servicios = calendarioUiState.servicios, calendarioVM = calendarioVM)
         }
+
         is CalendarioUiState.Error -> ErrorScreen(
             retryAction,
             calendarioUiState.err,

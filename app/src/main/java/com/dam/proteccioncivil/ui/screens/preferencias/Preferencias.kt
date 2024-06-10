@@ -38,7 +38,9 @@ fun Preferencias(
             modifier = Modifier.fillMaxSize()
         )
         Column(
-            modifier = Modifier.fillMaxSize().padding(4.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(4.dp)
         ) {
             LabelledSwitch(
                 checked = mainVM.uiPrefState.username.isNotEmpty() || mainVM.uiPrefState.password.isNotEmpty(),

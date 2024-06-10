@@ -58,14 +58,14 @@ class AnunciosVM(private val anunciosRepository: AnunciosRepository) : CRUD<Anun
     }
 
 
-    fun setShowDlgBorrar(showDlgBorrar: Boolean){
+    fun setShowDlgBorrar(showDlgBorrar: Boolean) {
         anunciosBusState = anunciosBusState.copy(
             showDlgBorrar = showDlgBorrar,
             showDlgDate = anunciosBusState.showDlgDate
         )
     }
 
-    fun setShowDlgDate(showDlgDate: Boolean){
+    fun setShowDlgDate(showDlgDate: Boolean) {
         anunciosBusState = anunciosBusState.copy(
             showDlgBorrar = anunciosBusState.showDlgBorrar,
             showDlgDate = showDlgDate

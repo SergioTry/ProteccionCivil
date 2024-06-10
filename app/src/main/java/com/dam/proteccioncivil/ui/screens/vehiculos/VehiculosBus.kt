@@ -351,7 +351,10 @@ fun vehiculoCard(
             }
             Column {
                 Spacer(modifier = modifier.height(8.dp))
-                Row(modifier = modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Spacer(modifier = modifier.height(12.dp))
                         Text(

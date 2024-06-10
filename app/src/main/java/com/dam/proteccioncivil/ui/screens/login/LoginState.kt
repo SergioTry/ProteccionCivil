@@ -1,4 +1,5 @@
 package com.dam.proteccioncivil.ui.screens.login
+
 data class LoginState(
     val username: String = "",
     val password: String = "",

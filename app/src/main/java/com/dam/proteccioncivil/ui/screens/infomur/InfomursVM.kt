@@ -67,14 +67,14 @@ class InfomursVM(
         )
     }
 
-    fun setShowDlgBorrar(showDlgBorrar: Boolean){
+    fun setShowDlgBorrar(showDlgBorrar: Boolean) {
         infomursBusState = infomursBusState.copy(
             showDlgConfirmation = showDlgBorrar,
             showDlgDate = infomursBusState.showDlgDate
         )
     }
 
-    fun setShowDlgDate(showDlgDate: Boolean){
+    fun setShowDlgDate(showDlgDate: Boolean) {
         infomursBusState = infomursBusState.copy(
             showDlgConfirmation = infomursBusState.showDlgConfirmation,
             showDlgDate = showDlgDate
@@ -93,7 +93,7 @@ class InfomursVM(
             infomursUiState = try {
                 // En futuras versiones se controlará que no se pueda alcanzar
                 // este código con el rango "nuevo".
-                if(Token.rango == "Voluntario" || Token.rango == "Nuevo"){
+                if (Token.rango == "Voluntario" || Token.rango == "Nuevo") {
                     var infomurs: List<Infomur>?
                     withTimeout(timeoutMillis) {
                         infomurs = infomursRepository.getInfomurs()
@@ -103,7 +103,7 @@ class InfomursVM(
                     } else {
                         InfomursUiState.Error("Error, no se ha recibido respuesta del servidor")
                     }
-                }else{
+                } else {
                     var infomurs: List<Infomur>?
                     withTimeout(timeoutMillis) {
                         users.addAll(usuarioRepository.getUsuarios())
@@ -162,7 +162,6 @@ class InfomursVM(
             }
         }
     }
-
 
 
     override fun update() {
@@ -227,7 +226,6 @@ class InfomursVM(
             }
         }
     }
-
 
 
     fun resetInfomurMtoState() {
