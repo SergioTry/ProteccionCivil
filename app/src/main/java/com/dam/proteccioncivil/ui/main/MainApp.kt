@@ -735,6 +735,7 @@ private fun NavHostRoutes(
                 },
                 refresh = {
                     navController.popBackStack()
+                    preventivosVM.setTextoBusqueda("")
                     navController.navigate(AppScreens.Preventivos.name)
                 },
                 onShowSnackBar = { mensaje, isSuccess ->

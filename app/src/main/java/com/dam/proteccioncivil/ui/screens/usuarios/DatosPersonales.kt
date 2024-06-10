@@ -46,7 +46,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.dam.proteccioncivil.R
 import com.dam.proteccioncivil.data.model.FormatVisibleDate
@@ -89,7 +88,6 @@ fun DatosPersonales(
             Token.password = mainVM.passwordState.UIpassword
             onShowSnackBar(mensage, true)
             usuariosVM.setChangePasswordChecker(false)
-            usuariosVM.getAll()
             usuariosVM.resetInfoState()
             usuariosVM.resetUsuarioMtoState()
         }
